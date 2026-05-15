@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>대화 기록 — MIRAI</title>
+<link rel="stylesheet" href="../shared/styles.css">
+<style>
+  main{
+    width:100%;
+    max-width:920px;
+    margin:0 auto;
+    padding:20px 32px 80px;
+  }
+
+  /* 검색 */
+  .chat-search{position:relative;margin-bottom:24px}
+  .chat-search input{
+    width:100%;height:48px;
+    padding:0 16px 0 48px;
+    border-radius:12px;
+    background:var(--fill-alternative);
+    border:none;
+    color:var(--label-normal);
+    font-family:inherit;font-size:15px;line-height:1.467;
+    letter-spacing:0.0096em;
+    outline:none;
+  }
+  .chat-search input::placeholder{color:var(--label-assistive)}
+  .chat-search-icon{
+    position:absolute;left:18px;top:50%;transform:translateY(-50%);
+    width:18px;height:18px;color:var(--label-alternative);
+    pointer-events:none;
+  }
+
+  /* 리스트 */
+  .history-list{display:flex;flex-direction:column}
+  .history-item{
+    position:relative;
+    display:flex;align-items:flex-start;gap:16px;
+    padding:14px 4px;
+    text-decoration:none;
+    cursor:pointer;
+    border-radius:12px;
+    transition:background 0.15s ease;
+  }
+  .history-item:hover{background:var(--fill-alternative)}
+  .history-thumb{
+    width:72px;height:72px;
+    border-radius:14px;
+    flex-shrink:0;overflow:hidden;
+    background:var(--fill-normal);
+  }
+  .history-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+
+  .history-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:6px}
+  .history-row{display:flex;align-items:center;justify-content:space-between;gap:8px}
+  .history-name{
+    font-size:15px;font-weight:600;line-height:1.35;
+    color:var(--label-strong);
+    letter-spacing:-0.002em;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+    flex:1;min-width:0;
+  }
+  .history-time{
+    flex-shrink:0;
+    font-size:13px;font-weight:400;
+    color:var(--label-alternative);
+    letter-spacing:0.0145em;
+  }
+  .history-preview{
+    font-size:13px;font-weight:400;line-height:1.4;
+    color:var(--label-alternative);
+    letter-spacing:0.0145em;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  .history-persona{
+    display:flex;align-items:center;gap:4px;
+    font-size:12px;font-weight:500;
+    color:var(--label-alternative);
+    letter-spacing:0.0145em;
+    margin-top:2px;
+  }
+  .history-persona svg{width:14px;height:14px;flex-shrink:0}
+
+  /* 더보기 메뉴 */
+  .history-more{
+    flex-shrink:0;
+    width:32px;height:32px;
+    border-radius:50%;
+    background:transparent;border:none;cursor:pointer;
+    color:var(--label-alternative);
+    display:flex;align-items:center;justify-content:center;
+    align-self:center;
+    transition:background 0.15s ease, color 0.15s ease;
+  }
+  .history-more:hover{background:var(--fill-normal);color:var(--label-strong)}
+  .history-more svg{width:18px;height:18px}
+
+  .history-menu{
+    position:absolute;right:8px;top:60px;
+    min-width:140px;
+    padding:6px;
+    border-radius:12px;
+    background:var(--bg-elevated);
+    border:1px solid var(--line-alternative);
+    box-shadow:0 8px 24px rgba(0,0,0,0.32);
+    display:none;flex-direction:column;gap:2px;
+    z-index:5;
+  }
+  .history-menu.open{display:flex}
+  .history-menu-item{
+    display:flex;align-items:center;gap:10px;
+    padding:10px 12px;
+    background:transparent;border:none;cursor:pointer;
+    color:var(--label-normal);
+    font-size:14px;font-weight:500;
+    border-radius:8px;
+    text-align:left;
+    transition:background 0.15s ease;
+  }
+  .history-menu-item:hover{background:var(--fill-alternative)}
+  .history-menu-item.danger{color:var(--status-negative)}
+  .history-menu-item svg{width:16px;height:16px;flex-shrink:0}
+
+  @media (max-width:768px){
+    main{padding:16px 16px calc(72px + env(safe-area-inset-bottom))}
+    .history-thumb{width:60px;height:60px;border-radius:12px}
+    .history-name{font-size:14px}
+  }
+</style>
+<script src="../shared/components.js" defer></script>
+</head>
+<body>
+<div class="app">
+  <mirai-sidebar active="history"></mirai-sidebar>
+
+  <div class="content-wrap">
+    <mirai-header></mirai-header>
+
+    <main>
+      <!-- 검색 -->
+      <div class="chat-search">
+        <svg class="chat-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="11" cy="11" r="7"/><path d="m21 21-4.35-4.35"/>
+        </svg>
+        <input type="search" placeholder="채팅 검색">
+      </div>
+
+      <!-- 대화 리스트 -->
+      <div class="history-list" id="historyList"></div>
+    </main>
+
+    <mirai-bottom-nav active="history"></mirai-bottom-nav>
+  </div>
+</div>
+
+<script>
+  /* ─────────────────────────────────────────────
+     데이터 — 실제 서비스에선 API 응답으로 교체
+     ───────────────────────────────────────────── */
+  const HISTORY = [
+    { name: 'Amon Vallentis',  time: '2분 전',   img: 'Image.png',
+      preview: '"이건 명령이야, 도망가지 마. 한 번만 더 도망치면 그땐 정말 가만 안 둘 거다."',
+      persona: '대학생 김도현' },
+    { name: 'Luca',            time: '21분 전',  img: 'Image-1.png',
+      preview: '너가 키운 거잖아. 이제 와서 못 본 척하지 말고 끝까지 책임져. 도망갈 생각은 하지도 마.',
+      persona: '여우 정령 호아' },
+    { name: '강서준',          time: '1시간 전', img: 'Image-2.png',
+      preview: '선배가 갑자기 너를 끌어당겼다. 가까워진 거리에 심장이 미친 듯이 뛰기 시작했다.',
+      persona: '대학생 김도현' },
+    { name: 'Kael Ardent',     time: '3시간 전', img: 'Image-3.png',
+      preview: '"넌 이제 내 거다. 다른 누구에게도 눈길 주지 마. 내가 직접 너를 길들여줄 테니까."',
+      persona: '여우 정령 호아' },
+    { name: '이도현',          time: '어제',     img: 'Image.png',
+      preview: '전학 첫날부터 일이 꼬였다. 하필 마주친 사람이 학교에서 제일 유명한 일진이라니, 운이 없어도 너무 없다.',
+      persona: '대학생 김도현' },
+    { name: 'Seraphine',       time: '어제',     img: 'Image-1.png',
+      preview: '"당신의 선택을 후회하게 될 거예요. 하지만 지금이라도 마음을 바꾸면 모든 게 다시 시작될 수 있어요."',
+      persona: '마법사 이슬비' },
+    { name: '박재희',          time: '2일 전',   img: 'Image-2.png',
+      preview: '보름달이 떠올랐다. 그가 변했다. 차가운 눈동자가 너를 향했고, 입꼬리가 천천히 올라갔다.',
+      persona: '대학생 김도현' },
+    { name: 'Damien Voss',     time: '3일 전',   img: 'Image-3.png',
+      preview: '"오늘 밤은 내 약혼녀로서 행동해. 가짜라도 좋으니 그 누구도 의심하지 못하게 완벽하게."',
+      persona: '여우 정령 호아' },
+    { name: '아이돌 아카데미', time: '5일 전',   img: 'Image.png',
+      preview: '동기들이 너를 의심하기 시작했다. 데뷔조에 든 사람이 너 하나뿐이라서, 모두가 이상한 눈으로 쳐다봤다.',
+      persona: '연습생 윤하늘' },
+    { name: '강호중출',        time: '1주 전',   img: 'Image-1.png',
+      preview: '정파 사파, 너는 어느 쪽? 강호의 풍랑 속에서 살아남으려면 빨리 선택해야 할 거다. 시간이 없어.',
+      persona: '무림인 백호' },
+  ];
+
+  /* ─────────────────────────────────────────────
+     아이콘 (한 곳에서 관리)
+     ───────────────────────────────────────────── */
+  const ICONS = {
+    persona: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>',
+    more:    '<svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="12" cy="19" r="1.6"/></svg>',
+    copy:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>',
+    trash:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>',
+  };
+
+  /* ─────────────────────────────────────────────
+     렌더링
+     ───────────────────────────────────────────── */
+  function renderItem(c){
+    return `
+    <a href="#" class="history-item">
+      <div class="history-thumb"><img src="./images/main/${c.img}" alt=""></div>
+      <div class="history-body">
+        <div class="history-row">
+          <span class="history-name">${c.name}</span>
+          <span class="history-time">${c.time}</span>
+        </div>
+        <div class="history-preview">${c.preview}</div>
+        <div class="history-persona">${ICONS.persona}${c.persona}</div>
+      </div>
+      <button class="history-more" type="button" aria-label="더보기"
+              onclick="event.preventDefault();event.stopPropagation();toggleMenu(this)">
+        ${ICONS.more}
+      </button>
+      <div class="history-menu" role="menu">
+        <button class="history-menu-item" data-act="duplicate">${ICONS.copy}복제하기</button>
+        <button class="history-menu-item danger" data-act="delete">${ICONS.trash}삭제하기</button>
+      </div>
+    </a>`;
+  }
+
+  document.getElementById('historyList').innerHTML = HISTORY.map(renderItem).join('');
+
+  /* ─────────────────────────────────────────────
+     메뉴 토글
+     ───────────────────────────────────────────── */
+  function toggleMenu(btn){
+    const menu = btn.nextElementSibling;
+    const wasOpen = menu.classList.contains('open');
+    document.querySelectorAll('.history-menu.open').forEach(m => m.classList.remove('open'));
+    if (!wasOpen) menu.classList.add('open');
+  }
+
+  document.addEventListener('click', e => {
+    if (!e.target.closest('.history-more') && !e.target.closest('.history-menu')) {
+      document.querySelectorAll('.history-menu.open').forEach(m => m.classList.remove('open'));
+    }
+  });
+</script>
+</body>
+</html>

@@ -217,7 +217,7 @@ main{
 /* ═══ CATEGORY CHIPS ═══ */
 .chips{
   display:flex;gap:8px;
-  margin:0 56px 24px 0;
+  margin-bottom:24px;
   overflow-x:auto;
   scrollbar-width:none;
   padding-bottom:4px;
@@ -257,14 +257,14 @@ main{
 .cat-fade{
   position:absolute;
   right:48px;top:0;bottom:0;
-  width:28px;
-  background:linear-gradient(to right, rgba(27,28,30,0) 0%, var(--bg-normal) 100%);
+  width:24px;
+  background:linear-gradient(to right, rgba(27,28,30,0), var(--bg-normal));
   pointer-events:none;
   z-index:1;
 }
 .cat-expand-btn{
   position:absolute;
-  right:8px;top:50%;transform:translateY(-50%);
+  right:16px;top:50%;transform:translateY(-50%);
   width:32px;height:32px;
   border-radius:50%;
   background:var(--bg-elevated);
@@ -384,7 +384,7 @@ main{
 /* ═══ CARD GRID ═══ */
 .grid{
   display:grid;
-  grid-template-columns:repeat(5, minmax(0, 1fr));
+  grid-template-columns:repeat(5, 1fr);
   gap:8px;
 }
 .card{
@@ -419,14 +419,15 @@ main{
 .card-heart,.card-ribbon{display:none}
 .card-views{
   position:absolute;left:12px;
-  bottom:72px;
+  bottom:72px; /* pb(10) + desc(32) + gap(4) + title(22) + gap(4) */
   display:flex;align-items:center;gap:4px;
   font-family:'Inter','Pretendard JP',sans-serif;
   font-size:12px;font-weight:500;line-height:18px;
-  color:var(--label-neutral);
+  color:#fff;
+  text-shadow:0 1px 2px rgba(0,0,0,0.5);
   z-index:2;
 }
-.card-views svg{width:13px;height:13px;color:var(--label-neutral)}
+.card-views svg{width:13px;height:13px;color:#fff}
 .card-info{
   position:absolute;
   left:0;right:0;
@@ -951,10 +952,10 @@ main{
 
 /* ═══ RESPONSIVE ═══ */
 @media (max-width:1100px){
-  .grid{grid-template-columns:repeat(4, minmax(0, 1fr))}
+  .grid{grid-template-columns:repeat(4, 1fr)}
 }
 @media (max-width:880px){
-  .grid{grid-template-columns:repeat(3, minmax(0, 1fr))}
+  .grid{grid-template-columns:repeat(3, 1fr)}
 
   .search{width:240px}
 }
@@ -998,7 +999,9 @@ main{
 .bs-backdrop{
   position:fixed;inset:0;
   background:var(--material-dimmer);
-  z-index:1000;opacity:0;pointer-events:none;
+  z-index:1000;
+  opacity:0;
+  pointer-events:none;
   transition:opacity 240ms ease;
   display:flex;align-items:flex-end;justify-content:center;
 }
@@ -1011,45 +1014,85 @@ main{
   box-shadow:0 -8px 32px rgba(0,0,0,0.4);
   transform:translateY(100%);
   transition:transform 320ms cubic-bezier(0.32,0.72,0,1);
-  position:relative;overflow:hidden;
+  position:relative;
+  overflow:hidden;
 }
-@media (min-width:769px){.bs-sheet{max-width:696px;margin:0 auto}}
+@media (min-width:769px){
+  .bs-sheet{max-width:696px;margin:0 auto}
+}
 .bs-backdrop.open .bs-sheet{transform:translateY(0)}
-.bs-handle-wrap{height:12px;display:flex;align-items:flex-end;justify-content:center}
-.bs-handle{width:40px;height:5px;background:var(--fill-strong);border-radius:1000px}
+.bs-handle-wrap{
+  height:12px;
+  display:flex;align-items:flex-end;justify-content:center;
+  padding-bottom:0;
+}
+.bs-handle{
+  width:40px;height:5px;
+  background:var(--fill-strong);
+  border-radius:1000px;
+}
 .bs-header{
   position:relative;
   display:flex;align-items:center;justify-content:center;
   padding:20px 16px;
 }
-.bs-title{font-size:17px;font-weight:600;line-height:1.412;color:var(--label-strong)}
+.bs-title{
+  font-size:17px;font-weight:600;line-height:1.412;
+  color:var(--label-strong);
+  text-align:center;
+}
 .bs-close{
-  position:absolute;right:16px;top:50%;transform:translateY(-50%);
-  width:24px;height:24px;display:flex;align-items:center;justify-content:center;
-  background:transparent;border:0;color:var(--label-normal);cursor:pointer;padding:0;
+  position:absolute;
+  right:16px;top:50%;
+  transform:translateY(-50%);
+  width:24px;height:24px;
+  display:flex;align-items:center;justify-content:center;
+  background:transparent;border:0;
+  color:var(--label-normal);
+  cursor:pointer;
+  padding:0;
 }
 .bs-close svg{width:24px;height:24px;display:block}
 .bs-content{padding:0 20px 20px}
 .bs-icon-wrap{display:flex;justify-content:center;margin:8px 0 28px}
-.bs-icon{width:64px;height:64px;display:flex;align-items:center;justify-content:center}
+.bs-icon{
+  width:64px;height:64px;
+  display:flex;align-items:center;justify-content:center;
+}
 .bs-icon img{width:100%;height:100%;display:block;object-fit:contain}
+.bs-desc{
+  text-align:center;
+  font-size:14px;
+  color:var(--label-neutral);
+  margin-bottom:20px;
+  line-height:1.5;
+}
 .bs-cta-primary{
   width:100%;
-  background:var(--primary-normal);color:var(--label-strong);
+  background:var(--primary-normal);
+  color:var(--label-strong);
   border:0;border-radius:12px;
   padding:12px 28px;
-  font-size:16px;font-weight:600;line-height:1.5;letter-spacing:0.57px;
-  cursor:pointer;font-family:inherit;margin-bottom:4px;
+  font-size:16px;font-weight:600;
+  line-height:1.5;
+  letter-spacing:0.57px;
+  cursor:pointer;
+  font-family:inherit;
+  margin-bottom:4px;
   transition:opacity 160ms;
 }
 .bs-cta-primary:hover{opacity:0.92}
 .bs-cta-primary:active{opacity:0.85}
 .bs-cta-secondary{
-  display:block;width:100%;text-align:center;
-  padding:12px;color:var(--label-neutral);
+  display:block;width:100%;
+  text-align:center;
+  padding:12px;
+  color:var(--label-neutral);
   font-size:14px;font-weight:500;
-  text-decoration:none;background:transparent;border:0;
-  cursor:pointer;font-family:inherit;
+  text-decoration:none;
+  background:transparent;border:0;
+  cursor:pointer;
+  font-family:inherit;
   transition:color 160ms;
 }
 .bs-cta-secondary:hover{color:var(--label-normal)}
@@ -1059,7 +1102,7 @@ main{
 <body>
 <div class="app">
 
-<mirai-sidebar active="home"></mirai-sidebar>
+<mirai-sidebar></mirai-sidebar>
 
 <div class="content-wrap">
 
@@ -1202,7 +1245,7 @@ main{
     <article class="card">
       <img class="card-img" src="./images/main/thumbs/adventurer-strongest.png" alt="">
       <div class="card-views">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M1 6s2-4 5-4 5 4 5 4-2 4-5 4S1 6 1 6z"/><circle cx="6" cy="6" r="2" fill="currentColor"/></svg>
         113.6K
       </div>
       <div class="card-info">
@@ -1213,7 +1256,7 @@ main{
     <article class="card">
       <img class="card-img" src="./images/main/thumbs/iljin-taming.png" alt="">
       <div class="card-views">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M1 6s2-4 5-4 5 4 5 4-2 4-5 4S1 6 1 6z"/><circle cx="6" cy="6" r="2" fill="currentColor"/></svg>
         95.8K
       </div>
       <div class="card-info">
@@ -1224,7 +1267,7 @@ main{
     <article class="card">
       <img class="card-img" src="./images/main/thumbs/prof-crush.png" alt="">
       <div class="card-views">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M1 6s2-4 5-4 5 4 5 4-2 4-5 4S1 6 1 6z"/><circle cx="6" cy="6" r="2" fill="currentColor"/></svg>
         81.1K
       </div>
       <div class="card-info">
@@ -1235,7 +1278,7 @@ main{
     <article class="card">
       <img class="card-img" src="./images/main/thumbs/ghoul-zone.png" alt="">
       <div class="card-views">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M1 6s2-4 5-4 5 4 5 4-2 4-5 4S1 6 1 6z"/><circle cx="6" cy="6" r="2" fill="currentColor"/></svg>
         24.1K
       </div>
       <div class="card-info">
@@ -1246,7 +1289,7 @@ main{
     <article class="card">
       <img class="card-img" src="./images/main/thumbs/despised-bride.png" alt="">
       <div class="card-views">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M1 6s2-4 5-4 5 4 5 4-2 4-5 4S1 6 1 6z"/><circle cx="6" cy="6" r="2" fill="currentColor"/></svg>
         17.6K
       </div>
       <div class="card-info">
@@ -1257,7 +1300,7 @@ main{
     <article class="card">
       <img class="card-img" src="./images/main/thumbs/hypnosis-change.png" alt="">
       <div class="card-views">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M1 6s2-4 5-4 5 4 5 4-2 4-5 4S1 6 1 6z"/><circle cx="6" cy="6" r="2" fill="currentColor"/></svg>
         86.6K
       </div>
       <div class="card-info">
@@ -1268,7 +1311,7 @@ main{
     <article class="card">
       <img class="card-img" src="./images/main/thumbs/ice-palace.png" alt="">
       <div class="card-views">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M1 6s2-4 5-4 5 4 5 4-2 4-5 4S1 6 1 6z"/><circle cx="6" cy="6" r="2" fill="currentColor"/></svg>
         21.1K
       </div>
       <div class="card-info">
@@ -1279,7 +1322,7 @@ main{
     <article class="card">
       <img class="card-img" src="./images/main/thumbs/iljin-school.png" alt="">
       <div class="card-views">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M1 6s2-4 5-4 5 4 5 4-2 4-5 4S1 6 1 6z"/><circle cx="6" cy="6" r="2" fill="currentColor"/></svg>
         58.9K
       </div>
       <div class="card-info">
@@ -1290,7 +1333,7 @@ main{
     <article class="card">
       <img class="card-img" src="./images/main/thumbs/leeyeonwoo.png" alt="">
       <div class="card-views">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M1 6s2-4 5-4 5 4 5 4-2 4-5 4S1 6 1 6z"/><circle cx="6" cy="6" r="2" fill="currentColor"/></svg>
         82.1K
       </div>
       <div class="card-info">
@@ -1301,7 +1344,7 @@ main{
     <article class="card">
       <img class="card-img" src="./images/main/thumbs/masodo-magical.png" alt="">
       <div class="card-views">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M1 6s2-4 5-4 5 4 5 4-2 4-5 4S1 6 1 6z"/><circle cx="6" cy="6" r="2" fill="currentColor"/></svg>
         9.7K
       </div>
       <div class="card-info">
@@ -1312,7 +1355,7 @@ main{
     <article class="card">
       <img class="card-img" src="./images/main/thumbs/nadenade-sister.png" alt="">
       <div class="card-views">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M1 6s2-4 5-4 5 4 5 4-2 4-5 4S1 6 1 6z"/><circle cx="6" cy="6" r="2" fill="currentColor"/></svg>
         2.5K
       </div>
       <div class="card-info">
@@ -1323,7 +1366,7 @@ main{
     <article class="card">
       <img class="card-img" src="./images/main/thumbs/wounded-wolf.png" alt="">
       <div class="card-views">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M1 6s2-4 5-4 5 4 5 4-2 4-5 4S1 6 1 6z"/><circle cx="6" cy="6" r="2" fill="currentColor"/></svg>
         34.2K
       </div>
       <div class="card-info">
@@ -1334,7 +1377,7 @@ main{
     <article class="card">
       <img class="card-img" src="./images/main/thumbs/saved-villain.png" alt="">
       <div class="card-views">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M1 6s2-4 5-4 5 4 5 4-2 4-5 4S1 6 1 6z"/><circle cx="6" cy="6" r="2" fill="currentColor"/></svg>
         43.8K
       </div>
       <div class="card-info">
@@ -1345,7 +1388,7 @@ main{
     <article class="card">
       <img class="card-img" src="./images/main/thumbs/friend-areum.png" alt="">
       <div class="card-views">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M1 6s2-4 5-4 5 4 5 4-2 4-5 4S1 6 1 6z"/><circle cx="6" cy="6" r="2" fill="currentColor"/></svg>
         12.4K
       </div>
       <div class="card-info">
@@ -1356,7 +1399,7 @@ main{
     <article class="card">
       <img class="card-img" src="./images/main/thumbs/summoned.png" alt="">
       <div class="card-views">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M1 6s2-4 5-4 5 4 5 4-2 4-5 4S1 6 1 6z"/><circle cx="6" cy="6" r="2" fill="currentColor"/></svg>
         9.8K
       </div>
       <div class="card-info">
@@ -1367,7 +1410,7 @@ main{
     <article class="card">
       <img class="card-img" src="./images/main/thumbs/yusayeon.jpg" alt="">
       <div class="card-views">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        <svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M1 6s2-4 5-4 5 4 5 4-2 4-5 4S1 6 1 6z"/><circle cx="6" cy="6" r="2" fill="currentColor"/></svg>
         76.5K
       </div>
       <div class="card-info">
@@ -1571,41 +1614,73 @@ document.querySelector('.avatar')?.addEventListener('click', () => {
 <!-- ═══ DAILY REWARDS BOTTOM SHEET ═══ -->
 <div class="bs-backdrop" id="dailyRewardBs">
   <div class="bs-sheet">
-    <div class="bs-handle-wrap"><div class="bs-handle"></div></div>
+    <div class="bs-handle-wrap">
+      <div class="bs-handle"></div>
+    </div>
     <div class="bs-header">
       <div class="bs-title">오늘의 출석 보상</div>
       <button class="bs-close" onclick="closeDailyBs()" aria-label="닫기">
-        <svg viewBox="0 0 24 24" fill="none"><path d="M6 6L18 18M18 6L6 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M6 6L18 18M18 6L6 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
       </button>
     </div>
     <div class="bs-content">
-      <div class="bs-icon-wrap"><div class="bs-icon"><img src="./images/main/mir.png" alt="미르"></div></div>
+      <div class="bs-icon-wrap">
+        <div class="bs-icon"><img src="images/mir.png" alt="미르"></div>
+      </div>
       <button class="bs-cta-primary" onclick="claimDailyReward()">출석 보상 200 미르 받기</button>
-      <a class="bs-cta-secondary" href="../mirai-store-v2/index.html">더 많은 보상 보기 ›</a>
+      <a class="bs-cta-secondary" href="../mirai-store-v2/index.html?tab=rewards">더 많은 보상 보기 ›</a>
     </div>
   </div>
 </div>
 
 <script>
-function closeDailyBs(){
-  const bs = document.getElementById('dailyRewardBs');
-  if (!bs) return;
-  bs.classList.remove('open');
-  document.body.style.overflow = '';
-}
-function claimDailyReward(){
-  closeDailyBs();
-  location.href = '../mirai-store-v2/index.html?tab=rewards';
-}
-// 페이지 로드 시 자동 노출 (디자인 단계: 매 방문 노출)
-window.addEventListener('DOMContentLoaded', () => {
+// 일일 보상 바텀시트 (디자인 단계: 항상 노출)
+(function(){
+  console.log('[daily-bs] script loaded at', new Date().toISOString());
   setTimeout(() => {
     const bs = document.getElementById('dailyRewardBs');
+    console.log('[daily-bs] element:', bs);
     if (bs) {
       bs.classList.add('open');
       document.body.style.overflow = 'hidden';
+      console.log('[daily-bs] opened, classList:', bs.className);
+    } else {
+      console.error('[daily-bs] #dailyRewardBs not found!');
     }
-  }, 400);
+  }, 800);
+})();
+
+function closeDailyBs(){
+  const bs = document.getElementById('dailyRewardBs');
+  if (bs) {
+    bs.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+}
+
+function claimDailyReward(){
+  const today = new Date().toISOString().slice(0,10);
+  localStorage.setItem('mirai-daily-checkin', today);
+  closeDailyBs();
+  // 보상 탭으로 이동
+  setTimeout(() => {
+    window.location.href = '../mirai-store-v2/index.html?tab=rewards';
+  }, 300);
+}
+
+// ESC로 닫기
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    const bs = document.getElementById('dailyRewardBs');
+    if (bs && bs.classList.contains('open')) closeDailyBs();
+  }
+});
+
+// 배경 클릭으로 닫기
+document.getElementById('dailyRewardBs')?.addEventListener('click', e => {
+  if (e.target.id === 'dailyRewardBs') closeDailyBs();
 });
 </script>
 </body>

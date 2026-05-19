@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#1B1C1E">
+<title>이라 — MIRAI</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable-jp.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/seullyeee-art/mirai-shared@main/styles.css">
+<style>
+/* ═══ 데스크탑 — 모달 ═══ */
+.cd-overlay{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,0.65);
+  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  z-index:1000;
+  display:flex;align-items:center;justify-content:center;
+  padding:24px;
+  animation:cdFade 200ms ease;
+}
+@keyframes cdFade{from{opacity:0}to{opacity:1}}
+
+.cd-modal{
+  width:100%;max-width:480px;max-height:calc(100dvh - 48px);
+  background:var(--bg-elevated,#1B1C1E);
+  border-radius:20px;
+  overflow:hidden;
+  position:relative;
+  display:flex;flex-direction:column;
+  animation:cdPop 280ms cubic-bezier(0.32,0.72,0,1);
+}
+@keyframes cdPop{from{transform:translateY(12px) scale(0.96);opacity:0}to{transform:none;opacity:1}}
+
+.cd-close{
+  position:absolute;top:16px;right:16px;
+  width:36px;height:36px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(0,0,0,0.45);backdrop-filter:blur(8px);
+  border:none;cursor:pointer;color:#fff;padding:0;
+  z-index:5;
+  transition:background 0.15s ease;
+}
+.cd-close:hover{background:rgba(0,0,0,0.65)}
+.cd-close svg{width:20px;height:20px}
+
+.cd-scroll{overflow-y:auto;overscroll-behavior:contain}
+
+.cd-hero{
+  position:relative;width:100%;
+  aspect-ratio:1/1;
+  background:#0F0F10;overflow:hidden;
+}
+.cd-hero img{
+  width:100%;height:100%;object-fit:cover;display:block;
+}
+
+.cd-info{padding:20px 20px 24px}
+
+.cd-title-row{
+  display:flex;align-items:flex-start;justify-content:space-between;gap:12px;
+  margin-bottom:10px;
+}
+.cd-title{
+  font-size:24px;font-weight:700;line-height:1.3;
+  color:var(--label-strong,#fff);
+  letter-spacing:-0.4px;
+  word-break:keep-all;
+}
+.cd-actions-row{
+  display:flex;align-items:center;gap:4px;flex-shrink:0;
+}
+.cd-action{
+  width:36px;height:36px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background:transparent;border:none;cursor:pointer;
+  color:var(--label-normal,#F7F7F8);
+  transition:background 0.15s ease;padding:0;
+}
+.cd-action:hover{background:rgba(255,255,255,0.08)}
+.cd-action svg{width:20px;height:20px}
+.cd-action.liked{color:var(--accent-pink,#FA73E3)}
+
+.cd-author{
+  display:flex;align-items:center;gap:8px;
+  margin-bottom:16px;
+}
+.cd-author-avatar{
+  width:24px;height:24px;border-radius:50%;
+  background:var(--fill-alternative);overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+.cd-author-avatar img{width:100%;height:100%;object-fit:cover}
+.cd-author-name{
+  font-size:13px;font-weight:600;color:var(--label-strong,#fff);
+  letter-spacing:-0.2px;
+}
+
+.cd-stats{
+  display:flex;flex-wrap:wrap;gap:8px;
+  margin-bottom:14px;
+}
+.cd-stat{
+  display:inline-flex;align-items:center;gap:5px;
+  height:30px;padding:0 12px;
+  background:var(--fill-alternative,rgba(112,115,124,0.12));
+  border-radius:999px;
+  font-size:12px;font-weight:600;
+  color:var(--label-neutral,rgba(194,196,200,0.88));
+  letter-spacing:-0.2px;
+}
+.cd-stat svg{width:14px;height:14px;flex-shrink:0}
+
+.cd-tags{
+  display:flex;flex-wrap:wrap;gap:8px;
+  margin-bottom:20px;
+}
+.cd-tag{
+  font-size:13px;font-weight:500;
+  color:var(--label-neutral,rgba(194,196,200,0.88));
+  letter-spacing:-0.2px;
+}
+
+.cd-tabs{
+  display:flex;gap:24px;
+  margin-bottom:16px;
+  border-bottom:1px solid var(--line-alternative,rgba(112,115,124,0.22));
+}
+.cd-tab{
+  position:relative;
+  padding:8px 0;
+  background:transparent;border:none;cursor:pointer;
+  font-family:inherit;
+  font-size:15px;font-weight:600;
+  color:var(--label-alternative,rgba(174,176,182,0.61));
+  letter-spacing:-0.2px;
+  transition:color 0.15s ease;
+}
+.cd-tab.active{color:var(--label-strong,#fff)}
+.cd-tab.active::after{
+  content:'';
+  position:absolute;left:0;right:0;bottom:-1px;height:2px;
+  background:var(--label-strong,#fff);
+}
+
+.cd-panel{display:none}
+.cd-panel.active{display:block}
+
+.cd-description{
+  font-size:14px;line-height:1.6;
+  color:var(--label-normal,#F7F7F8);
+  margin-bottom:20px;
+}
+.cd-date{
+  padding-top:16px;
+  border-top:1px solid var(--line-alternative,rgba(112,115,124,0.22));
+  font-size:12px;
+  color:var(--label-alternative,rgba(174,176,182,0.61));
+  letter-spacing:-0.1px;
+}
+
+.cd-comments-empty{
+  padding:32px 0;text-align:center;
+  font-size:13px;
+  color:var(--label-alternative,rgba(174,176,182,0.61));
+}
+
+/* 갤러리 미니 그리드 */
+.cd-gallery-grid{
+  display:grid;grid-template-columns:repeat(3, 1fr);
+  gap:6px;
+  margin-bottom:16px;
+}
+.cd-gallery-item{
+  position:relative;
+  aspect-ratio:1/1;
+  border-radius:8px;overflow:hidden;
+  background:var(--fill-alternative);
+  cursor:pointer;display:block;text-decoration:none;
+}
+.cd-gallery-item img{
+  width:100%;height:100%;object-fit:cover;display:block;
+  transition:transform 0.3s ease;
+}
+.cd-gallery-item:hover img{transform:scale(1.05)}
+.cd-gallery-item.locked img{filter:blur(8px) brightness(0.6)}
+.cd-gallery-item .cd-gallery-lock{
+  position:absolute;inset:0;
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;pointer-events:none;
+}
+.cd-gallery-item .cd-gallery-lock svg{width:20px;height:20px;opacity:0.85}
+.cd-gallery-all{
+  display:flex;align-items:center;justify-content:center;gap:4px;
+  width:100%;height:44px;
+  background:var(--fill-alternative);
+  border-radius:10px;border:none;cursor:pointer;
+  font-family:inherit;font-size:13px;font-weight:600;
+  color:var(--label-normal,#F7F7F8);
+  text-decoration:none;
+  transition:background 0.15s ease;
+}
+.cd-gallery-all:hover{background:var(--fill-normal)}
+.cd-gallery-all svg{width:14px;height:14px}
+
+/* 비슷한 콘텐츠 */
+.cd-similar{
+  display:block;
+  padding:24px 0 16px;
+  border-top:1px solid var(--line-alternative,rgba(112,115,124,0.22));
+  margin:24px -20px 0;
+}
+.cd-similar-title{
+  padding:0 20px;
+  font-size:18px;font-weight:700;
+  color:var(--label-strong,#fff);
+  margin-bottom:14px;
+}
+.cd-similar-track{
+  display:flex;gap:10px;
+  padding:0 20px;
+  overflow-x:auto;scroll-snap-type:x mandatory;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+}
+.cd-similar-track::-webkit-scrollbar{display:none}
+.cd-similar-card{
+  flex-shrink:0;width:140px;
+  border-radius:14px;overflow:hidden;
+  background:var(--fill-alternative);
+  text-decoration:none;color:inherit;
+  scroll-snap-align:start;
+  position:relative;
+}
+.cd-similar-thumb{
+  width:140px;height:180px;
+  overflow:hidden;position:relative;
+}
+.cd-similar-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.cd-similar-views{
+  position:absolute;left:8px;bottom:8px;
+  display:inline-flex;align-items:center;gap:3px;
+  height:20px;padding:0 7px;border-radius:999px;
+  background:rgba(0,0,0,0.55);backdrop-filter:blur(6px);
+  color:#fff;font-size:10.5px;font-weight:700;letter-spacing:-0.2px;
+}
+.cd-similar-views svg{width:9px;height:9px}
+.cd-similar-meta{padding:8px 10px 10px}
+.cd-similar-name{
+  font-size:13px;font-weight:700;line-height:1.3;
+  color:var(--label-strong,#fff);
+  margin-bottom:4px;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.cd-similar-sub{
+  font-size:11px;line-height:1.3;
+  color:var(--label-alternative,rgba(174,176,182,0.61));
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+  overflow:hidden;
+}
+
+/* ═══ 모바일 — 풀스크린 페이지 ═══ */
+@media (max-width:768px){
+  .cd-overlay{
+    padding:0;background:var(--bg-normal,#1B1C1E);
+    backdrop-filter:none;-webkit-backdrop-filter:none;
+    align-items:stretch;justify-content:stretch;
+  }
+  .cd-modal{
+    max-width:none;max-height:none;
+    width:100%;height:100dvh;
+    border-radius:0;
+    animation:none;
+  }
+  .cd-close{
+    top:max(12px, env(safe-area-inset-top));
+    right:12px;
+  }
+  .cd-hero{aspect-ratio:1/1}
+  .cd-info{padding:20px 16px}
+  .cd-title{font-size:26px}
+  .cd-similar{margin:24px -16px 0}
+  .cd-similar-title,.cd-similar-track{padding-left:16px;padding-right:16px}
+}
+</style>
+</head>
+<body>
+<div class="cd-overlay" id="cdOverlay">
+  <div class="cd-modal">
+    <button class="cd-close" type="button" aria-label="닫기"
+            onclick="location.href='../mirai-chat/chat-prototype.html'">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+
+    <div class="cd-scroll">
+      <div class="cd-hero">
+        <img src="./images/main/thumbs/despised-bride.png" alt="이라">
+      </div>
+
+      <div class="cd-info">
+        <div class="cd-title-row">
+          <h1 class="cd-title">이라</h1>
+          <div class="cd-actions-row">
+            <button class="cd-action" id="cdLikeBtn" type="button" aria-label="좋아요"
+                    onclick="this.classList.toggle('liked')">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+              </svg>
+            </button>
+            <button class="cd-action" type="button" aria-label="더보기">
+              <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="12" cy="19" r="1.6"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="cd-author">
+          <div class="cd-author-avatar">
+            <img src="./images/main/Image.png" alt="">
+          </div>
+          <span class="cd-author-name">@MIRAI_Slave1</span>
+        </div>
+
+        <div class="cd-stats">
+          <span class="cd-stat">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+            4.0K
+          </span>
+          <span class="cd-stat">
+            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+            14
+          </span>
+          <span class="cd-stat">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            +66개의 이미지
+          </span>
+        </div>
+
+        <div class="cd-tags">
+          <span class="cd-tag">#일상</span>
+          <span class="cd-tag">#첫사랑</span>
+          <span class="cd-tag">#남성향</span>
+          <span class="cd-tag">#여성</span>
+          <span class="cd-tag">#회사원</span>
+        </div>
+
+        <div class="cd-tabs" role="tablist">
+          <button class="cd-tab active" type="button" data-tab="intro" onclick="cdTab(this)">정보</button>
+          <button class="cd-tab" type="button" data-tab="gallery" onclick="cdTab(this)">갤러리</button>
+          <button class="cd-tab" type="button" data-tab="comments" onclick="cdTab(this)">댓글</button>
+        </div>
+
+        <div class="cd-panel active" id="cdPanelIntro">
+          <p class="cd-description">미라이에 직접 CS 문의하러 갔다</p>
+          <div class="cd-date">등록일 2025.11.04 · 수정일자 2026.02.23</div>
+        </div>
+
+        <div class="cd-panel" id="cdPanelGallery">
+          <div class="cd-gallery-grid">
+            <a href="../mirai-gallery/gallery-prototype.html" class="cd-gallery-item"><img src="./images/main/thumbs/despised-bride.png" alt=""></a>
+            <a href="../mirai-gallery/gallery-prototype.html" class="cd-gallery-item"><img src="./images/main/thumbs/home-women.png" alt=""></a>
+            <a href="../mirai-gallery/gallery-prototype.html" class="cd-gallery-item"><img src="./images/main/thumbs/magical-girl-sim.png" alt=""></a>
+            <a href="../mirai-gallery/gallery-prototype.html" class="cd-gallery-item locked">
+              <img src="./images/main/thumbs/summoned.png" alt="">
+              <span class="cd-gallery-lock"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
+            </a>
+            <a href="../mirai-gallery/gallery-prototype.html" class="cd-gallery-item locked">
+              <img src="./images/main/thumbs/wounded-wolf.png" alt="">
+              <span class="cd-gallery-lock"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
+            </a>
+            <a href="../mirai-gallery/gallery-prototype.html" class="cd-gallery-item locked">
+              <img src="./images/main/thumbs/ghoul-zone.png" alt="">
+              <span class="cd-gallery-lock"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
+            </a>
+          </div>
+          <a href="../mirai-gallery/gallery-prototype.html" class="cd-gallery-all">
+            전체 갤러리 보기
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+          </a>
+        </div>
+
+        <div class="cd-panel" id="cdPanelComments">
+          <div class="cd-comments-empty">아직 댓글이 없습니다</div>
+        </div>
+
+        <div class="cd-similar">
+          <div class="cd-similar-title">이라...와 비슷한</div>
+          <div class="cd-similar-track">
+            <a href="#" class="cd-similar-card">
+              <div class="cd-similar-thumb">
+                <img src="./images/main/thumbs/summoned.png" alt="">
+                <span class="cd-similar-views"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>72.8K</span>
+              </div>
+              <div class="cd-similar-meta">
+                <div class="cd-similar-name">소환했노라</div>
+                <div class="cd-similar-sub">⚠️ 유저 페르소나 필수 사용 ⚠️ 믿기지 않는 운명의...</div>
+              </div>
+            </a>
+            <a href="#" class="cd-similar-card">
+              <div class="cd-similar-thumb">
+                <img src="./images/main/thumbs/wounded-wolf.png" alt="">
+                <span class="cd-similar-views"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>31.1K</span>
+              </div>
+              <div class="cd-similar-meta">
+                <div class="cd-similar-name">상처투성이 늑대와...</div>
+                <div class="cd-similar-sub">상처투성이 집착광 늑대랑 함께하는 일상 #제1회공모전</div>
+              </div>
+            </a>
+            <a href="#" class="cd-similar-card">
+              <div class="cd-similar-thumb">
+                <img src="./images/main/thumbs/magical-girl-sim.png" alt="">
+                <span class="cd-similar-views"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>27.7K</span>
+              </div>
+              <div class="cd-similar-meta">
+                <div class="cd-similar-name">마법소녀 시뮬레이션</div>
+                <div class="cd-similar-sub">[마법소녀 협회 모집 공고] 평범한 일상 속, 숨겨진 당신...</div>
+              </div>
+            </a>
+            <a href="#" class="cd-similar-card">
+              <div class="cd-similar-thumb">
+                <img src="./images/main/thumbs/ghoul-zone.png" alt="">
+                <span class="cd-similar-views"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>26.8K</span>
+              </div>
+              <div class="cd-similar-meta">
+                <div class="cd-similar-name">구울 출몰</div>
+                <div class="cd-similar-sub">구울이 존재하는 134장기 #1...</div>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function cdTab(btn){
+  const tab = btn.dataset.tab;
+  const map = { intro: 'cdPanelIntro', gallery: 'cdPanelGallery', comments: 'cdPanelComments' };
+  document.querySelectorAll('.cd-tab').forEach(t => t.classList.toggle('active', t === btn));
+  document.querySelectorAll('.cd-panel').forEach(p => {
+    p.classList.toggle('active', p.id === map[tab]);
+  });
+}
+/* 배경 클릭 시 닫기 (모달에서만) */
+document.getElementById('cdOverlay').addEventListener('click', e => {
+  if (e.target.id !== 'cdOverlay') return;
+  if (window.innerWidth > 768){
+    history.length > 1 ? history.back() : location.href = 'index.html';
+  }
+});
+/* ESC */
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    history.length > 1 ? history.back() : location.href = 'index.html';
+  }
+});
+</script>
+</body>
+</html>

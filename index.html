@@ -1984,7 +1984,9 @@ function claimDailyReward(){
   try { localStorage.setItem('mirai-daily-checkin', today); } catch(e){}
   fireConfetti(document.querySelector('.bs-icon-wrap'));
   showMirToast('오늘의 보상 받기 완료!', DAILY_REWARD_AMOUNT);
-  setTimeout(closeDailyBs, 1200);
+  setTimeout(() => {
+    location.href = '../mirai-store-v2/index.html?tab=rewards';
+  }, 1500);
 }
 // 페이지 로드 시 자동 노출 + 카운트업
 window.addEventListener('DOMContentLoaded', () => {

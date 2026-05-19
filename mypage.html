@@ -490,7 +490,7 @@ main{
 .mypage-actions svg{width:18px;height:18px}
 
 .mypage-profile{
-  display:flex;align-items:flex-start;justify-content:space-between;
+  display:flex;align-items:center;justify-content:space-between;
   gap:16px;margin-bottom:24px;
 }
 .mypage-profile-left{
@@ -502,10 +502,10 @@ main{
   border-radius:50%;
   overflow:hidden;
   flex-shrink:0;
-  background:linear-gradient(135deg, rgba(19,187,143,0.35), rgba(19,187,143,0.15));
+  background:var(--bg-elevated);
   display:flex;align-items:center;justify-content:center;
-  font-size:32px;
 }
+.mypage-avatar img{width:100%;height:100%;object-fit:cover;display:block}
 .mypage-name{
   font-size:18px;font-weight:600;line-height:1.445;
   color:var(--label-strong);
@@ -634,6 +634,7 @@ main{
   color:var(--label-strong);
   font-size:12px;font-weight:600;letter-spacing:0.0145em;
   cursor:pointer;border:none;
+  text-decoration:none;
   transition:background 0.15s ease;
 }
 .currency-action:hover{background:rgba(255,255,255,0.14)}
@@ -840,19 +841,7 @@ main{
   pointer-events:none;
   z-index:1;
 }
-.gallery-badge{
-  position:absolute;top:8px;left:8px;
-  display:inline-flex;align-items:center;gap:4px;
-  height:24px;padding:0 9px;
-  border-radius:999px;
-  background:rgba(0,0,0,0.55);
-  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
-  color:#fff;
-  font-size:11px;font-weight:600;
-  letter-spacing:0.0145em;
-  z-index:2;
-}
-.gallery-badge svg{width:12px;height:12px}
+.gallery-badge{display:none}
 .gallery-info{
   position:absolute;left:0;right:0;bottom:0;
   padding:0 12px 12px;
@@ -1340,7 +1329,29 @@ main{
   /* 레이아웃 (사이드바는 shared/styles.css에서 자동 숨김) */
   main{padding:0 16px calc(72px + env(safe-area-inset-bottom))}
 
-  /* GNB — 48px, 반투명 + blur */
+  /* 글로벌 헤더 숨김 — mypage-topbar가 상단 네비 역할 */
+  mirai-header,
+  mirai-header > .header{display:none}
+
+  /* 상단 영역 타이트하게 — 프로필/플랜/미르 간격 축소 */
+  .mypage{padding:8px 16px calc(72px + env(safe-area-inset-bottom))}
+  .mypage-topbar{
+    padding-top:max(8px, env(safe-area-inset-top));
+    margin-bottom:14px;
+  }
+  .mypage-actions button,
+  .mypage-actions a{width:32px;height:32px}
+  .mypage-actions svg{width:16px;height:16px}
+  .mypage-profile{margin-bottom:14px;gap:12px}
+  .mypage-avatar{width:52px;height:52px}
+  .mypage-name{font-size:16px}
+  .mypage-edit{padding:6px 12px;font-size:12px}
+  .mypage-bio{padding:10px 14px;margin-bottom:10px}
+  .mypage-bio-text{font-size:13px}
+  .mypage-currency{padding:12px 14px;margin-bottom:16px}
+  .currency-value,.currency-amount{font-size:16px}
+  .currency-action{height:28px;padding:0 12px;font-size:11.5px}
+  .currency-divider{height:32px;margin:0 12px}
 
   /* 데스크탑 히어로 숨김, 모바일 배너 노출 */
   .hero{display:none}
@@ -1418,20 +1429,21 @@ main{
     <div class="mypage-profile">
       <div class="mypage-profile-left">
         <div class="mypage-avatar" aria-hidden="true">
-          <svg viewBox="0 0 36 36" width="100%" height="100%">
-            <rect width="36" height="36" fill="#fce7f3"/>
-            <circle cx="18" cy="14" r="6" fill="#f9a8d4"/>
-            <ellipse cx="18" cy="32" rx="14" ry="10" fill="#f9a8d4"/>
-          </svg>
+          <img src="./images/main/profile-purple.png" alt="">
         </div>
         <div class="mypage-name">신비한 초록 곰팡이</div>
       </div>
-      <button class="mypage-edit">프로필 편집</button>
+      <a href="edit-profile.html" class="mypage-edit">프로필 편집</a>
     </div>
 
-    <div class="mypage-bio">
+    <a href="edit-profile.html" class="mypage-bio" style="text-decoration:none;color:inherit">
       <span class="mypage-bio-text">자기 소개를 추가해 주세요</span>
-    </div>
+      <span aria-hidden="true" style="display:flex;align-items:center;justify-content:center;width:24px;height:24px;color:var(--label-alternative);flex-shrink:0">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px">
+          <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+        </svg>
+      </span>
+    </a>
 
     <div class="mypage-currency">
       <div class="currency-card">
@@ -1443,7 +1455,7 @@ main{
           </button>
         </div>
         <div class="currency-value">Free</div>
-        <button class="currency-action" type="button">업그레이드</button>
+        <a class="currency-action" href="../mirai-store-v2/index.html">업그레이드</a>
       </div>
       <div class="currency-divider" aria-hidden="true"></div>
       <div class="currency-card">
@@ -1452,7 +1464,7 @@ main{
           <img class="currency-icon-mir" src="./images/main/mir.png" alt="미르">
           <span>0</span>
         </div>
-        <button class="currency-action" type="button">충전하기</button>
+        <a class="currency-action" href="../mirai-store-v2/index.html#buy-mir">충전하기</a>
       </div>
     </div>
 

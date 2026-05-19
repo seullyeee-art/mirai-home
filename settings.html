@@ -18,7 +18,7 @@ main{
 /* 페이지 헤더 (← 뒤로 + 타이틀) */
 .settings-pageheader{
   display:flex;align-items:center;gap:8px;
-  padding:8px 0 16px;
+  height:56px;margin-bottom:8px;
 }
 .settings-back{
   width:40px;height:40px;
@@ -30,11 +30,11 @@ main{
 }
 .settings-back:hover{opacity:0.7}
 .settings-back:active{opacity:0.5}
-.settings-back svg{width:22px;height:22px}
+.settings-back svg{width:24px;height:24px}
 .settings-pagetitle{
-  font-size:20px;font-weight:700;line-height:1.4;
+  font-size:17px;font-weight:600;line-height:1.412;
   color:var(--label-strong);
-  letter-spacing:-0.0036em;
+  letter-spacing:-0.002em;
 }
 
 /* 그룹 헤더 */
@@ -139,6 +139,9 @@ main{
 
 @media (max-width:768px){
   main{padding:0 16px calc(72px + env(safe-area-inset-bottom))}
+  /* 설정 페이지는 자체 헤더(뒤로+제목)가 있으므로 글로벌 헤더 숨김 */
+  mirai-header,
+  mirai-header > .header{display:none}
 }
 </style>
 <script src="../shared/components.js" defer></script>
@@ -294,7 +297,7 @@ main{
   <!-- 로그아웃 -->
   <section class="settings-group">
     <div class="settings-list">
-      <a href="#" class="settings-card danger">
+      <a href="#" class="settings-card danger" id="logoutBtn">
         <div class="settings-card-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
@@ -322,6 +325,14 @@ document.querySelectorAll('[data-toggle]').forEach(t => {
     t.classList.toggle('on');
     t.setAttribute('aria-checked', t.classList.contains('on'));
   });
+});
+
+// 로그아웃 — guest=1 저장 + 홈으로 이동
+document.getElementById('logoutBtn')?.addEventListener('click', e => {
+  e.preventDefault();
+  if (!confirm('로그아웃하시겠습니까?')) return;
+  try { localStorage.setItem('mirai.guest', '1'); } catch(err){}
+  location.href = 'index.html';
 });
 </script>
 </body>

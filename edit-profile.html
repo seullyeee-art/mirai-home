@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#1B1C1E">
+<title>프로필 편집 — MIRAI</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable-jp.min.css">
+<link rel="stylesheet" href="../shared/styles.css">
+<style>
+.content-wrap main{max-width:560px;margin:0 auto}
+main{
+  padding:0 20px calc(120px + env(safe-area-inset-bottom));
+}
+
+/* 페이지 헤더 — 꺽쇠 좌측, 타이틀 절대 중앙 (둘 다 헤더 세로 중앙 정렬) */
+.ep-header{
+  position:relative;
+  height:56px;
+  display:flex;align-items:center;
+  margin:0 -8px 16px;
+}
+.ep-back{
+  width:40px;height:40px;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--label-normal);
+  background:transparent;border:none;cursor:pointer;
+  transition:opacity 0.15s ease;
+  flex-shrink:0;
+}
+.ep-back:hover{opacity:0.7}
+.ep-back:active{opacity:0.5}
+.ep-back svg{width:24px;height:24px}
+.ep-title{
+  position:absolute;left:50%;top:50%;
+  transform:translate(-50%,-50%);
+  font-size:17px;font-weight:600;line-height:1.412;
+  color:var(--label-strong);
+  letter-spacing:-0.002em;
+}
+
+/* 아바타 */
+.ep-avatar-wrap{
+  display:flex;justify-content:center;
+  margin:8px 0 36px;
+}
+.ep-avatar-frame{
+  position:relative;
+  width:120px;height:120px;
+}
+.ep-avatar{
+  width:120px;height:120px;
+  border-radius:50%;
+  overflow:hidden;
+  background:var(--bg-elevated);
+  border:1px solid var(--line-alternative);
+}
+.ep-avatar img{width:100%;height:100%;object-fit:cover;display:block}
+.ep-avatar-edit{
+  position:absolute;right:-2px;bottom:-2px;
+  width:36px;height:36px;
+  border-radius:50%;
+  background:var(--primary-normal);
+  border:3px solid var(--bg-normal);
+  color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;
+  transition:background 0.15s ease;
+  padding:0;
+}
+.ep-avatar-edit:hover{background:var(--primary-strong)}
+.ep-avatar-edit svg{width:16px;height:16px}
+
+/* 폼 필드 */
+.ep-field{margin-bottom:24px}
+.ep-label{
+  display:block;
+  font-size:14px;font-weight:600;line-height:1.4;
+  color:var(--label-strong);
+  letter-spacing:-0.002em;
+  margin-bottom:10px;
+}
+.ep-input,
+.ep-textarea{
+  width:100%;
+  font-family:inherit;
+  background:var(--fill-alternative);
+  border:1px solid var(--line-alternative);
+  border-radius:12px;
+  color:var(--label-normal);
+  font-size:15px;line-height:1.467;
+  letter-spacing:-0.002em;
+  outline:none;
+  transition:border-color 0.15s ease, background 0.15s ease;
+}
+.ep-input{
+  height:52px;padding:0 16px;
+}
+.ep-input:focus,
+.ep-textarea:focus{
+  border-color:var(--primary-normal);
+  background:var(--bg-elevated);
+}
+.ep-input::placeholder,
+.ep-textarea::placeholder{color:var(--label-assistive)}
+.ep-input.disabled{
+  color:var(--label-alternative);
+  cursor:not-allowed;
+}
+.ep-textarea-wrap{position:relative}
+.ep-textarea{
+  min-height:160px;padding:14px 16px;
+  resize:none;
+  display:block;
+}
+.ep-counter{
+  position:absolute;right:14px;bottom:10px;
+  font-size:12px;font-weight:400;
+  color:var(--label-alternative);
+  letter-spacing:0.0145em;
+  pointer-events:none;
+}
+.ep-helper{
+  display:block;
+  margin-top:8px;
+  font-size:13px;font-weight:400;line-height:1.4;
+  color:var(--label-alternative);
+  letter-spacing:0.0145em;
+}
+
+/* 계정 삭제 */
+.ep-delete-row{
+  display:flex;align-items:center;justify-content:space-between;gap:8px;
+  margin-top:28px;padding-top:20px;
+  border-top:1px solid var(--line-alternative);
+}
+.ep-delete-text{
+  font-size:14px;color:var(--label-alternative);
+  letter-spacing:0.0145em;
+}
+.ep-delete-link{
+  background:transparent;border:none;cursor:pointer;
+  font-size:14px;font-weight:700;
+  color:var(--label-strong);
+  letter-spacing:-0.002em;
+  padding:6px 0;
+}
+.ep-delete-link:hover{color:var(--status-negative)}
+
+/* Save 버튼 (하단 고정) */
+.ep-actions{
+  position:fixed;
+  left:0;right:0;bottom:0;
+  z-index:50;
+  padding:12px 20px calc(20px + env(safe-area-inset-bottom));
+  background:linear-gradient(180deg, rgba(27,28,30,0) 0%, rgba(27,28,30,0.85) 30%, var(--bg-normal) 70%);
+}
+.ep-actions-inner{max-width:560px;margin:0 auto}
+.ep-save{
+  width:100%;height:52px;
+  border-radius:12px;border:none;cursor:pointer;
+  background:var(--interaction-disable);
+  color:var(--label-alternative);
+  font-size:16px;font-weight:600;letter-spacing:-0.002em;
+  font-family:inherit;
+  transition:background 0.15s ease, color 0.15s ease;
+}
+.ep-save.active{
+  background:var(--primary-normal);
+  color:#fff;
+}
+.ep-save.active:hover{background:var(--primary-strong)}
+
+/* 프로필 편집은 단일 작업 화면 — 바텀네비 항상 숨김 */
+mirai-bottom-nav,
+.mobile-bottom-nav{display:none !important}
+
+@media (max-width:768px){
+  /* 글로벌 헤더 숨김 (자체 ep-header가 상단 네비 역할) */
+  mirai-header,
+  mirai-header > .header{display:none}
+  main{padding:0 16px calc(120px + env(safe-area-inset-bottom))}
+}
+</style>
+<script src="../shared/components.js" defer></script>
+</head>
+<body>
+<div class="app">
+
+<mirai-sidebar></mirai-sidebar>
+
+<div class="content-wrap">
+
+<mirai-header></mirai-header>
+
+<main>
+  <header class="ep-header">
+    <button class="ep-back" aria-label="뒤로" onclick="history.length > 1 ? history.back() : location.href='mypage.html'">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="15 18 9 12 15 6"/>
+      </svg>
+    </button>
+    <h1 class="ep-title">프로필 편집</h1>
+  </header>
+
+  <!-- 아바타 -->
+  <div class="ep-avatar-wrap">
+    <div class="ep-avatar-frame">
+      <div class="ep-avatar">
+        <img src="./images/main/profile-purple.png" alt="">
+      </div>
+      <button class="ep-avatar-edit" type="button" aria-label="프로필 사진 변경" onclick="document.getElementById('avatarFile').click()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+        </svg>
+      </button>
+    </div>
+    <input type="file" id="avatarFile" accept="image/*" hidden>
+  </div>
+
+  <!-- User ID -->
+  <div class="ep-field">
+    <label class="ep-label" for="epUserId">User ID</label>
+    <input class="ep-input disabled" id="epUserId" type="text" value="yeseul@launcher.capital" disabled>
+  </div>
+
+  <!-- Nickname -->
+  <div class="ep-field">
+    <label class="ep-label" for="epNickname">닉네임</label>
+    <input class="ep-input" id="epNickname" type="text" placeholder="닉네임을 입력해 주세요" value="신비한 초록 곰팡이" maxlength="20">
+    <span class="ep-helper">크리에이터 이름으로 표시됩니다.</span>
+  </div>
+
+  <!-- Bio -->
+  <div class="ep-field">
+    <label class="ep-label" for="epBio">자기 소개</label>
+    <div class="ep-textarea-wrap">
+      <textarea class="ep-textarea" id="epBio" placeholder="자기 소개를 추가해 주세요" maxlength="2000"></textarea>
+      <span class="ep-counter"><span id="epCounter">0</span>/2000</span>
+    </div>
+    <span class="ep-helper">크리에이터 페이지에 표시됩니다.</span>
+  </div>
+
+  <!-- 계정 삭제 -->
+  <div class="ep-delete-row">
+    <span class="ep-delete-text">계정을 삭제하시겠어요?</span>
+    <button class="ep-delete-link" type="button" onclick="confirmDeleteAccount()">계정 삭제</button>
+  </div>
+</main>
+
+<!-- 하단 고정 Save 버튼 -->
+<div class="ep-actions">
+  <div class="ep-actions-inner">
+    <button class="ep-save" id="epSave" type="button" disabled>저장</button>
+  </div>
+</div>
+
+</div>
+</div>
+
+<mirai-bottom-nav active="mypage"></mirai-bottom-nav>
+
+<script>
+const bio = document.getElementById('epBio');
+const counter = document.getElementById('epCounter');
+const nickname = document.getElementById('epNickname');
+const saveBtn = document.getElementById('epSave');
+
+const initial = { nickname: nickname.value, bio: bio.value };
+
+function update(){
+  counter.textContent = bio.value.length;
+  const dirty = nickname.value !== initial.nickname || bio.value !== initial.bio;
+  saveBtn.classList.toggle('active', dirty);
+  saveBtn.disabled = !dirty;
+}
+bio.addEventListener('input', update);
+nickname.addEventListener('input', update);
+update();
+
+saveBtn.addEventListener('click', () => {
+  if (saveBtn.disabled) return;
+  // TODO: API 연결
+  alert('프로필이 저장되었습니다.');
+  history.back();
+});
+
+function confirmDeleteAccount(){
+  const msg = '회원 탈퇴하겠습니까?\n'
+    + '회원정보 및 이용정보는 모두 삭제되며, 작성하신 댓글·콘텐츠 등은 삭제되지 않습니다.\n'
+    + '재가입 시 복구가 불가능합니다.\n\n'
+    + '⚠️ 구독 중인 상품을 이용 중이라면 탈퇴 전에 반드시\n'
+    + '앱스토어/플레이스토어에서 먼저 해지해 주세요.\n'
+    + '구독은 앱스토어에서만 해지 가능하며,\n'
+    + '미해지 시 탈퇴 후에도 자동 결제가 계속됩니다.';
+  if (confirm(msg)) {
+    alert('회원 탈퇴 요청이 접수되었습니다.');
+  }
+}
+
+// 아바타 파일 선택 미리보기
+document.getElementById('avatarFile').addEventListener('change', e => {
+  const file = e.target.files?.[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    document.querySelector('.ep-avatar img').src = ev.target.result;
+    saveBtn.classList.add('active');
+    saveBtn.disabled = false;
+  };
+  reader.readAsDataURL(file);
+});
+</script>
+</body>
+</html>

@@ -1982,11 +1982,7 @@ function fireConfetti(originEl){
 function claimDailyReward(){
   const today = new Date().toISOString().slice(0,10);
   try { localStorage.setItem('mirai-daily-checkin', today); } catch(e){}
-  fireConfetti(document.querySelector('.bs-icon-wrap'));
-  showMirToast('오늘의 보상 받기 완료!', DAILY_REWARD_AMOUNT);
-  setTimeout(() => {
-    location.href = '../mirai-store-v2/index.html?tab=rewards';
-  }, 1500);
+  location.href = '../mirai-store-v2/index.html?tab=rewards';
 }
 // 페이지 로드 시 자동 노출 + 카운트업
 window.addEventListener('DOMContentLoaded', () => {

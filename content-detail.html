@@ -54,6 +54,14 @@
 .cd-hero img{
   width:100%;height:100%;object-fit:cover;display:block;
 }
+.cd-hero::after{
+  content:'';
+  position:absolute;left:0;right:0;bottom:0;
+  height:180px;
+  background:linear-gradient(to bottom, rgba(27,28,30,0) 0%, rgba(27,28,30,0.6) 50%, var(--bg-elevated,#1B1C1E) 100%);
+  pointer-events:none;
+  z-index:2;
+}
 
 .cd-info{padding:20px 20px 24px}
 
@@ -165,6 +173,110 @@
   font-size:13px;
   color:var(--label-alternative,rgba(174,176,182,0.61));
 }
+
+/* 댓글 */
+.cd-comments-header{
+  font-size:13px;font-weight:700;
+  color:var(--label-strong,#fff);
+  margin-bottom:12px;
+}
+.cd-comment-form{
+  position:relative;
+  background:var(--fill-alternative,rgba(112,115,124,0.12));
+  border-radius:12px;
+  padding:14px 12px;
+  margin-bottom:16px;
+}
+.cd-comment-form textarea{
+  width:100%;
+  background:transparent;border:none;outline:none;resize:none;
+  font-family:inherit;
+  font-size:13px;color:var(--label-normal,#F7F7F8);
+  min-height:40px;
+  padding:0 88px 0 0;
+  line-height:1.45;
+}
+.cd-comment-form textarea::placeholder{color:var(--label-alternative,rgba(174,176,182,0.61))}
+.cd-comment-submit{
+  position:absolute;right:8px;bottom:8px;
+  height:32px;padding:0 14px;border-radius:8px;
+  background:var(--primary-normal,#14C391);color:#fff;
+  border:none;cursor:pointer;
+  font-family:inherit;font-size:13px;font-weight:700;
+  transition:opacity 0.15s ease;
+}
+.cd-comment-submit:hover{opacity:0.92}
+
+.cd-comments-list{display:flex;flex-direction:column;gap:14px}
+.cd-comment{
+  display:flex;gap:10px;
+  padding:12px;
+  background:var(--fill-alternative,rgba(112,115,124,0.12));
+  border-radius:12px;
+  position:relative;
+}
+.cd-comment-avatar{
+  width:32px;height:32px;border-radius:50%;
+  flex-shrink:0;overflow:hidden;background:var(--fill-normal);
+}
+.cd-comment-avatar img{width:100%;height:100%;object-fit:cover;display:block}
+.cd-comment-body{flex:1;min-width:0;padding-right:24px}
+.cd-comment-head{
+  display:flex;align-items:center;gap:6px;flex-wrap:wrap;
+  margin-bottom:4px;
+}
+.cd-comment-name{
+  font-size:13px;font-weight:700;color:var(--label-strong,#fff);
+}
+.cd-comment-creator-badge{
+  display:inline-flex;align-items:center;
+  height:18px;padding:0 6px;border-radius:4px;
+  background:rgba(20,195,145,0.18);
+  color:var(--primary-normal,#14C391);
+  font-size:10px;font-weight:700;letter-spacing:-0.1px;
+}
+.cd-comment-meta{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:11px;
+  color:var(--label-alternative,rgba(174,176,182,0.61));
+}
+.cd-comment-meta::before{
+  content:'';display:inline-block;width:2px;height:2px;border-radius:50%;
+  background:var(--label-alternative,rgba(174,176,182,0.61));
+}
+.cd-comment-text{
+  font-size:13px;line-height:1.5;
+  color:var(--label-normal,#F7F7F8);
+  margin-bottom:6px;
+  word-break:break-word;
+}
+.cd-comment-foot{
+  display:flex;align-items:center;gap:14px;
+  font-size:11px;
+  color:var(--label-alternative,rgba(174,176,182,0.61));
+}
+.cd-comment-foot button{
+  display:inline-flex;align-items:center;gap:4px;
+  background:transparent;border:none;cursor:pointer;
+  font-family:inherit;font-size:11px;font-weight:600;
+  color:var(--label-alternative,rgba(174,176,182,0.61));
+  padding:0;
+  transition:color 0.15s ease;
+}
+.cd-comment-foot button:hover{color:var(--label-normal,#F7F7F8)}
+.cd-comment-foot button.liked{color:var(--accent-pink,#FA73E3)}
+.cd-comment-foot svg{width:12px;height:12px}
+.cd-comment-menu{
+  position:absolute;top:10px;right:10px;
+  width:24px;height:24px;border-radius:6px;
+  background:transparent;border:none;cursor:pointer;
+  color:var(--label-alternative,rgba(174,176,182,0.61));padding:0;
+  display:flex;align-items:center;justify-content:center;
+  transition:background 0.15s ease;
+}
+.cd-comment-menu:hover{background:rgba(255,255,255,0.06)}
+.cd-comment-menu svg{width:14px;height:14px}
+.cd-comment-reply{margin-left:30px}
 
 /* 갤러리 미니 그리드 */
 .cd-gallery-grid{
@@ -355,6 +467,51 @@
         <div class="cd-panel active" id="cdPanelIntro">
           <p class="cd-description">미라이에 직접 CS 문의하러 갔다</p>
           <div class="cd-date">등록일 2025.11.04 · 수정일자 2026.02.23</div>
+          <div class="cd-similar">
+            <div class="cd-similar-title">이라...와 비슷한</div>
+            <div class="cd-similar-track">
+              <a href="#" class="cd-similar-card">
+                <div class="cd-similar-thumb">
+                  <img src="./images/main/thumbs/summoned.png" alt="">
+                  <span class="cd-similar-views"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>72.8K</span>
+                </div>
+                <div class="cd-similar-meta">
+                  <div class="cd-similar-name">소환했노라</div>
+                  <div class="cd-similar-sub">⚠️ 유저 페르소나 필수 사용 ⚠️ 믿기지 않는 운명의...</div>
+                </div>
+              </a>
+              <a href="#" class="cd-similar-card">
+                <div class="cd-similar-thumb">
+                  <img src="./images/main/thumbs/wounded-wolf.png" alt="">
+                  <span class="cd-similar-views"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>31.1K</span>
+                </div>
+                <div class="cd-similar-meta">
+                  <div class="cd-similar-name">상처투성이 늑대와...</div>
+                  <div class="cd-similar-sub">상처투성이 집착광 늑대랑 함께하는 일상 #제1회공모전</div>
+                </div>
+              </a>
+              <a href="#" class="cd-similar-card">
+                <div class="cd-similar-thumb">
+                  <img src="./images/main/thumbs/magical-girl-sim.png" alt="">
+                  <span class="cd-similar-views"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>27.7K</span>
+                </div>
+                <div class="cd-similar-meta">
+                  <div class="cd-similar-name">마법소녀 시뮬레이션</div>
+                  <div class="cd-similar-sub">[마법소녀 협회 모집 공고] 평범한 일상 속, 숨겨진 당신...</div>
+                </div>
+              </a>
+              <a href="#" class="cd-similar-card">
+                <div class="cd-similar-thumb">
+                  <img src="./images/main/thumbs/ghoul-zone.png" alt="">
+                  <span class="cd-similar-views"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>26.8K</span>
+                </div>
+                <div class="cd-similar-meta">
+                  <div class="cd-similar-name">구울 출몰</div>
+                  <div class="cd-similar-sub">구울이 존재하는 134장기 #1...</div>
+                </div>
+              </a>
+            </div>
+          </div>
         </div>
 
         <div class="cd-panel" id="cdPanelGallery">
@@ -382,52 +539,93 @@
         </div>
 
         <div class="cd-panel" id="cdPanelComments">
-          <div class="cd-comments-empty">아직 댓글이 없습니다</div>
-        </div>
+          <div class="cd-comments-header">댓글 12건</div>
+          <form class="cd-comment-form" onsubmit="event.preventDefault();this.querySelector('textarea').value='';">
+            <textarea placeholder="댓글을 남겨보세요." rows="1"></textarea>
+            <button class="cd-comment-submit" type="submit">등록하기</button>
+          </form>
+          <div class="cd-comments-list">
+            <div class="cd-comment">
+              <div class="cd-comment-avatar"><img src="./images/main/Image.png" alt=""></div>
+              <div class="cd-comment-body">
+                <div class="cd-comment-head">
+                  <span class="cd-comment-name">김제작</span>
+                  <span class="cd-comment-creator-badge">크리에이터</span>
+                  <span class="cd-comment-meta">하루 전</span>
+                </div>
+                <div class="cd-comment-text">저를 갈아 만든 작품입니다. 즐겨주세요. 🩷</div>
+                <div class="cd-comment-foot">
+                  <button type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>12</button>
+                  <button type="button">답글</button>
+                </div>
+              </div>
+              <button class="cd-comment-menu" type="button" aria-label="더보기"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="12" cy="19" r="1.6"/></svg></button>
+            </div>
 
-        <div class="cd-similar">
-          <div class="cd-similar-title">이라...와 비슷한</div>
-          <div class="cd-similar-track">
-            <a href="#" class="cd-similar-card">
-              <div class="cd-similar-thumb">
-                <img src="./images/main/thumbs/summoned.png" alt="">
-                <span class="cd-similar-views"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>72.8K</span>
+            <div class="cd-comment">
+              <div class="cd-comment-avatar"><img src="./images/main/Image-1.png" alt=""></div>
+              <div class="cd-comment-body">
+                <div class="cd-comment-head">
+                  <span class="cd-comment-name">김유저</span>
+                  <span class="cd-comment-meta">1.2K chat · 3시간 전</span>
+                </div>
+                <div class="cd-comment-text">밤새 옐론루로 자격 증명 챙겨야 됐는데 소문도 들어준다고 해서 ㅋㅋㅋㅋ 재미있게 즐길게요 작가님!</div>
+                <div class="cd-comment-foot">
+                  <button type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>6</button>
+                  <button type="button">답글</button>
+                </div>
               </div>
-              <div class="cd-similar-meta">
-                <div class="cd-similar-name">소환했노라</div>
-                <div class="cd-similar-sub">⚠️ 유저 페르소나 필수 사용 ⚠️ 믿기지 않는 운명의...</div>
+              <button class="cd-comment-menu" type="button" aria-label="더보기"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="12" cy="19" r="1.6"/></svg></button>
+            </div>
+
+            <div class="cd-comment">
+              <div class="cd-comment-avatar"><img src="./images/main/Image-2.png" alt=""></div>
+              <div class="cd-comment-body">
+                <div class="cd-comment-head">
+                  <span class="cd-comment-name">닉네임이 엄청나게 길 수도...</span>
+                  <span class="cd-comment-meta">1.2K chat · 어제</span>
+                </div>
+                <div class="cd-comment-text">잘 먹고갑니다 💚</div>
+                <div class="cd-comment-foot">
+                  <button type="button" class="liked"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>32</button>
+                  <button type="button">답글</button>
+                </div>
               </div>
-            </a>
-            <a href="#" class="cd-similar-card">
-              <div class="cd-similar-thumb">
-                <img src="./images/main/thumbs/wounded-wolf.png" alt="">
-                <span class="cd-similar-views"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>31.1K</span>
+              <button class="cd-comment-menu" type="button" aria-label="더보기"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="12" cy="19" r="1.6"/></svg></button>
+            </div>
+
+            <div class="cd-comment cd-comment-reply">
+              <div class="cd-comment-avatar"><img src="./images/main/Image.png" alt=""></div>
+              <div class="cd-comment-body">
+                <div class="cd-comment-head">
+                  <span class="cd-comment-name">김제작</span>
+                  <span class="cd-comment-creator-badge">크리에이터</span>
+                  <span class="cd-comment-meta">12시간 전</span>
+                </div>
+                <div class="cd-comment-text">감사합니다 ㅎㅎ 다음 작품도 기대해주세요!</div>
+                <div class="cd-comment-foot">
+                  <button type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>8</button>
+                  <button type="button">답글</button>
+                </div>
               </div>
-              <div class="cd-similar-meta">
-                <div class="cd-similar-name">상처투성이 늑대와...</div>
-                <div class="cd-similar-sub">상처투성이 집착광 늑대랑 함께하는 일상 #제1회공모전</div>
+              <button class="cd-comment-menu" type="button" aria-label="더보기"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="12" cy="19" r="1.6"/></svg></button>
+            </div>
+
+            <div class="cd-comment">
+              <div class="cd-comment-avatar"><img src="./images/main/Image-3.png" alt=""></div>
+              <div class="cd-comment-body">
+                <div class="cd-comment-head">
+                  <span class="cd-comment-name">한밤중의산책자</span>
+                  <span class="cd-comment-meta">340 chat · 2일 전</span>
+                </div>
+                <div class="cd-comment-text">스토리 짜임새가 진짜 좋네요. 막판 반전이 ㄹㅇ 소름...</div>
+                <div class="cd-comment-foot">
+                  <button type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>4</button>
+                  <button type="button">답글</button>
+                </div>
               </div>
-            </a>
-            <a href="#" class="cd-similar-card">
-              <div class="cd-similar-thumb">
-                <img src="./images/main/thumbs/magical-girl-sim.png" alt="">
-                <span class="cd-similar-views"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>27.7K</span>
-              </div>
-              <div class="cd-similar-meta">
-                <div class="cd-similar-name">마법소녀 시뮬레이션</div>
-                <div class="cd-similar-sub">[마법소녀 협회 모집 공고] 평범한 일상 속, 숨겨진 당신...</div>
-              </div>
-            </a>
-            <a href="#" class="cd-similar-card">
-              <div class="cd-similar-thumb">
-                <img src="./images/main/thumbs/ghoul-zone.png" alt="">
-                <span class="cd-similar-views"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>26.8K</span>
-              </div>
-              <div class="cd-similar-meta">
-                <div class="cd-similar-name">구울 출몰</div>
-                <div class="cd-similar-sub">구울이 존재하는 134장기 #1...</div>
-              </div>
-            </a>
+              <button class="cd-comment-menu" type="button" aria-label="더보기"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="12" cy="19" r="1.6"/></svg></button>
+            </div>
           </div>
         </div>
       </div>

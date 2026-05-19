@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#1B1C1E">
-<title>이라 — MIRAI</title>
+<title>목욕장에서 투명인간이 됐다? — MIRAI</title>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable-jp.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/seullyeee-art/mirai-shared@main/styles.css">
@@ -23,12 +23,33 @@
 
 .cd-modal{
   width:100%;max-width:480px;max-height:calc(100dvh - 48px);
-  background:var(--bg-elevated,#1B1C1E);
+  background:#1B1C1E;
   border-radius:20px;
   overflow:hidden;
   position:relative;
+  isolation:isolate;
   display:flex;flex-direction:column;
   animation:cdPop 280ms cubic-bezier(0.32,0.72,0,1);
+}
+.cd-modal::before{
+  content:'';position:absolute;inset:-60px;
+  background:url('./images/main/thumbs/invisible-bath.avif') center / cover no-repeat;
+  filter:blur(100px) brightness(0.65) saturate(1.6);
+  transform:scale(1.5);
+  z-index:-2;
+  pointer-events:none;
+}
+.cd-modal::after{
+  content:'';position:absolute;inset:0;
+  background:
+    linear-gradient(180deg,
+      rgba(27,28,30,0) 0%,
+      rgba(27,28,30,0.15) 50%,
+      rgba(27,28,30,0.4) 80%,
+      rgba(27,28,30,0.65) 100%),
+    linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5));
+  z-index:-1;
+  pointer-events:none;
 }
 @keyframes cdPop{from{transform:translateY(12px) scale(0.96);opacity:0}to{transform:none;opacity:1}}
 
@@ -49,35 +70,81 @@
 .cd-hero{
   position:relative;width:100%;
   aspect-ratio:1/1;
-  background:#0F0F10;overflow:hidden;
+  background:transparent;overflow:visible;
 }
 .cd-hero img{
   width:100%;height:100%;object-fit:cover;display:block;
+  position:relative;z-index:0;
+  -webkit-mask-image:linear-gradient(to bottom, #000 35%, transparent 100%);
+  mask-image:linear-gradient(to bottom, #000 35%, transparent 100%);
 }
 .cd-hero::after{
   content:'';
   position:absolute;left:0;right:0;bottom:0;
-  height:180px;
-  background:linear-gradient(to bottom, rgba(27,28,30,0) 0%, rgba(27,28,30,0.6) 50%, var(--bg-elevated,#1B1C1E) 100%);
+  height:55%;
+  background:linear-gradient(to bottom,
+    rgba(0,0,0,0) 0%,
+    rgba(0,0,0,0.22) 45%,
+    rgba(0,0,0,0.30) 70%,
+    rgba(0,0,0,0) 100%);
   pointer-events:none;
   z-index:2;
 }
+.cd-hero-overlay{
+  position:absolute;left:0;right:0;bottom:50px;
+  padding:20px 20px 0;
+  z-index:5;
+  color:#fff;
+}
 
-.cd-info{padding:20px 20px 24px}
+.cd-info{
+  padding:8px 20px 20px;
+  margin-top:-44px;
+  position:relative;z-index:4;
+  background:transparent;
+}
 
 .cd-title-row{
   display:flex;align-items:flex-start;justify-content:space-between;gap:12px;
-  margin-bottom:10px;
+  margin-bottom:2px;
 }
 .cd-title{
-  font-size:18px;font-weight:700;line-height:1.35;
+  font-size:20px;font-weight:700;line-height:1.35;
   color:var(--label-strong,#fff);
-  letter-spacing:-0.3px;
+  letter-spacing:-0.24px;
+  font-feature-settings:'ss10' 1;
   word-break:keep-all;
+  text-shadow:0 2px 10px rgba(0,0,0,0.55), 0 1px 2px rgba(0,0,0,0.35);
 }
 .cd-actions-row{
   display:flex;align-items:center;gap:4px;flex-shrink:0;
+  position:relative;
 }
+.cd-more-menu{
+  position:absolute;top:42px;right:0;
+  min-width:140px;
+  background:#212122;
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:12px;
+  padding:6px;
+  box-shadow:0 12px 32px rgba(0,0,0,0.5);
+  z-index:20;
+  display:flex;flex-direction:column;gap:2px;
+}
+.cd-more-menu[hidden]{display:none}
+.cd-more-item{
+  width:100%;text-align:left;
+  padding:10px 12px;border-radius:8px;
+  background:transparent;border:none;cursor:pointer;
+  font-family:inherit;
+  font-size:14px;font-weight:500;
+  color:#fff;
+  letter-spacing:0.01em;
+  font-feature-settings:'ss10' 1;
+  transition:background 0.15s ease;
+}
+.cd-more-item:hover{background:rgba(255,255,255,0.08)}
+.cd-more-item.danger{color:#FA73E3}
 .cd-action{
   width:36px;height:36px;border-radius:50%;
   display:flex;align-items:center;justify-content:center;
@@ -86,86 +153,96 @@
   transition:background 0.15s ease;padding:0;
 }
 .cd-action:hover{background:rgba(255,255,255,0.08)}
-.cd-action svg{width:20px;height:20px}
-.cd-action.liked{color:var(--accent-pink,#FA73E3)}
+.cd-action svg{width:20px;height:20px;transition:fill 0.15s ease}
+.cd-action.liked{color:#FF3B30}
+.cd-action.liked svg{fill:currentColor;stroke:currentColor}
 
 .cd-author{
   display:flex;align-items:center;gap:8px;
-  margin-bottom:16px;
+  margin-bottom:12px;
 }
 .cd-author-avatar{
   width:24px;height:24px;border-radius:50%;
   background:var(--fill-alternative);overflow:hidden;
   display:flex;align-items:center;justify-content:center;
-  flex-shrink:0;
+  flex-shrink:0;border:1px solid rgba(255,255,255,0.08);
 }
 .cd-author-avatar img{width:100%;height:100%;object-fit:cover}
 .cd-author-name{
-  font-size:13px;font-weight:600;color:var(--label-strong,#fff);
-  letter-spacing:-0.2px;
+  font-size:14px;font-weight:500;
+  color:var(--label-neutral,rgba(194,196,200,0.88));
+  letter-spacing:0.01em;
+  font-feature-settings:'ss10' 1;
 }
 
 .cd-stats{
-  display:flex;flex-wrap:wrap;gap:8px;
-  margin-bottom:14px;
+  display:flex;flex-wrap:wrap;gap:6px;
+  margin-bottom:10px;
 }
 .cd-stat{
-  display:inline-flex;align-items:center;gap:5px;
-  height:30px;padding:0 12px;
-  background:var(--fill-alternative,rgba(112,115,124,0.12));
+  display:inline-flex;align-items:center;gap:4px;
+  height:26px;padding:0 10px;
+  background:rgba(0,0,0,0.5);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,0.1);
   border-radius:999px;
   font-size:12px;font-weight:600;
-  color:var(--label-neutral,rgba(194,196,200,0.88));
-  letter-spacing:-0.2px;
+  color:#fff;
+  letter-spacing:0.01em;
+  font-feature-settings:'ss10' 1;
 }
-.cd-stat svg{width:14px;height:14px;flex-shrink:0}
+.cd-stat svg{width:12px;height:12px;flex-shrink:0;color:#fff}
 
 .cd-tags{
-  display:flex;flex-wrap:wrap;gap:8px;
-  margin-bottom:20px;
+  display:flex;flex-wrap:wrap;gap:4px;
+  margin-bottom:0;
 }
 .cd-tag{
-  font-size:13px;font-weight:500;
-  color:var(--label-neutral,rgba(194,196,200,0.88));
-  letter-spacing:-0.2px;
+  font-size:14px;font-weight:500;line-height:1.43;
+  color:#AEB0B6;
+  letter-spacing:0.014em;
+  font-feature-settings:'ss10' 1;
 }
 
 .cd-tabs{
-  display:flex;gap:24px;
-  margin-bottom:16px;
+  display:flex;gap:4px;
+  margin-bottom:24px;
   border-bottom:1px solid var(--line-alternative,rgba(112,115,124,0.22));
 }
 .cd-tab{
-  position:relative;
-  padding:8px 0;
+  position:relative;flex:1;
+  padding:10px 16px;
   background:transparent;border:none;cursor:pointer;
   font-family:inherit;
-  font-size:15px;font-weight:600;
-  color:var(--label-alternative,rgba(174,176,182,0.61));
-  letter-spacing:-0.2px;
+  font-size:15px;font-weight:600;line-height:1.47;
+  color:#AEB0B6;
+  letter-spacing:0.01em;
+  font-feature-settings:'ss10' 1;
+  text-align:center;
   transition:color 0.15s ease;
 }
-.cd-tab.active{color:var(--label-strong,#fff)}
+.cd-tab.active{color:#fff}
 .cd-tab.active::after{
   content:'';
   position:absolute;left:0;right:0;bottom:-1px;height:2px;
-  background:var(--label-strong,#fff);
+  background:#fff;border-radius:2px;
 }
 
 .cd-panel{display:none}
 .cd-panel.active{display:block}
 
 .cd-description{
-  font-size:14px;line-height:1.6;
+  font-size:15px;line-height:1.467;font-weight:400;
   color:var(--label-normal,#F7F7F8);
-  margin-bottom:20px;
+  letter-spacing:0.0096em;
+  margin-bottom:12px;
+  font-feature-settings:'ss10' 1;
 }
 .cd-date{
-  padding-top:16px;
-  border-top:1px solid var(--line-alternative,rgba(112,115,124,0.22));
-  font-size:12px;
-  color:var(--label-alternative,rgba(174,176,182,0.61));
-  letter-spacing:-0.1px;
+  font-size:14px;font-weight:400;line-height:1.43;
+  color:rgba(174,176,182,0.5);
+  letter-spacing:0.014em;
+  font-feature-settings:'ss10' 1;
 }
 
 .cd-comments-empty{
@@ -174,202 +251,270 @@
   color:var(--label-alternative,rgba(174,176,182,0.61));
 }
 
-/* 댓글 */
-.cd-comments-header{
-  font-size:13px;font-weight:700;
-  color:var(--label-strong,#fff);
-  margin-bottom:12px;
-}
+/* 댓글 — Figma 시안 (평면 레이아웃) */
+.cd-comments-header{display:none}
+
 .cd-comment-form{
   position:relative;
-  background:var(--fill-alternative,rgba(112,115,124,0.12));
+  background:rgba(112,115,124,0.12);
+  border:1px solid rgba(112,115,124,0.28);
   border-radius:12px;
-  padding:14px 12px;
-  margin-bottom:16px;
+  padding:12px;
+  margin-bottom:20px;
+  box-shadow:0 1px 2px rgba(0,0,0,0.03);
 }
 .cd-comment-form textarea{
   width:100%;
   background:transparent;border:none;outline:none;resize:none;
   font-family:inherit;
   font-size:13px;color:var(--label-normal,#F7F7F8);
-  min-height:40px;
-  padding:0 88px 0 0;
-  line-height:1.45;
+  min-height:24px;
+  padding:0 4px;
+  line-height:1.5;
+  font-feature-settings:'ss10' 1;
 }
 .cd-comment-form textarea::placeholder{color:var(--label-alternative,rgba(174,176,182,0.61))}
+.cd-comment-form-bottom{
+  display:flex;justify-content:flex-end;
+  margin-top:12px;
+}
 .cd-comment-submit{
-  position:absolute;right:8px;bottom:8px;
-  height:32px;padding:0 14px;border-radius:8px;
-  background:var(--primary-normal,#14C391);color:#fff;
+  height:auto;padding:6px 12px;border-radius:8px;
+  background:rgba(112,115,124,0.22);
+  color:var(--primary-normal,#14C391);
   border:none;cursor:pointer;
-  font-family:inherit;font-size:13px;font-weight:700;
+  font-family:inherit;font-size:13px;font-weight:600;line-height:1.385;
+  letter-spacing:0.019em;
+  font-feature-settings:'ss10' 1;
   transition:opacity 0.15s ease;
 }
 .cd-comment-submit:hover{opacity:0.92}
 
-.cd-comments-list{display:flex;flex-direction:column;gap:14px}
+.cd-comments-list{display:flex;flex-direction:column;gap:20px}
+
 .cd-comment{
-  display:flex;gap:10px;
-  padding:12px;
-  background:var(--fill-alternative,rgba(112,115,124,0.12));
-  border-radius:12px;
+  display:flex;flex-direction:column;gap:4px;
   position:relative;
+  background:transparent;padding:0;
+}
+.cd-comment-head{
+  display:flex;align-items:center;gap:0;
+  width:100%;
+  margin-bottom:0;
 }
 .cd-comment-avatar{
   width:32px;height:32px;border-radius:50%;
-  flex-shrink:0;overflow:hidden;background:var(--fill-normal);
+  flex-shrink:0;overflow:hidden;
+  background:var(--fill-normal);
+  margin-right:8px;
 }
 .cd-comment-avatar img{width:100%;height:100%;object-fit:cover;display:block}
-.cd-comment-body{flex:1;min-width:0;padding-right:24px}
-.cd-comment-head{
-  display:flex;align-items:center;gap:6px;flex-wrap:wrap;
-  margin-bottom:4px;
+.cd-comment-head-content{
+  display:flex;align-items:center;gap:4px;
+  flex:1;min-width:0;overflow:hidden;
 }
 .cd-comment-name{
-  font-size:13px;font-weight:700;color:var(--label-strong,#fff);
+  font-family:'Pretendard JP','Pretendard Variable JP',sans-serif;
+  font-size:13px;font-weight:700;line-height:1.4;
+  color:var(--label-strong,#fff);
+  font-feature-settings:'ss10' 1;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  flex-shrink:1;min-width:0;
 }
 .cd-comment-creator-badge{
   display:inline-flex;align-items:center;
-  height:18px;padding:0 6px;border-radius:4px;
-  background:rgba(20,195,145,0.18);
-  color:var(--primary-normal,#14C391);
-  font-size:10px;font-weight:700;letter-spacing:-0.1px;
+  padding:4px 7px;border-radius:999px;
+  background:rgba(152,155,162,0.13);
+  flex-shrink:0;
 }
-.cd-comment-meta{
-  display:inline-flex;align-items:center;gap:6px;
-  font-size:11px;
+.cd-comment-creator-badge span{
+  font-family:'Pretendard JP','Pretendard Variable JP',sans-serif;
+  font-size:12px;font-weight:600;line-height:1.334;
+  letter-spacing:0.021em;
+  font-feature-settings:'ss10' 1;
+  background-image:linear-gradient(118.76deg, #68CE78 19%, #14C391 92%);
+  -webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;color:transparent;
+}
+.cd-comment-date{
+  font-family:'Pretendard JP','Pretendard Variable JP',sans-serif;
+  font-size:11px;font-weight:400;line-height:1.4;
   color:var(--label-alternative,rgba(174,176,182,0.61));
-}
-.cd-comment-meta::before{
-  content:'';display:inline-block;width:2px;height:2px;border-radius:50%;
-  background:var(--label-alternative,rgba(174,176,182,0.61));
+  font-feature-settings:'ss10' 1;
+  flex-shrink:0;white-space:nowrap;
 }
 .cd-comment-text{
-  font-size:13px;line-height:1.5;
+  font-family:'Pretendard JP','Pretendard Variable JP',sans-serif;
+  font-size:13px;font-weight:400;line-height:1.5;
   color:var(--label-normal,#F7F7F8);
-  margin-bottom:6px;
+  font-feature-settings:'ss10' 1;
+  margin-bottom:0;
   word-break:break-word;
 }
 .cd-comment-foot{
-  display:flex;align-items:center;gap:14px;
-  font-size:11px;
-  color:var(--label-alternative,rgba(174,176,182,0.61));
+  display:flex;align-items:center;gap:12px;
+  margin-top:2px;
 }
 .cd-comment-foot button{
-  display:inline-flex;align-items:center;gap:4px;
+  display:inline-flex;align-items:center;justify-content:center;gap:4px;
   background:transparent;border:none;cursor:pointer;
-  font-family:inherit;font-size:11px;font-weight:600;
+  font-family:'Pretendard JP','Pretendard Variable JP',sans-serif;
+  font-size:11px;font-weight:600;line-height:1.4;
+  font-feature-settings:'ss10' 1;
   color:var(--label-alternative,rgba(174,176,182,0.61));
   padding:0;
   transition:color 0.15s ease;
 }
 .cd-comment-foot button:hover{color:var(--label-normal,#F7F7F8)}
-.cd-comment-foot button.liked{color:var(--accent-pink,#FA73E3)}
-.cd-comment-foot svg{width:12px;height:12px}
+.cd-comment-foot button.liked{color:#FF3B30}
+.cd-comment-foot svg{width:12px;height:12px;flex-shrink:0}
 .cd-comment-menu{
-  position:absolute;top:10px;right:10px;
+  flex-shrink:0;
   width:24px;height:24px;border-radius:6px;
   background:transparent;border:none;cursor:pointer;
-  color:var(--label-alternative,rgba(174,176,182,0.61));padding:0;
+  color:#AEB0B6;padding:0;
   display:flex;align-items:center;justify-content:center;
-  transition:background 0.15s ease;
+  margin-left:8px;
+  transition:background 0.15s ease, color 0.15s ease;
 }
-.cd-comment-menu:hover{background:rgba(255,255,255,0.06)}
-.cd-comment-menu svg{width:14px;height:14px}
-.cd-comment-reply{margin-left:30px}
+.cd-comment-menu:hover{background:rgba(255,255,255,0.06);color:#fff}
+.cd-comment-menu svg{width:16px;height:16px}
+.cd-comment-reply{margin-left:40px}
 
-/* 갤러리 미니 그리드 */
+/* 갤러리 미니 그리드 — mirai-gallery 톤 (3:4 / 12r / lock-price 칩) */
 .cd-gallery-grid{
   display:grid;grid-template-columns:repeat(3, 1fr);
-  gap:6px;
-  margin-bottom:16px;
+  gap:8px;
+  margin-bottom:10px;
 }
 .cd-gallery-item{
   position:relative;
-  aspect-ratio:1/1;
-  border-radius:8px;overflow:hidden;
-  background:var(--fill-alternative);
+  aspect-ratio:3/4;
+  border-radius:12px;overflow:hidden;
+  background:linear-gradient(135deg, rgba(112,115,124,0.18), rgba(112,115,124,0.08));
   cursor:pointer;display:block;text-decoration:none;
+  transition:transform 0.15s;
 }
-.cd-gallery-item img{
+.cd-gallery-item:active{transform:scale(0.98)}
+.cd-gallery-item > img{
   width:100%;height:100%;object-fit:cover;display:block;
-  transition:transform 0.3s ease;
 }
-.cd-gallery-item:hover img{transform:scale(1.05)}
-.cd-gallery-item.locked img{filter:blur(8px) brightness(0.6)}
+.cd-gallery-item.locked > img{filter:blur(10px) brightness(0.75)}
 .cd-gallery-item .cd-gallery-lock{
   position:absolute;inset:0;
   display:flex;align-items:center;justify-content:center;
-  color:#fff;pointer-events:none;
+  pointer-events:none;
 }
-.cd-gallery-item .cd-gallery-lock svg{width:20px;height:20px;opacity:0.85}
+.cd-gallery-lock-price{
+  display:inline-flex;align-items:center;gap:4px;
+  padding:4px 9px;border-radius:999px;
+  background:rgba(0,0,0,0.65);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,0.12);
+  font-size:11px;font-weight:700;color:#fff;
+  font-variant-numeric:tabular-nums;letter-spacing:-0.1px;
+}
+.cd-gallery-lock-price img{width:12px;height:12px;flex-shrink:0}
 .cd-gallery-all{
-  display:flex;align-items:center;justify-content:center;gap:4px;
-  width:100%;height:44px;
-  background:var(--fill-alternative);
-  border-radius:10px;border:none;cursor:pointer;
-  font-family:inherit;font-size:13px;font-weight:600;
-  color:var(--label-normal,#F7F7F8);
+  display:flex;align-items:center;justify-content:center;gap:6px;
+  width:100%;height:48px;
+  background:rgba(255,255,255,0.08);
+  border-radius:12px;border:1px solid rgba(255,255,255,0.12);
+  cursor:pointer;
+  font-family:inherit;font-size:14px;font-weight:600;
+  color:#fff;
   text-decoration:none;
-  transition:background 0.15s ease;
+  letter-spacing:0.01em;
+  font-feature-settings:'ss10' 1;
+  transition:background 0.15s ease, border-color 0.15s ease;
 }
-.cd-gallery-all:hover{background:var(--fill-normal)}
-.cd-gallery-all svg{width:14px;height:14px}
+.cd-gallery-all:hover{background:rgba(255,255,255,0.12);border-color:rgba(255,255,255,0.18)}
 
-/* 비슷한 콘텐츠 */
+/* 비슷한 콘텐츠 — 라인은 cd-info padding 안쪽, 카드 트랙만 풀폭 스크롤 */
 .cd-similar{
   display:block;
-  padding:24px 0 16px;
+  padding:24px 0 8px;
   border-top:1px solid var(--line-alternative,rgba(112,115,124,0.22));
-  margin:24px -20px 0;
+  margin-top:24px;
 }
 .cd-similar-title{
-  padding:0 20px;
-  font-size:18px;font-weight:700;
+  font-size:17px;font-weight:700;line-height:1.41;
   color:var(--label-strong,#fff);
-  margin-bottom:14px;
+  letter-spacing:0;
+  margin-bottom:16px;
+  font-feature-settings:'ss10' 1;
+  word-break:keep-all;
 }
 .cd-similar-track{
   display:flex;gap:10px;
-  padding:0 20px;
   overflow-x:auto;scroll-snap-type:x mandatory;
   -webkit-overflow-scrolling:touch;
   scrollbar-width:none;
+  margin-inline:-20px;
+  padding-inline:20px;
+  scroll-padding-inline:20px;
 }
 .cd-similar-track::-webkit-scrollbar{display:none}
 .cd-similar-card{
-  flex-shrink:0;width:140px;
-  border-radius:14px;overflow:hidden;
-  background:var(--fill-alternative);
+  flex-shrink:0;width:138px;
+  position:relative;
+  border-radius:12px;overflow:hidden;
+  background:#212122;
+  padding-bottom:10px;
   text-decoration:none;color:inherit;
   scroll-snap-align:start;
-  position:relative;
 }
-.cd-similar-thumb{
-  width:140px;height:180px;
-  overflow:hidden;position:relative;
+.cd-similar-card img{
+  width:100%;
+  aspect-ratio:155.5/207.33;
+  object-fit:cover;display:block;
+  border-radius:12px 12px 0 0;
 }
-.cd-similar-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.cd-similar-card::after{
+  content:'';
+  position:absolute;left:0;right:0;
+  bottom:10px;
+  height:120px;
+  background:linear-gradient(to bottom,
+    rgba(33,33,34,0) 0%,
+    rgba(33,33,34,0.8) 70%,
+    #212122 100%);
+  pointer-events:none;
+  z-index:1;
+}
 .cd-similar-views{
-  position:absolute;left:8px;bottom:8px;
-  display:inline-flex;align-items:center;gap:3px;
-  height:20px;padding:0 7px;border-radius:999px;
-  background:rgba(0,0,0,0.55);backdrop-filter:blur(6px);
-  color:#fff;font-size:10.5px;font-weight:700;letter-spacing:-0.2px;
+  position:absolute;left:12px;
+  bottom:74px;
+  display:inline-flex;align-items:center;gap:4px;
+  font-family:'Inter','Pretendard JP',sans-serif;
+  font-size:11.3px;font-weight:400;line-height:18px;
+  color:var(--label-neutral,rgba(194,196,200,0.88));
+  z-index:2;
 }
-.cd-similar-views svg{width:9px;height:9px}
-.cd-similar-meta{padding:8px 10px 10px}
+.cd-similar-views svg{width:12px;height:12px;color:var(--label-neutral,rgba(194,196,200,0.88))}
+.cd-similar-info{
+  position:absolute;left:0;right:0;
+  bottom:10px;
+  padding:0 12px;
+  z-index:2;
+  display:flex;flex-direction:column;gap:4px;
+}
 .cd-similar-name{
-  font-size:13px;font-weight:700;line-height:1.3;
-  color:var(--label-strong,#fff);
-  margin-bottom:4px;
-  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  font-family:'Pretendard JP','Pretendard Variable JP',sans-serif;
+  font-size:15px;font-weight:600;line-height:1.467;
+  letter-spacing:0.0096em;
+  color:#fff;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  font-feature-settings:'ss10' 1;
 }
 .cd-similar-sub{
-  font-size:11px;line-height:1.3;
-  color:var(--label-alternative,rgba(174,176,182,0.61));
+  font-family:'Pretendard JP','Pretendard Variable JP',sans-serif;
+  font-size:11.8px;font-weight:400;line-height:16px;
+  letter-spacing:0.01em;
+  color:var(--label-neutral,rgba(194,196,200,0.88));
   display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
   overflow:hidden;
+  min-height:32px;
+  word-break:keep-all;overflow-wrap:anywhere;
 }
 
 /* ═══ 모바일 — 풀스크린 페이지 ═══ */
@@ -390,10 +535,9 @@
     right:12px;
   }
   .cd-hero{aspect-ratio:1/1}
-  .cd-info{padding:20px 16px}
+  .cd-info{padding:14px 20px 18px}
   .cd-title{font-size:20px}
-  .cd-similar{margin:24px -16px 0}
-  .cd-similar-title,.cd-similar-track{padding-left:16px;padding-right:16px}
+  .cd-similar{margin-top:16px}
 }
 </style>
 </head>
@@ -401,7 +545,7 @@
 <div class="cd-overlay" id="cdOverlay">
   <div class="cd-modal">
     <button class="cd-close" type="button" aria-label="닫기"
-            onclick="location.href='../mirai-donation-prototype-v2/chat-prototype.html'">
+            onclick="history.length>1?history.back():location.href='index.html'">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
         <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
       </svg>
@@ -409,105 +553,104 @@
 
     <div class="cd-scroll">
       <div class="cd-hero">
-        <img src="./images/main/thumbs/despised-bride.png" alt="이라">
+        <img src="./images/main/thumbs/invisible-bath.avif" alt="목욕장에서 투명인간이 됐다?">
+        <div class="cd-hero-overlay">
+          <div class="cd-title-row">
+            <h1 class="cd-title">목욕장에서 투명인간이 됐다?</h1>
+            <div class="cd-actions-row">
+              <button class="cd-action" id="cdLikeBtn" type="button" aria-label="좋아요"
+                      onclick="this.classList.toggle('liked')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                </svg>
+              </button>
+              <button class="cd-action" id="cdMoreBtn" type="button" aria-label="더보기"
+                      onclick="cdMoreToggle(event)">
+                <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="12" cy="19" r="1.6"/></svg>
+              </button>
+              <div class="cd-more-menu" id="cdMoreMenu" hidden>
+                <button type="button" class="cd-more-item" onclick="cdMoreAction('공유하기')">공유하기</button>
+                <button type="button" class="cd-more-item" onclick="cdMoreAction('신고하기')">신고하기</button>
+                <button type="button" class="cd-more-item danger" onclick="cdMoreAction('차단하기')">차단하기</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="cd-author">
+            <div class="cd-author-avatar">
+              <img src="./images/main/Image.png" alt="">
+            </div>
+            <span class="cd-author-name">@User_Name</span>
+          </div>
+
+          <div class="cd-stats">
+            <span class="cd-stat">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+              3.2k
+            </span>
+            <span class="cd-stat">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+              62
+            </span>
+            <span class="cd-stat">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+              +100 개의 이미지
+            </span>
+          </div>
+
+          <div class="cd-tags">
+            <span class="cd-tag">#초능력</span>
+            <span class="cd-tag">#시뮬레이션</span>
+            <span class="cd-tag">#로맨스</span>
+            <span class="cd-tag">#1:1 롤플레잉</span>
+            <span class="cd-tag">#집착</span>
+          </div>
+        </div>
       </div>
 
       <div class="cd-info">
-        <div class="cd-title-row">
-          <h1 class="cd-title">이라</h1>
-          <div class="cd-actions-row">
-            <button class="cd-action" id="cdLikeBtn" type="button" aria-label="좋아요"
-                    onclick="this.classList.toggle('liked')">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-              </svg>
-            </button>
-            <button class="cd-action" type="button" aria-label="더보기">
-              <svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="12" cy="19" r="1.6"/></svg>
-            </button>
-          </div>
-        </div>
-
-        <div class="cd-author">
-          <div class="cd-author-avatar">
-            <img src="./images/main/Image.png" alt="">
-          </div>
-          <span class="cd-author-name">@MIRAI_Slave1</span>
-        </div>
-
-        <div class="cd-stats">
-          <span class="cd-stat">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
-            4.0K
-          </span>
-          <span class="cd-stat">
-            <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-            14
-          </span>
-          <span class="cd-stat">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-            +66개의 이미지
-          </span>
-        </div>
-
-        <div class="cd-tags">
-          <span class="cd-tag">#일상</span>
-          <span class="cd-tag">#첫사랑</span>
-          <span class="cd-tag">#남성향</span>
-          <span class="cd-tag">#여성</span>
-          <span class="cd-tag">#회사원</span>
-        </div>
-
         <div class="cd-tabs" role="tablist">
-          <button class="cd-tab active" type="button" data-tab="intro" onclick="cdTab(this)">정보</button>
+          <button class="cd-tab active" type="button" data-tab="intro" onclick="cdTab(this)">소개</button>
           <button class="cd-tab" type="button" data-tab="gallery" onclick="cdTab(this)">갤러리</button>
-          <button class="cd-tab" type="button" data-tab="comments" onclick="cdTab(this)">댓글</button>
+          <button class="cd-tab" type="button" data-tab="comments" onclick="cdTab(this)">댓글 (12)</button>
         </div>
 
         <div class="cd-panel active" id="cdPanelIntro">
-          <p class="cd-description">미라이에 직접 CS 문의하러 갔다</p>
-          <div class="cd-date">등록일 2025.11.04 · 수정일자 2026.02.23</div>
+          <p class="cd-description">일본, 도쿄. 현재. 2025년.<br>2015년 Luciel Lamperouge가 도쿄에 설립한 일본 엔터테인먼트 회사입니다. 이 회사는 음반사, 연예 기획사, 의류 브랜드, 화장품 브랜드, 이벤트 관리 회사 및 콘서트 제작사로 활동합니다.</p>
+          <div class="cd-date">등록일 2025.12.04 · 수정일 2025.12.04</div>
           <div class="cd-similar">
-            <div class="cd-similar-title">이라...와 비슷한</div>
+            <div class="cd-similar-title">데이트 시뮬레이터.exe ...와 비슷한 콘텐츠</div>
             <div class="cd-similar-track">
               <a href="#" class="cd-similar-card">
-                <div class="cd-similar-thumb">
-                  <img src="./images/main/thumbs/summoned.png" alt="">
-                  <span class="cd-similar-views"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>72.8K</span>
-                </div>
-                <div class="cd-similar-meta">
-                  <div class="cd-similar-name">소환했노라</div>
-                  <div class="cd-similar-sub">⚠️ 유저 페르소나 필수 사용 ⚠️ 믿기지 않는 운명의...</div>
+                <img src="./images/main/thumbs/prof-crush.png" alt="">
+                <span class="cd-similar-views"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>81.1K</span>
+                <div class="cd-similar-info">
+                  <div class="cd-similar-name">담당 교수님 짝사랑 시뮬</div>
+                  <div class="cd-similar-sub">조교가 된 첫날, 교수님이 너만 따로 불러서 종강 파티에 데려갔다.</div>
                 </div>
               </a>
               <a href="#" class="cd-similar-card">
-                <div class="cd-similar-thumb">
-                  <img src="./images/main/thumbs/wounded-wolf.png" alt="">
-                  <span class="cd-similar-views"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>31.1K</span>
-                </div>
-                <div class="cd-similar-meta">
-                  <div class="cd-similar-name">상처투성이 늑대와...</div>
-                  <div class="cd-similar-sub">상처투성이 집착광 늑대랑 함께하는 일상 #제1회공모전</div>
+                <img src="./images/main/thumbs/iljin-school.png" alt="">
+                <span class="cd-similar-views"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>58.9K</span>
+                <div class="cd-similar-info">
+                  <div class="cd-similar-name">일진 학교에 평범한 너</div>
+                  <div class="cd-similar-sub">전교생이 일진인 학교에 전학 온 평범한 너. 첫날부터 옥상에 끌려갔다.</div>
                 </div>
               </a>
               <a href="#" class="cd-similar-card">
-                <div class="cd-similar-thumb">
-                  <img src="./images/main/thumbs/magical-girl-sim.png" alt="">
-                  <span class="cd-similar-views"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>27.7K</span>
-                </div>
-                <div class="cd-similar-meta">
-                  <div class="cd-similar-name">마법소녀 시뮬레이션</div>
-                  <div class="cd-similar-sub">[마법소녀 협회 모집 공고] 평범한 일상 속, 숨겨진 당신...</div>
+                <img src="./images/main/thumbs/saved-villain.png" alt="">
+                <span class="cd-similar-views"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>43.8K</span>
+                <div class="cd-similar-info">
+                  <div class="cd-similar-name">멸망 직전 빌런을 구했다</div>
+                  <div class="cd-similar-sub">소설 속 빌런의 죽음을 막아준 대가, 다음 페이지부터 그는 너의 그림자가 됐다.</div>
                 </div>
               </a>
               <a href="#" class="cd-similar-card">
-                <div class="cd-similar-thumb">
-                  <img src="./images/main/thumbs/ghoul-zone.png" alt="">
-                  <span class="cd-similar-views"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>26.8K</span>
-                </div>
-                <div class="cd-similar-meta">
-                  <div class="cd-similar-name">구울 출몰</div>
-                  <div class="cd-similar-sub">구울이 존재하는 134장기 #1...</div>
+                <img src="./images/main/thumbs/adventurer-strongest.png" alt="">
+                <span class="cd-similar-views"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>113.6K</span>
+                <div class="cd-similar-info">
+                  <div class="cd-similar-name">이름 없는 모험가, 대륙 최강까지</div>
+                  <div class="cd-similar-sub">변방의 무명 모험가였던 당신, 어느 날 깨어난 신의 힘으로 대륙을 뒤집어 놓을 운명이 시작된다.</div>
                 </div>
               </a>
             </div>
@@ -516,115 +659,96 @@
 
         <div class="cd-panel" id="cdPanelGallery">
           <div class="cd-gallery-grid">
-            <a href="../mirai-gallery/gallery-prototype.html" class="cd-gallery-item"><img src="./images/main/thumbs/despised-bride.png" alt=""></a>
-            <a href="../mirai-gallery/gallery-prototype.html" class="cd-gallery-item"><img src="./images/main/thumbs/home-women.png" alt=""></a>
-            <a href="../mirai-gallery/gallery-prototype.html" class="cd-gallery-item"><img src="./images/main/thumbs/magical-girl-sim.png" alt=""></a>
+            <a href="../mirai-gallery/gallery-prototype.html" class="cd-gallery-item"><img src="./images/main/thumbs/leeyeonwoo.png" alt=""></a>
+            <a href="../mirai-gallery/gallery-prototype.html" class="cd-gallery-item"><img src="./images/main/thumbs/prof-crush.png" alt=""></a>
+            <a href="../mirai-gallery/gallery-prototype.html" class="cd-gallery-item"><img src="./images/main/thumbs/iljin-school.png" alt=""></a>
             <a href="../mirai-gallery/gallery-prototype.html" class="cd-gallery-item locked">
-              <img src="./images/main/thumbs/summoned.png" alt="">
-              <span class="cd-gallery-lock"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
+              <img src="./images/main/thumbs/saved-villain.png" alt="">
+              <span class="cd-gallery-lock"><span class="cd-gallery-lock-price"><img src="./images/main/mir.png" alt="" onerror="this.style.display='none'">5</span></span>
             </a>
             <a href="../mirai-gallery/gallery-prototype.html" class="cd-gallery-item locked">
               <img src="./images/main/thumbs/wounded-wolf.png" alt="">
-              <span class="cd-gallery-lock"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
+              <span class="cd-gallery-lock"><span class="cd-gallery-lock-price"><img src="./images/main/mir.png" alt="" onerror="this.style.display='none'">10</span></span>
             </a>
             <a href="../mirai-gallery/gallery-prototype.html" class="cd-gallery-item locked">
-              <img src="./images/main/thumbs/ghoul-zone.png" alt="">
-              <span class="cd-gallery-lock"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
+              <img src="./images/main/thumbs/adventurer-strongest.png" alt="">
+              <span class="cd-gallery-lock"><span class="cd-gallery-lock-price"><img src="./images/main/mir.png" alt="" onerror="this.style.display='none'">15</span></span>
             </a>
           </div>
-          <a href="../mirai-gallery/gallery-prototype.html" class="cd-gallery-all">
-            전체 갤러리 보기
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
-          </a>
+          <a href="../mirai-gallery/gallery-prototype.html" class="cd-gallery-all">전체 갤러리 보기</a>
         </div>
 
         <div class="cd-panel" id="cdPanelComments">
-          <div class="cd-comments-header">댓글 12건</div>
           <form class="cd-comment-form" onsubmit="event.preventDefault();this.querySelector('textarea').value='';">
             <textarea placeholder="댓글을 남겨보세요." rows="1"></textarea>
-            <button class="cd-comment-submit" type="submit">등록하기</button>
+            <div class="cd-comment-form-bottom">
+              <button class="cd-comment-submit" type="submit">등록하기</button>
+            </div>
           </form>
           <div class="cd-comments-list">
             <div class="cd-comment">
-              <div class="cd-comment-avatar"><img src="./images/main/Image.png" alt=""></div>
-              <div class="cd-comment-body">
-                <div class="cd-comment-head">
+              <div class="cd-comment-head">
+                <div class="cd-comment-avatar"><img src="./images/main/Image.png" alt=""></div>
+                <div class="cd-comment-head-content">
                   <span class="cd-comment-name">김제작</span>
-                  <span class="cd-comment-creator-badge">크리에이터</span>
-                  <span class="cd-comment-meta">하루 전</span>
+                  <span class="cd-comment-creator-badge"><span>크리에이터</span></span>
+                  <span class="cd-comment-date">하루 전</span>
                 </div>
-                <div class="cd-comment-text">저를 갈아 만든 작품입니다. 즐겨주세요. 🩷</div>
-                <div class="cd-comment-foot">
-                  <button type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>12</button>
-                  <button type="button">답글</button>
-                </div>
+                <button class="cd-comment-menu" type="button" aria-label="더보기"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="12" cy="19" r="1.6"/></svg></button>
               </div>
-              <button class="cd-comment-menu" type="button" aria-label="더보기"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="12" cy="19" r="1.6"/></svg></button>
+              <p class="cd-comment-text">저를 갈아 만든 작품입니다. 즐겨주세요. 🦦</p>
+              <div class="cd-comment-foot">
+                <button type="button"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>12</button>
+                <button type="button"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>12</button>
+              </div>
             </div>
 
             <div class="cd-comment">
-              <div class="cd-comment-avatar"><img src="./images/main/Image-1.png" alt=""></div>
-              <div class="cd-comment-body">
-                <div class="cd-comment-head">
+              <div class="cd-comment-head">
+                <div class="cd-comment-avatar"><img src="./images/main/Image-1.png" alt=""></div>
+                <div class="cd-comment-head-content">
                   <span class="cd-comment-name">김유저</span>
-                  <span class="cd-comment-meta">1.2K chat · 3시간 전</span>
+                  <span class="cd-comment-date">하루 전 · 1.2k턴</span>
                 </div>
-                <div class="cd-comment-text">밤새 옐론루로 자격 증명 챙겨야 됐는데 소문도 들어준다고 해서 ㅋㅋㅋㅋ 재미있게 즐길게요 작가님!</div>
-                <div class="cd-comment-foot">
-                  <button type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>6</button>
-                  <button type="button">답글</button>
-                </div>
+                <button class="cd-comment-menu" type="button" aria-label="더보기"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="12" cy="19" r="1.6"/></svg></button>
               </div>
-              <button class="cd-comment-menu" type="button" aria-label="더보기"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="12" cy="19" r="1.6"/></svg></button>
+              <p class="cd-comment-text">밤새 멸천주로 자격 증명 했네요 덤으로 소원도 들어준다고 해서 ㅋㅎㅎㅎ! 재미있게 즐길게요 작가님!</p>
+              <div class="cd-comment-foot">
+                <button type="button"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>12</button>
+                <button type="button"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>12</button>
+              </div>
             </div>
 
             <div class="cd-comment">
-              <div class="cd-comment-avatar"><img src="./images/main/Image-2.png" alt=""></div>
-              <div class="cd-comment-body">
-                <div class="cd-comment-head">
-                  <span class="cd-comment-name">닉네임이 엄청나게 길 수도...</span>
-                  <span class="cd-comment-meta">1.2K chat · 어제</span>
+              <div class="cd-comment-head">
+                <div class="cd-comment-avatar"><img src="./images/main/Image-2.png" alt=""></div>
+                <div class="cd-comment-head-content">
+                  <span class="cd-comment-name">닉네임이 엄청나게 길 수 도 있잖아요 그럴때는 이렇게 표시가됩니다.</span>
+                  <span class="cd-comment-date">하루 전 · 1.2k턴</span>
                 </div>
-                <div class="cd-comment-text">잘 먹고갑니다 💚</div>
-                <div class="cd-comment-foot">
-                  <button type="button" class="liked"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>32</button>
-                  <button type="button">답글</button>
-                </div>
+                <button class="cd-comment-menu" type="button" aria-label="더보기"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="12" cy="19" r="1.6"/></svg></button>
               </div>
-              <button class="cd-comment-menu" type="button" aria-label="더보기"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="12" cy="19" r="1.6"/></svg></button>
-            </div>
-
-            <div class="cd-comment cd-comment-reply">
-              <div class="cd-comment-avatar"><img src="./images/main/Image.png" alt=""></div>
-              <div class="cd-comment-body">
-                <div class="cd-comment-head">
-                  <span class="cd-comment-name">김제작</span>
-                  <span class="cd-comment-creator-badge">크리에이터</span>
-                  <span class="cd-comment-meta">12시간 전</span>
-                </div>
-                <div class="cd-comment-text">감사합니다 ㅎㅎ 다음 작품도 기대해주세요!</div>
-                <div class="cd-comment-foot">
-                  <button type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>8</button>
-                  <button type="button">답글</button>
-                </div>
+              <p class="cd-comment-text">잘먹고갑니다💕</p>
+              <div class="cd-comment-foot">
+                <button type="button" class="liked"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>12</button>
+                <button type="button"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>12</button>
               </div>
-              <button class="cd-comment-menu" type="button" aria-label="더보기"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="12" cy="19" r="1.6"/></svg></button>
             </div>
 
             <div class="cd-comment">
-              <div class="cd-comment-avatar"><img src="./images/main/Image-3.png" alt=""></div>
-              <div class="cd-comment-body">
-                <div class="cd-comment-head">
-                  <span class="cd-comment-name">한밤중의산책자</span>
-                  <span class="cd-comment-meta">340 chat · 2일 전</span>
+              <div class="cd-comment-head">
+                <div class="cd-comment-avatar"><img src="./images/main/Image-3.png" alt=""></div>
+                <div class="cd-comment-head-content">
+                  <span class="cd-comment-name">김유저</span>
+                  <span class="cd-comment-date">하루 전 · 1.2k턴</span>
                 </div>
-                <div class="cd-comment-text">스토리 짜임새가 진짜 좋네요. 막판 반전이 ㄹㅇ 소름...</div>
-                <div class="cd-comment-foot">
-                  <button type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>4</button>
-                  <button type="button">답글</button>
-                </div>
+                <button class="cd-comment-menu" type="button" aria-label="더보기"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="12" cy="19" r="1.6"/></svg></button>
               </div>
-              <button class="cd-comment-menu" type="button" aria-label="더보기"><svg viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="12" cy="19" r="1.6"/></svg></button>
+              <p class="cd-comment-text">밤새 멸천주로 자격 증명 했네요 덤으로 소원도 들어준다고 해서 ㅋㅎㅎㅎ! 재미있게 즐길게요 작가님!</p>
+              <div class="cd-comment-foot">
+                <button type="button"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>12</button>
+                <button type="button"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>12</button>
+              </div>
             </div>
           </div>
         </div>
@@ -642,6 +766,27 @@ function cdTab(btn){
     p.classList.toggle('active', p.id === map[tab]);
   });
 }
+/* 더보기 메뉴 토글 */
+function cdMoreToggle(e){
+  e.stopPropagation();
+  const menu = document.getElementById('cdMoreMenu');
+  menu.hidden = !menu.hidden;
+}
+function cdMoreAction(label){
+  document.getElementById('cdMoreMenu').hidden = true;
+  console.log('더보기:', label);
+}
+/* 바깥 클릭 시 더보기 메뉴 닫기 */
+document.addEventListener('click', e => {
+  const menu = document.getElementById('cdMoreMenu');
+  if (!menu || menu.hidden) return;
+  if (e.target.closest('#cdMoreMenu') || e.target.closest('#cdMoreBtn')) return;
+  menu.hidden = true;
+});
+/* 댓글 좋아요 토글 */
+document.querySelectorAll('.cd-comment-foot button:first-child').forEach(btn => {
+  btn.addEventListener('click', () => btn.classList.toggle('liked'));
+});
 /* 배경 클릭 시 닫기 (모달에서만) */
 document.getElementById('cdOverlay').addEventListener('click', e => {
   if (e.target.id !== 'cdOverlay') return;

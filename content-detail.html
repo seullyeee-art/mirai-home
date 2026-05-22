@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#1B1C1E">
-<title>목욕장에서 투명인간이 됐다? — MIRAI</title>
+<title>빙궁의 공주 — MIRAI</title>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable-jp.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/seullyeee-art/mirai-shared@main/styles.css">
@@ -18,6 +18,25 @@
   display:flex;align-items:center;justify-content:center;
   padding:24px;
   animation:cdFade 200ms ease;
+}
+/* iframe(embed) 모드 — 오른쪽 사이드 패널로 표시, backdrop 없음 */
+html.cd-embed body{background:transparent}
+html.cd-embed .cd-overlay{
+  background:transparent;
+  backdrop-filter:none;-webkit-backdrop-filter:none;
+  padding:0;
+  align-items:stretch;justify-content:flex-end;
+  animation:none;
+}
+html.cd-embed .cd-modal{
+  width:100%;max-width:none;height:100dvh;max-height:100dvh;
+  border-radius:0;
+  box-shadow:-12px 0 40px rgba(0,0,0,0.4);
+  animation:cdSlideIn 320ms cubic-bezier(0.32,0.72,0,1);
+}
+@keyframes cdSlideIn{
+  from{transform:translateX(100%)}
+  to{transform:translateX(0)}
 }
 @keyframes cdFade{from{opacity:0}to{opacity:1}}
 
@@ -33,8 +52,8 @@
 }
 .cd-modal::before{
   content:'';position:absolute;inset:-120px;
-  background:url('./images/main/thumbs/invisible-bath.avif') center / cover no-repeat;
-  filter:blur(140px) brightness(0.85) saturate(2.6);
+  background:var(--cd-bg-img, url('./images/main/thumbs/invisible-bath.avif')) center / cover no-repeat;
+  filter:blur(140px) brightness(0.95) saturate(1);
   transform:scale(2);
   z-index:-2;
   pointer-events:none;
@@ -47,7 +66,7 @@
       rgba(27,28,30,0.15) 50%,
       rgba(27,28,30,0.4) 80%,
       rgba(27,28,30,0.65) 100%),
-    linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5));
+    linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65));
   z-index:-1;
   pointer-events:none;
 }
@@ -65,7 +84,28 @@
 .cd-close:hover{background:rgba(0,0,0,0.65)}
 .cd-close svg{width:20px;height:20px}
 
-.cd-scroll{overflow-y:auto;overscroll-behavior:contain}
+.cd-scroll{overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain}
+
+/* 모달 안 서브뷰 (갤러리 등 iframe) */
+.cd-subview{
+  position:absolute;inset:0;
+  width:100%;height:100%;border:none;
+  background:#1B1C1E;
+  z-index:50;
+}
+.cd-subview[hidden]{display:none}
+.cd-subview-back{
+  position:absolute;top:max(12px, env(safe-area-inset-top));left:12px;
+  width:36px;height:36px;border-radius:50%;
+  background:rgba(0,0,0,0.55);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+  border:none;cursor:pointer;color:#fff;padding:0;
+  z-index:60;
+  display:flex;align-items:center;justify-content:center;
+  transition:background 0.15s ease;
+}
+.cd-subview-back:hover{background:rgba(0,0,0,0.75)}
+.cd-subview-back svg{width:20px;height:20px}
+.cd-subview-back[hidden]{display:none}
 
 .cd-hero{
   position:relative;width:100%;
@@ -231,6 +271,12 @@
 .cd-panel{display:none}
 .cd-panel.active{display:block}
 
+.cd-section-title{
+  font-size:17px;font-weight:700;line-height:1.41;
+  color:var(--label-strong,#fff);
+  margin-bottom:10px;
+  font-feature-settings:'ss10' 1;
+}
 .cd-description{
   font-size:15px;line-height:1.467;font-weight:400;
   color:var(--label-normal,#F7F7F8);
@@ -380,6 +426,83 @@
 .cd-comment-menu:hover{background:rgba(255,255,255,0.06);color:#fff}
 .cd-comment-menu svg{width:16px;height:16px}
 .cd-comment-reply{margin-left:40px}
+
+/* 소개 탭 갤러리 미리보기 캐러셀 */
+.cd-gallery-cs{margin-bottom:20px}
+.cd-gallery-cs-head{
+  display:flex;align-items:baseline;justify-content:space-between;gap:12px;
+  margin-bottom:12px;
+}
+.cd-gallery-cs-title{
+  font-size:17px;font-weight:700;line-height:1.41;
+  color:var(--label-strong,#fff);
+  font-feature-settings:'ss10' 1;
+}
+.cd-gallery-cs-more{
+  flex-shrink:0;
+  display:inline-flex;align-items:center;gap:1px;
+  background:none;border:none;cursor:pointer;font-family:inherit;
+  font-size:13px;font-weight:500;
+  color:var(--label-alternative,rgba(174,176,182,0.61));
+  letter-spacing:-0.1px;
+  transition:color 0.15s ease;
+}
+.cd-gallery-cs-more:hover{color:var(--label-normal,#F7F7F8)}
+.cd-gallery-cs-more svg{width:15px;height:15px}
+.cd-gallery-cs-track{
+  display:flex;gap:8px;
+  overflow-x:auto;scroll-snap-type:x mandatory;
+  -webkit-overflow-scrolling:touch;scrollbar-width:none;
+}
+.cd-gallery-cs-track::-webkit-scrollbar{display:none}
+.cd-gallery-cs-item{
+  flex-shrink:0;width:98px;
+  position:relative;aspect-ratio:3/4;
+  border-radius:12px;overflow:hidden;
+  background:linear-gradient(135deg, rgba(112,115,124,0.18), rgba(112,115,124,0.08));
+  scroll-snap-align:start;
+  text-decoration:none;display:block;cursor:pointer;
+  transition:transform 0.15s;
+}
+.cd-gallery-cs-item:active{transform:scale(0.98)}
+.cd-gallery-cs-item > img{width:100%;height:100%;object-fit:cover;display:block}
+.cd-gallery-cs-item.locked > img{filter:blur(10px) brightness(0.75)}
+.cd-gallery-cs-item .cd-gallery-lock{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}
+
+/* 갤러리 달성률 */
+.cd-gallery-progress{margin-bottom:18px}
+.cd-gallery-progress-head{
+  display:flex;align-items:baseline;justify-content:space-between;gap:12px;
+  margin-bottom:8px;
+}
+.cd-gallery-progress-title{
+  font-size:15px;font-weight:700;color:var(--label-strong,#fff);
+  letter-spacing:-0.2px;font-feature-settings:'ss10' 1;
+}
+.cd-gallery-progress-count{
+  font-size:13px;font-weight:500;color:var(--label-alternative,rgba(174,176,182,0.61));
+  letter-spacing:-0.1px;font-variant-numeric:tabular-nums;
+}
+.cd-gallery-progress-count b{color:var(--label-strong,#fff);font-weight:700}
+.cd-gallery-progress-bar{
+  height:6px;border-radius:3px;
+  background:rgba(255,255,255,0.08);overflow:hidden;
+  margin-bottom:10px;
+}
+.cd-gallery-progress-fill{
+  height:100%;border-radius:3px;
+  background:linear-gradient(90deg,var(--accent-pink,#FA73E3),var(--accent-violet,#8B5CF6));
+  transition:width 0.5s cubic-bezier(0.32,0.72,0,1);
+}
+.cd-gallery-tiers{
+  display:flex;flex-wrap:wrap;gap:8px 16px;
+  font-size:12px;color:var(--label-alternative,rgba(174,176,182,0.61));
+  font-variant-numeric:tabular-nums;
+}
+.cd-gallery-tier{display:inline-flex;align-items:center;gap:5px}
+.cd-gallery-tier::before{content:'';width:6px;height:6px;border-radius:50%;background:#3DC2FF}
+.cd-gallery-tier.cutscene::before{background:var(--accent-pink,#FA73E3)}
+.cd-gallery-tier b{color:var(--label-strong,#fff);font-weight:600;margin-left:1px}
 
 /* 갤러리 미니 그리드 — mirai-gallery 톤 (3:4 / 12r / lock-price 칩) */
 .cd-gallery-grid{
@@ -538,6 +661,17 @@
   .cd-info{padding:14px 20px 18px}
   .cd-title{font-size:20px}
   .cd-similar{margin-top:16px}
+  /* 모바일 Safari blur 한계 대응 — hero 원본과 동일 톤(채도/밝기 과장 X)으로 경계 제거 */
+  .cd-modal::before{
+    inset:-40px;
+    filter:blur(70px) brightness(0.95) saturate(1);
+    transform:scale(2.4);
+  }
+  /* hero img fade를 더 길게 빼서 blur 배경으로 부드럽게 전환 */
+  .cd-hero img{
+    -webkit-mask-image:linear-gradient(to bottom, #000 18%, rgba(0,0,0,0.5) 70%, transparent 100%);
+    mask-image:linear-gradient(to bottom, #000 18%, rgba(0,0,0,0.5) 70%, transparent 100%);
+  }
 }
 </style>
 </head>
@@ -545,18 +679,24 @@
 <div class="cd-overlay" id="cdOverlay">
   <div class="cd-modal">
     <button class="cd-close" type="button" aria-label="닫기"
-            onclick="history.length>1?history.back():location.href='index.html'">
+            onclick="cdCloseModal()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
         <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
       </svg>
     </button>
 
-    <div class="cd-scroll">
+    <button class="cd-subview-back" id="cdSubviewBack" type="button" aria-label="뒤로" hidden
+            onclick="cdSubviewClose()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+    <iframe class="cd-subview" id="cdSubview" hidden></iframe>
+
+    <div class="cd-scroll" id="cdScroll">
       <div class="cd-hero">
-        <img src="./images/main/thumbs/invisible-bath.avif" alt="목욕장에서 투명인간이 됐다?">
+        <img src="./images/main/thumbs/ice-palace.png" alt="빙궁의 공주">
         <div class="cd-hero-overlay">
           <div class="cd-title-row">
-            <h1 class="cd-title">목욕장에서 투명인간이 됐다?</h1>
+            <h1 class="cd-title">빙궁의 공주</h1>
             <div class="cd-actions-row">
               <button class="cd-action" id="cdLikeBtn" type="button" aria-label="좋아요"
                       onclick="this.classList.toggle('liked')">
@@ -610,14 +750,41 @@
 
       <div class="cd-info">
         <div class="cd-tabs" role="tablist">
-          <button class="cd-tab active" type="button" data-tab="intro" onclick="cdTab(this)">소개</button>
-          <button class="cd-tab" type="button" data-tab="gallery" onclick="cdTab(this)">갤러리</button>
+          <button class="cd-tab active" type="button" data-tab="intro" onclick="cdTab(this)">정보</button>
           <button class="cd-tab" type="button" data-tab="comments" onclick="cdTab(this)">댓글 (12)</button>
         </div>
 
         <div class="cd-panel active" id="cdPanelIntro">
+          <div class="cd-gallery-cs">
+          <div class="cd-gallery-progress" style="margin-bottom:14px">
+            <div class="cd-gallery-progress-head">
+              <span class="cd-gallery-progress-title">갤러리 수집률</span>
+              <span class="cd-gallery-progress-count"><b>34</b> / 103 · 33%</span>
+            </div>
+            <div class="cd-gallery-progress-bar"><div class="cd-gallery-progress-fill" style="width:33%"></div></div>
+          </div>
+            <div class="cd-gallery-cs-track">
+              <a class="cd-gallery-cs-item" onclick="cdGoGallery()"><img src="./images/main/thumbs/leeyeonwoo.png" alt=""></a>
+              <a class="cd-gallery-cs-item" onclick="cdGoGallery()"><img src="./images/main/thumbs/prof-crush.png" alt=""></a>
+              <a class="cd-gallery-cs-item" onclick="cdGoGallery()"><img src="./images/main/thumbs/iljin-school.png" alt=""></a>
+              <a class="cd-gallery-cs-item locked" onclick="cdGoGallery()">
+                <img src="./images/main/thumbs/saved-villain.png" alt="">
+                <span class="cd-gallery-lock"><span class="cd-gallery-lock-price"><img src="./images/main/mir.png" alt="" onerror="this.style.display='none'">5</span></span>
+              </a>
+              <a class="cd-gallery-cs-item locked" onclick="cdGoGallery()">
+                <img src="./images/main/thumbs/wounded-wolf.png" alt="">
+                <span class="cd-gallery-lock"><span class="cd-gallery-lock-price"><img src="./images/main/mir.png" alt="" onerror="this.style.display='none'">10</span></span>
+              </a>
+              <a class="cd-gallery-cs-item locked" onclick="cdGoGallery()">
+                <img src="./images/main/thumbs/adventurer-strongest.png" alt="">
+                <span class="cd-gallery-lock"><span class="cd-gallery-lock-price"><img src="./images/main/mir.png" alt="" onerror="this.style.display='none'">15</span></span>
+              </a>
+            </div>
+          </div>
+          <div class="cd-section-title">스토리</div>
           <p class="cd-description">일본, 도쿄. 현재. 2025년.<br>2015년 Luciel Lamperouge가 도쿄에 설립한 일본 엔터테인먼트 회사입니다. 이 회사는 음반사, 연예 기획사, 의류 브랜드, 화장품 브랜드, 이벤트 관리 회사 및 콘서트 제작사로 활동합니다.</p>
           <div class="cd-date">등록일 2025.12.04 · 수정일 2025.12.04</div>
+          <!-- 비슷한 콘텐츠 — 임시 숨김
           <div class="cd-similar">
             <div class="cd-similar-title">데이트 시뮬레이터.exe ...와 비슷한 콘텐츠</div>
             <div class="cd-similar-track">
@@ -655,27 +822,7 @@
               </a>
             </div>
           </div>
-        </div>
-
-        <div class="cd-panel" id="cdPanelGallery">
-          <div class="cd-gallery-grid">
-            <a href="../mirai-gallery/gallery-prototype.html" class="cd-gallery-item"><img src="./images/main/thumbs/leeyeonwoo.png" alt=""></a>
-            <a href="../mirai-gallery/gallery-prototype.html" class="cd-gallery-item"><img src="./images/main/thumbs/prof-crush.png" alt=""></a>
-            <a href="../mirai-gallery/gallery-prototype.html" class="cd-gallery-item"><img src="./images/main/thumbs/iljin-school.png" alt=""></a>
-            <a href="../mirai-gallery/gallery-prototype.html" class="cd-gallery-item locked">
-              <img src="./images/main/thumbs/saved-villain.png" alt="">
-              <span class="cd-gallery-lock"><span class="cd-gallery-lock-price"><img src="./images/main/mir.png" alt="" onerror="this.style.display='none'">5</span></span>
-            </a>
-            <a href="../mirai-gallery/gallery-prototype.html" class="cd-gallery-item locked">
-              <img src="./images/main/thumbs/wounded-wolf.png" alt="">
-              <span class="cd-gallery-lock"><span class="cd-gallery-lock-price"><img src="./images/main/mir.png" alt="" onerror="this.style.display='none'">10</span></span>
-            </a>
-            <a href="../mirai-gallery/gallery-prototype.html" class="cd-gallery-item locked">
-              <img src="./images/main/thumbs/adventurer-strongest.png" alt="">
-              <span class="cd-gallery-lock"><span class="cd-gallery-lock-price"><img src="./images/main/mir.png" alt="" onerror="this.style.display='none'">15</span></span>
-            </a>
-          </div>
-          <a href="../mirai-gallery/gallery-prototype.html" class="cd-gallery-all">전체 갤러리 보기</a>
+          -->
         </div>
 
         <div class="cd-panel" id="cdPanelComments">
@@ -758,6 +905,29 @@
 </div>
 
 <script>
+/* 갤러리 캐러셀 → 갤러리 페이지 (모달 안 iframe) */
+function cdGoGallery(){
+  cdSubviewOpen('../mirai-gallery/gallery-prototype.html');
+}
+/* iframe embed 모드 감지 */
+if (window.parent !== window){
+  document.documentElement.classList.add('cd-embed');
+}
+/* hero 이미지 → blur 배경 자동 동기화 */
+(function(){
+  const heroImg = document.querySelector('.cd-hero img');
+  const modal = document.querySelector('.cd-modal');
+  if (heroImg && modal){
+    modal.style.setProperty('--cd-bg-img', 'url("'+heroImg.getAttribute('src')+'")');
+  }
+})();
+/* URL ?tab= 으로 초기 탭 지정 (intro/gallery/comments) */
+(function(){
+  const initTab = new URLSearchParams(location.search).get('tab');
+  if (!initTab) return;
+  const btn = document.querySelector('.cd-tab[data-tab="'+initTab+'"]');
+  if (btn) cdTab(btn);
+})();
 function cdTab(btn){
   const tab = btn.dataset.tab;
   const map = { intro: 'cdPanelIntro', gallery: 'cdPanelGallery', comments: 'cdPanelComments' };
@@ -766,6 +936,32 @@ function cdTab(btn){
     p.classList.toggle('active', p.id === map[tab]);
   });
 }
+/* 모달 안 서브뷰 (갤러리 iframe) */
+function cdSubviewOpen(url){
+  const frame = document.getElementById('cdSubview');
+  frame.src = url;
+  frame.hidden = false;
+  document.getElementById('cdSubviewBack').hidden = false;
+  frame.onload = function(){
+    try{
+      const doc = frame.contentDocument;
+      const close = doc.querySelector('.gallery-close, .gallery-back');
+      if (close) close.style.display = 'none';
+    }catch(e){}
+  };
+}
+function cdSubviewClose(){
+  document.getElementById('cdSubview').hidden = true;
+  document.getElementById('cdSubview').src = 'about:blank';
+  document.getElementById('cdSubviewBack').hidden = true;
+}
+/* 갤러리 링크 클릭 시 모달 안 iframe으로 */
+document.addEventListener('click', e => {
+  const a = e.target.closest('a[href*="gallery-prototype.html"]');
+  if (!a) return;
+  e.preventDefault();
+  cdSubviewOpen(a.getAttribute('href'));
+});
 /* 더보기 메뉴 토글 */
 function cdMoreToggle(e){
   e.stopPropagation();
@@ -787,18 +983,24 @@ document.addEventListener('click', e => {
 document.querySelectorAll('.cd-comment-foot button:first-child').forEach(btn => {
   btn.addEventListener('click', () => btn.classList.toggle('liked'));
 });
+/* 닫기 — iframe(embed) 모드면 부모에게 알림, 아니면 history.back */
+function cdCloseModal(){
+  if (window.parent !== window){
+    window.parent.postMessage({type:'cd-close'}, '*');
+  } else {
+    history.length > 1 ? history.back() : location.href = 'index.html';
+  }
+}
 /* 배경 클릭 시 닫기 (모달에서만) */
 document.getElementById('cdOverlay').addEventListener('click', e => {
   if (e.target.id !== 'cdOverlay') return;
   if (window.innerWidth > 768){
-    history.length > 1 ? history.back() : location.href = 'index.html';
+    cdCloseModal();
   }
 });
 /* ESC */
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') {
-    history.length > 1 ? history.back() : location.href = 'index.html';
-  }
+  if (e.key === 'Escape') cdCloseModal();
 });
 </script>
 </body>

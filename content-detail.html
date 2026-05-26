@@ -469,31 +469,6 @@ html.cd-embed .cd-modal{
 .cd-gallery-cs-item.locked > img{filter:blur(10px) brightness(0.75)}
 .cd-gallery-cs-item .cd-gallery-lock{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}
 
-/* 갤러리 달성률 */
-.cd-gallery-progress{margin-bottom:18px}
-.cd-gallery-progress-head{
-  display:flex;align-items:baseline;justify-content:space-between;gap:12px;
-  margin-bottom:8px;
-}
-.cd-gallery-progress-title{
-  font-size:15px;font-weight:700;color:var(--label-strong,#fff);
-  letter-spacing:-0.2px;font-feature-settings:'ss10' 1;
-}
-.cd-gallery-progress-count{
-  font-size:13px;font-weight:500;color:var(--label-alternative,rgba(174,176,182,0.61));
-  letter-spacing:-0.1px;font-variant-numeric:tabular-nums;
-}
-.cd-gallery-progress-count b{color:var(--label-strong,#fff);font-weight:700}
-.cd-gallery-progress-bar{
-  height:6px;border-radius:3px;
-  background:rgba(255,255,255,0.08);overflow:hidden;
-  margin-bottom:10px;
-}
-.cd-gallery-progress-fill{
-  height:100%;border-radius:3px;
-  background:linear-gradient(90deg,var(--accent-pink,#FA73E3),var(--accent-violet,#8B5CF6));
-  transition:width 0.5s cubic-bezier(0.32,0.72,0,1);
-}
 .cd-gallery-tiers{
   display:flex;flex-wrap:wrap;gap:8px 16px;
   font-size:12px;color:var(--label-alternative,rgba(174,176,182,0.61));
@@ -756,13 +731,6 @@ html.cd-embed .cd-modal{
 
         <div class="cd-panel active" id="cdPanelIntro">
           <div class="cd-gallery-cs">
-          <div class="cd-gallery-progress" style="margin-bottom:14px">
-            <div class="cd-gallery-progress-head">
-              <span class="cd-gallery-progress-title">갤러리 수집률</span>
-              <span class="cd-gallery-progress-count"><b>34</b> / 103 · 33%</span>
-            </div>
-            <div class="cd-gallery-progress-bar"><div class="cd-gallery-progress-fill" style="width:33%"></div></div>
-          </div>
             <div class="cd-gallery-cs-track">
               <a class="cd-gallery-cs-item" onclick="cdGoGallery()"><img src="./images/main/thumbs/leeyeonwoo.png" alt=""></a>
               <a class="cd-gallery-cs-item" onclick="cdGoGallery()"><img src="./images/main/thumbs/prof-crush.png" alt=""></a>

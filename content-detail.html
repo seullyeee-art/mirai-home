@@ -469,6 +469,21 @@ html.cd-embed .cd-modal{
 .cd-gallery-cs-item.locked > img{filter:blur(10px) brightness(0.75)}
 .cd-gallery-cs-item .cd-gallery-lock{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none}
 
+/* 갤러리 수집률 — 헤더만 (프로그래스바 제거) */
+.cd-gallery-progress{margin-bottom:18px}
+.cd-gallery-progress-head{
+  display:flex;align-items:baseline;justify-content:space-between;gap:12px;
+}
+.cd-gallery-progress-title{
+  font-size:15px;font-weight:700;color:var(--label-strong,#fff);
+  letter-spacing:-0.2px;font-feature-settings:'ss10' 1;
+}
+.cd-gallery-progress-count{
+  font-size:13px;font-weight:500;color:var(--label-alternative,rgba(174,176,182,0.61));
+  letter-spacing:-0.1px;font-variant-numeric:tabular-nums;
+}
+.cd-gallery-progress-count b{color:var(--label-strong,#fff);font-weight:700}
+
 .cd-gallery-tiers{
   display:flex;flex-wrap:wrap;gap:8px 16px;
   font-size:12px;color:var(--label-alternative,rgba(174,176,182,0.61));
@@ -731,6 +746,12 @@ html.cd-embed .cd-modal{
 
         <div class="cd-panel active" id="cdPanelIntro">
           <div class="cd-gallery-cs">
+          <div class="cd-gallery-progress" style="margin-bottom:14px">
+            <div class="cd-gallery-progress-head">
+              <span class="cd-gallery-progress-title">갤러리 수집률</span>
+              <span class="cd-gallery-progress-count"><b>34</b> / 103 · 33%</span>
+            </div>
+          </div>
             <div class="cd-gallery-cs-track">
               <a class="cd-gallery-cs-item" onclick="cdGoGallery()"><img src="./images/main/thumbs/leeyeonwoo.png" alt=""></a>
               <a class="cd-gallery-cs-item" onclick="cdGoGallery()"><img src="./images/main/thumbs/prof-crush.png" alt=""></a>

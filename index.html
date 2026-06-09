@@ -2131,7 +2131,7 @@ document.getElementById('dailyRewardBs')?.addEventListener('click', e => {
         <div class="notif-char-avatar"><img src="./images/main/Image.png" alt=""></div>
       </div>
     </div>
-    <!-- @dev: 캐릭터명이 길어질 수 있음. 동적 바인딩 시 일정 글자수(예: 18자) 넘으면 ...으로 truncate 처리 필요. -->
+    <!-- @dev: 캐릭터명 동적 바인딩 시 KO 8자 / EN 14자 초과하면 …로 truncate (1줄 유지). -->
     <div class="notif-title" data-ko="Amon이 말을 걸고 싶어해요" data-en="Amon wants to talk to you">Amon이 말을 걸고 싶어해요</div>
     <div class="notif-desc" data-ko="알림을 켜면 캐릭터의 메시지를 받아볼 수 있어요." data-en="Enable alerts to hear from characters.">알림을 켜면 캐릭터의 메시지를 받아볼 수 있어요.</div>
     <button class="notif-cta" onclick="allowNotif()">

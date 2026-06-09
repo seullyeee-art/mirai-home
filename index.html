@@ -1014,16 +1014,17 @@ main{
   z-index:1000;opacity:0;pointer-events:none;
   transition:opacity 240ms ease;
   display:flex;align-items:center;justify-content:center;
-  padding:16px;
+  padding:24px;
 }
 .bs-backdrop.open{opacity:1;pointer-events:auto}
 .bs-sheet{
-  width:min(100%, var(--review-modal-max));
-  max-width:var(--review-modal-max);
-  height:var(--review-modal-max);
+  width:min(100%, var(--popup-modal-size));
+  max-width:var(--popup-modal-size);
   background:var(--bg-elevated);
+  border:1px solid var(--line-alternative);
   border-radius:20px;
   padding:var(--popup-modal-padding);
+  padding-bottom:16px;
   box-shadow:0 24px 60px rgba(0,0,0,0.5);
   transform:translateY(12px) scale(0.96);opacity:0;
   transition:transform 280ms cubic-bezier(0.32,0.72,0,1), opacity 220ms ease;
@@ -1035,25 +1036,28 @@ main{
 .bs-backdrop.open .bs-sheet{transform:translateY(0) scale(1);opacity:1}
 .bs-handle-wrap,.bs-handle{display:none}
 .bs-header{
-  position:relative;
   display:flex;align-items:center;justify-content:center;
   padding:0 0 12px;
   flex:0 0 auto;
 }
 .bs-title{font-size:17px;font-weight:600;line-height:1.412;color:var(--label-strong)}
 .bs-close{
-  position:absolute;right:0;top:50%;transform:translateY(-50%);
-  width:24px;height:24px;display:flex;align-items:center;justify-content:center;
-  background:transparent;border:0;color:var(--label-normal);cursor:pointer;padding:0;
+  position:absolute; top:12px; right:12px;
+  width:32px;height:32px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background:transparent;border:none;cursor:pointer;padding:0;
+  color:var(--label-alternative);
+  transition:background 0.15s ease, color 0.15s ease;
 }
-.bs-close svg{width:24px;height:24px;display:block}
+.bs-close:hover{background:var(--fill-alternative); color:var(--label-normal)}
+.bs-close svg{width:20px;height:20px;display:block}
 .bs-content{
   padding:0;
   flex:1 1 auto;
   overflow:auto;
   -webkit-overflow-scrolling:touch;
 }
-.bs-icon-wrap{display:flex;justify-content:center;margin:8px 0 28px}
+.bs-icon-wrap{display:flex;justify-content:center;margin:0 0 16px}
 .bs-icon{width:64px;height:64px;display:flex;align-items:center;justify-content:center;color:var(--primary-normal)}
 .bs-icon img{width:100%;height:100%;display:block;object-fit:contain}
 .bs-icon svg{width:100%;height:100%;display:block}
@@ -1074,15 +1078,6 @@ main{
 }
 .bs-cta-primary:hover{opacity:0.92}
 .bs-cta-primary:active{opacity:0.85}
-.bs-cta-secondary{
-  display:block;width:100%;text-align:center;
-  padding:12px;color:var(--label-neutral);
-  font-size:14px;font-weight:500;
-  text-decoration:none;background:transparent;border:0;
-  cursor:pointer;font-family:inherit;
-  transition:color 160ms;
-}
-.bs-cta-secondary:hover{color:var(--label-normal)}
 
 /* ═══ DAILY REWARDS BOTTOM SHEET — PARTY EDITION ═══ */
 .bs-sheet-party{
@@ -1195,14 +1190,14 @@ main{
   position:relative;
   display:flex;flex-direction:column;align-items:center;
   margin-bottom:18px;
-  padding:8px 0 0;
+  padding:0;
 }
 .bs-reward-glow{
   position:absolute;
   top:-44px;left:50%;
   transform:translateX(-50%);
   width:260px;height:260px;
-  background:radial-gradient(circle, var(--party-glow) 0%, rgba(39,168,204,0.10) 36%, rgba(39,168,204,0) 72%);
+  background:radial-gradient(circle 110px at center, var(--party-glow) 0%, rgba(39,168,204,0.08) 55%, rgba(39,168,204,0) 100%);
   pointer-events:none;
   animation:bsGlowPulse 3s ease-in-out infinite;
 }
@@ -1329,11 +1324,11 @@ main{
 .notif-modal{
   width:min(100%, var(--popup-modal-size));
   max-width:var(--popup-modal-size);
-  min-height:var(--popup-modal-size);
   background:var(--bg-elevated);
   border:1px solid var(--line-alternative);
   border-radius:20px;
   padding:var(--popup-modal-padding);
+  padding-bottom:16px;
   text-align:center;
   position:relative;
   transform:scale(0.94); opacity:0;
@@ -1354,25 +1349,18 @@ main{
 /* 비주얼 영역 */
 .notif-visual{
   display:flex; align-items:center; justify-content:center;
-  margin:4px 0 20px;
+  margin:4px 0 16px;
 }
 /* A — 미르 인센티브 */
 .notif-mir{
   position:relative;
-  width:96px; height:96px;
+  width:120px; height:120px;
   display:flex; align-items:center; justify-content:center;
+  margin-bottom:-16px;
 }
-.notif-mir img{width:84px; height:84px; object-fit:contain;
+.notif-mir img{width:120px; height:120px; object-fit:contain;
   filter:drop-shadow(0 10px 26px rgba(20,195,145,0.22));
   animation:notifFloat 2.6s ease-in-out infinite;
-}
-.notif-mir-amount{
-  position:absolute; bottom:-4px; left:50%; transform:translateX(-50%);
-  padding:3px 12px; border-radius:999px;
-  background:linear-gradient(116deg, var(--primary-normal), var(--primary-heavy));
-  color:#fff; font-size:13px; font-weight:800;
-  white-space:nowrap;
-  box-shadow:0 8px 22px rgba(20,195,145,0.22);
 }
 @keyframes notifFloat{
   0%,100%{transform:translateY(0)}
@@ -1381,53 +1369,42 @@ main{
 /* B — 캐릭터 감성 */
 .notif-char{
   position:relative;
-  width:88px; height:88px;
+  width:100px; height:100px;
 }
 .notif-char-avatar{
-  width:88px; height:88px; border-radius:50%;
-  overflow:hidden; border:2px solid var(--primary-normal);
+  width:100px; height:100px; border-radius:50%;
+  overflow:hidden; border:1px solid var(--line-normal);
 }
 .notif-char-avatar img{width:100%; height:100%; object-fit:cover; display:block}
-.notif-char-bubble{
-  position:absolute; top:-8px; right:-22px;
-  width:62px; height:42px;
-  border-radius:16px 16px 16px 6px;
+.notif-char::after{
+  content:"";
+  position:absolute; top:4px; right:4px;
+  width:20px; height:20px; border-radius:50%;
   background:
-    linear-gradient(180deg, rgba(255,255,255,0.18), rgba(255,255,255,0) 38%),
-    linear-gradient(116deg, var(--primary-normal), var(--primary-heavy));
-  display:flex; flex-direction:column; justify-content:center; gap:5px;
-  padding:10px 12px;
-  border:1px solid rgba(255,255,255,0.22);
-  box-shadow:0 12px 28px rgba(20,195,145,0.20);
-  animation:notifBubble 2s ease-in-out infinite;
+    radial-gradient(circle at 32% 28%, rgba(255,255,255,0.85), rgba(255,255,255,0) 55%),
+    linear-gradient(160deg, #8FE5FF 0%, #3DC2FF 55%, #1FA0E6 100%);
+  box-shadow:
+    0 2px 6px rgba(0,0,0,0.35),
+    0 0 14px rgba(61,194,255,0.55),
+    inset 0 -1px 2px rgba(0,0,0,0.22),
+    inset 0 1px 1.5px rgba(255,255,255,0.55);
+  animation:notifDot 2.2s ease-in-out infinite;
 }
-.notif-char-bubble::after{
-  content:"";
-  position:absolute; left:7px; bottom:-5px;
-  width:12px; height:12px;
-  background:var(--primary-heavy);
-  border-radius:0 0 0 4px;
-  transform:rotate(45deg);
-}
-.notif-char-bubble::before{
-  content:"";
-  position:absolute; top:-2px; right:-2px;
-  width:10px; height:10px;
-  border-radius:50%;
-  background:var(--status-negative);
-  border:2px solid var(--bg-elevated);
-  box-shadow:0 0 0 3px rgba(255,99,99,0.14);
-}
-.notif-bubble-line{
-  position:relative; z-index:1;
-  height:3px; border-radius:999px;
-  background:rgba(255,255,255,0.92);
-}
-.notif-bubble-line.short{width:22px}
-.notif-bubble-line.long{width:36px;opacity:0.68}
-@keyframes notifBubble{
-  0%,100%{transform:translateY(0) scale(1)}
-  50%{transform:translateY(-3px) scale(1.04)}
+@keyframes notifDot{
+  0%,100%{
+    box-shadow:
+      0 2px 6px rgba(0,0,0,0.35),
+      0 0 14px rgba(61,194,255,0.5),
+      inset 0 -1px 2px rgba(0,0,0,0.22),
+      inset 0 1px 1.5px rgba(255,255,255,0.55);
+  }
+  50%{
+    box-shadow:
+      0 2px 6px rgba(0,0,0,0.35),
+      0 0 22px rgba(61,194,255,0.8),
+      inset 0 -1px 2px rgba(0,0,0,0.22),
+      inset 0 1px 1.5px rgba(255,255,255,0.55);
+  }
 }
 .notif-title{
   font-size:19px; font-weight:700; line-height:1.35;
@@ -1443,6 +1420,7 @@ main{
   word-break:keep-all;
 }
 .notif-cta{
+  position:relative; overflow:hidden;
   width:100%; height:var(--cta-height);
   border:none; border-radius:var(--cta-radius);
   background:linear-gradient(116deg, var(--primary-normal), var(--primary-heavy));
@@ -1455,32 +1433,25 @@ main{
   cursor:pointer;
   transition:opacity 0.15s ease, transform 0.1s ease;
 }
+.notif-cta > .bs-cta-text{position:relative;z-index:2}
 .notif-cta:hover{opacity:0.93}
 .notif-cta:active{transform:scale(0.98)}
-.notif-later{
-  width:100%; padding:12px;
-  background:transparent; border:none; cursor:pointer;
-  color:var(--label-alternative);
-  font-family:inherit; font-size:14px; font-weight:500;
-  margin-top:4px;
-  transition:color 0.15s ease;
-}
-.notif-later:hover{color:var(--label-normal)}
 
 /* 개발용 A/B 토글 */
 .ab-dev{
   position:fixed; right:16px; bottom:16px; z-index:1200;
-  display:flex; gap:4px; padding:4px;
-  border-radius:999px;
+  display:flex; flex-direction:column; gap:4px; padding:4px;
+  border-radius:16px;
   background:rgba(0,0,0,0.6);
   backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
   border:1px solid var(--line-alternative);
 }
+.ab-dev-row{display:flex; gap:4px}
 .ab-dev button{
-  min-width:36px; height:32px; padding:0 12px; border-radius:999px;
+  min-width:52px; height:30px; padding:0 10px; border-radius:999px;
   background:transparent; border:none; cursor:pointer;
   color:var(--label-alternative);
-  font-family:inherit; font-size:13px; font-weight:700;
+  font-family:inherit; font-size:12px; font-weight:700;
   white-space:nowrap;
   transition:background 0.15s ease, color 0.15s ease;
 }
@@ -2007,11 +1978,9 @@ document.querySelector('.avatar')?.addEventListener('click', () => {
       <div class="bs-handle"></div>
     </div>
     <div class="bs-header">
-      <div class="bs-title">오늘의 출석 보상</div>
+      <div class="bs-title" data-ko="오늘의 출석 보상" data-en="Today's check-in">오늘의 출석 보상</div>
       <button class="bs-close" onclick="closeDailyBs()" aria-label="닫기">
-        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M6 6L18 18M18 6L6 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M6 18L18 6"/></svg>
       </button>
     </div>
     <div class="bs-content">
@@ -2070,18 +2039,17 @@ document.querySelector('.avatar')?.addEventListener('click', () => {
           <span class="bs-sparkle bs-sparkle-4" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0 L13.5 9 L24 12 L13.5 15 L12 24 L10.5 15 L0 12 L10.5 9 Z"/></svg></span>
         </div>
         <div class="bs-reward-amount">
-          <span class="bs-reward-plus">최대</span>
+          <span class="bs-reward-plus" data-ko="최대" data-en="Up to">최대</span>
           <span class="bs-reward-number" id="bsRewardNum">300</span>
-          <span class="bs-reward-unit">미르</span>
+          <span class="bs-reward-unit" data-ko="미르" data-en="Mir">미르</span>
         </div>
-        <div class="bs-reward-sub">7일 연속 출석 시 <strong>×2 보너스</strong> 받기!</div>
+        <div class="bs-reward-sub" data-ko="7일 연속 출석 시 <strong>×2 보너스</strong> 받기!" data-en="Hit a 7-day streak → <strong>×2 bonus</strong>">7일 연속 출석 시 <strong>×2 보너스</strong> 받기!</div>
       </div>
 
       <button class="bs-cta-primary bs-cta-gold" onclick="claimDailyReward()">
-        <span class="bs-cta-text">오늘의 보상 받기</span>
+        <span class="bs-cta-text" data-ko="오늘의 보상 받기" data-en="Claim today's drop">오늘의 보상 받기</span>
         <span class="bs-cta-shine" aria-hidden="true"></span>
       </button>
-      <a class="bs-cta-secondary" href="../mirai-store-v2/daily-tasks.html">더 많은 보상 보기 ›</a>
     </div>
   </div>
 </div>
@@ -2142,14 +2110,15 @@ document.getElementById('dailyRewardBs')?.addEventListener('click', e => {
     </button>
     <div class="notif-visual">
       <div class="notif-mir">
-        <img src="./images/main/mir.png" alt="미르">
-        <span class="notif-mir-amount">+100 미르</span>
+        <img src="./images/main/mir-gems.png" alt="미르">
       </div>
     </div>
-    <div class="notif-title">알림 켜고 <span class="hl">100미르</span> 받기</div>
-    <div class="notif-desc">MIRAI 보상과 새 소식을 바로 받아보세요.</div>
-    <button class="notif-cta" onclick="allowNotif()">알림 켜고 받기</button>
-    <button class="notif-later" onclick="closeNotif()">다음에 할게요</button>
+    <div class="notif-title" data-ko="알림 켜고 <span class=&quot;hl&quot;>100미르</span> 받기" data-en="Flip on notifs, grab <span class=&quot;hl&quot;>100 Mir</span>">알림 켜고 <span class="hl">100미르</span> 받기</div>
+    <div class="notif-desc" data-ko="MIRAI 보상과 새 소식을 바로 받아보세요." data-en="We'll ping you when rewards & new drops hit.">MIRAI 보상과 새 소식을 바로 받아보세요.</div>
+    <button class="notif-cta" onclick="allowNotif()">
+      <span class="bs-cta-text" data-ko="알림 켜고 받기" data-en="Turn on notifs">알림 켜고 받기</span>
+      <span class="bs-cta-shine" aria-hidden="true"></span>
+    </button>
   </div>
 
   <!-- B: 캐릭터 감성 -->
@@ -2160,31 +2129,51 @@ document.getElementById('dailyRewardBs')?.addEventListener('click', e => {
     <div class="notif-visual">
       <div class="notif-char">
         <div class="notif-char-avatar"><img src="./images/main/Image.png" alt=""></div>
-        <div class="notif-char-bubble">
-          <span class="notif-bubble-line short"></span>
-          <span class="notif-bubble-line long"></span>
-        </div>
       </div>
     </div>
-    <div class="notif-title">Amon이 말을 걸고 싶어해요</div>
-    <div class="notif-desc">알림을 켜면 캐릭터의 메시지를 바로 받을 수 있어요.</div>
-    <button class="notif-cta" onclick="allowNotif()">알림 켜고 이어가기</button>
-    <button class="notif-later" onclick="closeNotif()">다음에 할게요</button>
+    <!-- @dev: 캐릭터명이 길어질 수 있음. 동적 바인딩 시 일정 글자수(예: 18자) 넘으면 ...으로 truncate 처리 필요. -->
+    <div class="notif-title" data-ko="Amon이 말을 걸고 싶어해요" data-en="Amon's trying to reach you">Amon이 말을 걸고 싶어해요</div>
+    <div class="notif-desc" data-ko="알림을 켜면 캐릭터의 메시지를 받아볼 수 있어요." data-en="Flip on notifs so characters can actually hit you up.">알림을 켜면 캐릭터의 메시지를 받아볼 수 있어요.</div>
+    <button class="notif-cta" onclick="allowNotif()">
+      <span class="bs-cta-text" data-ko="알림 켜고 이어가기" data-en="Turn on notifs">알림 켜고 이어가기</span>
+      <span class="bs-cta-shine" aria-hidden="true"></span>
+    </button>
   </div>
 </div>
 
-<!-- 개발용 토글 (A / B / 일일보상 3개 검토) -->
+<!-- 개발용 토글 — 3종 모달 × KO/EN -->
 <div class="ab-dev" aria-label="모달 검토 토글">
-  <button id="abBtnA" onclick="devShow('a')">A</button>
-  <button id="abBtnB" onclick="devShow('b')">B</button>
-  <button id="abBtnDaily" onclick="devShow('daily')">일일</button>
+  <div class="ab-dev-row">
+    <button id="abBtnAKo" onclick="devShow('a','ko')">A · KO</button>
+    <button id="abBtnBKo" onclick="devShow('b','ko')">B · KO</button>
+    <button id="abBtnDailyKo" onclick="devShow('daily','ko')">일일 · KO</button>
+  </div>
+  <div class="ab-dev-row">
+    <button id="abBtnAEn" onclick="devShow('a','en')">A · EN</button>
+    <button id="abBtnBEn" onclick="devShow('b','en')">B · EN</button>
+    <button id="abBtnDailyEn" onclick="devShow('daily','en')">일일 · EN</button>
+  </div>
 </div>
 
 <script>
-  function setActiveBtn(v){
-    document.getElementById('abBtnA').classList.toggle('active', v === 'a');
-    document.getElementById('abBtnB').classList.toggle('active', v === 'b');
-    document.getElementById('abBtnDaily').classList.toggle('active', v === 'daily');
+  function setLang(lang){
+    document.documentElement.lang = lang === 'en' ? 'en' : 'ko';
+    document.querySelectorAll('[data-ko][data-en]').forEach(el => {
+      const text = lang === 'en' ? el.dataset.en : el.dataset.ko;
+      if (text != null) el.innerHTML = text;
+    });
+  }
+
+  function setActiveBtn(v, lang){
+    const map = {
+      'a':   {ko:'abBtnAKo',     en:'abBtnAEn'},
+      'b':   {ko:'abBtnBKo',     en:'abBtnBEn'},
+      'daily':{ko:'abBtnDailyKo', en:'abBtnDailyEn'},
+    };
+    ['abBtnAKo','abBtnAEn','abBtnBKo','abBtnBEn','abBtnDailyKo','abBtnDailyEn']
+      .forEach(id => document.getElementById(id)?.classList.remove('active'));
+    const target = map[v]?.[lang];
+    if (target) document.getElementById(target)?.classList.add('active');
   }
 
   function showNotif(variant){
@@ -2200,15 +2189,16 @@ document.getElementById('dailyRewardBs')?.addEventListener('click', e => {
   }
 
   function allowNotif(){
-    // 실제 서비스: Notification.requestPermission() 연결
     closeNotif();
   }
 
-  // 개발 토글 — A/B 알림 모달 + 일일보상 바텀시트 검토
-  function devShow(v){
+  // 개발 토글 — A/B 알림 모달 + 일일보상 바텀시트 검토 (KO/EN)
+  function devShow(v, lang){
+    lang = lang || 'ko';
     closeNotif();
     if (typeof closeDailyBs === 'function') closeDailyBs();
-    setActiveBtn(v);
+    setLang(lang);
+    setActiveBtn(v, lang);
     if (v === 'a' || v === 'b') {
       showNotif(v);
     } else if (v === 'daily') {
@@ -2217,7 +2207,6 @@ document.getElementById('dailyRewardBs')?.addEventListener('click', e => {
     }
   }
 
-  // 백드롭 클릭 닫기
   document.getElementById('notifOverlay').addEventListener('click', e => {
     if (e.target.id === 'notifOverlay') closeNotif();
   });

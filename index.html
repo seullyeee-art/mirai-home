@@ -1978,7 +1978,7 @@ document.querySelector('.avatar')?.addEventListener('click', () => {
       <div class="bs-handle"></div>
     </div>
     <div class="bs-header">
-      <div class="bs-title" data-ko="오늘의 출석 보상" data-en="Today's check-in">오늘의 출석 보상</div>
+      <div class="bs-title" data-ko="오늘의 출석 보상" data-en="Daily Reward">오늘의 출석 보상</div>
       <button class="bs-close" onclick="closeDailyBs()" aria-label="닫기">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M6 18L18 6"/></svg>
       </button>
@@ -2041,13 +2041,13 @@ document.querySelector('.avatar')?.addEventListener('click', () => {
         <div class="bs-reward-amount">
           <span class="bs-reward-plus" data-ko="최대" data-en="Up to">최대</span>
           <span class="bs-reward-number" id="bsRewardNum">300</span>
-          <span class="bs-reward-unit" data-ko="미르" data-en="Mir">미르</span>
+          <span class="bs-reward-unit" data-ko="미르" data-en="Credits">미르</span>
         </div>
-        <div class="bs-reward-sub" data-ko="7일 연속 출석 시 <strong>×2 보너스</strong> 받기!" data-en="Hit a 7-day streak → <strong>×2 bonus</strong>">7일 연속 출석 시 <strong>×2 보너스</strong> 받기!</div>
+        <div class="bs-reward-sub" data-ko="7일 연속 출석 시 <strong>×2 보너스</strong> 받기!" data-en="Earn a <strong>×2 bonus</strong> on a 7-day streak!">7일 연속 출석 시 <strong>×2 보너스</strong> 받기!</div>
       </div>
 
       <button class="bs-cta-primary bs-cta-gold" onclick="claimDailyReward()">
-        <span class="bs-cta-text" data-ko="오늘의 보상 받기" data-en="Claim today's drop">오늘의 보상 받기</span>
+        <span class="bs-cta-text" data-ko="오늘의 보상 받기" data-en="Claim Today's Reward">오늘의 보상 받기</span>
         <span class="bs-cta-shine" aria-hidden="true"></span>
       </button>
     </div>
@@ -2113,10 +2113,10 @@ document.getElementById('dailyRewardBs')?.addEventListener('click', e => {
         <img src="./images/main/mir-gems.png" alt="미르">
       </div>
     </div>
-    <div class="notif-title" data-ko="알림 켜고 <span class=&quot;hl&quot;>100미르</span> 받기" data-en="Flip on notifs, grab <span class=&quot;hl&quot;>100 Mir</span>">알림 켜고 <span class="hl">100미르</span> 받기</div>
-    <div class="notif-desc" data-ko="MIRAI 보상과 새 소식을 바로 받아보세요." data-en="We'll ping you when rewards & new drops hit.">MIRAI 보상과 새 소식을 바로 받아보세요.</div>
+    <div class="notif-title" data-ko="알림 켜고 <span class=&quot;hl&quot;>100미르</span> 받기" data-en="Enable alerts, get <span class=&quot;hl&quot;>100 Credits</span>">알림 켜고 <span class="hl">100미르</span> 받기</div>
+    <div class="notif-desc" data-ko="MIRAI 보상과 새 소식을 바로 받아보세요." data-en="Get MIRAI rewards & updates instantly.">MIRAI 보상과 새 소식을 바로 받아보세요.</div>
     <button class="notif-cta" onclick="allowNotif()">
-      <span class="bs-cta-text" data-ko="알림 켜고 받기" data-en="Turn on notifs">알림 켜고 받기</span>
+      <span class="bs-cta-text" data-ko="알림 켜고 받기" data-en="Enable & Claim">알림 켜고 받기</span>
       <span class="bs-cta-shine" aria-hidden="true"></span>
     </button>
   </div>
@@ -2132,10 +2132,10 @@ document.getElementById('dailyRewardBs')?.addEventListener('click', e => {
       </div>
     </div>
     <!-- @dev: 캐릭터명이 길어질 수 있음. 동적 바인딩 시 일정 글자수(예: 18자) 넘으면 ...으로 truncate 처리 필요. -->
-    <div class="notif-title" data-ko="Amon이 말을 걸고 싶어해요" data-en="Amon's trying to reach you">Amon이 말을 걸고 싶어해요</div>
-    <div class="notif-desc" data-ko="알림을 켜면 캐릭터의 메시지를 받아볼 수 있어요." data-en="Flip on notifs so characters can actually hit you up.">알림을 켜면 캐릭터의 메시지를 받아볼 수 있어요.</div>
+    <div class="notif-title" data-ko="Amon이 말을 걸고 싶어해요" data-en="Amon wants to talk to you">Amon이 말을 걸고 싶어해요</div>
+    <div class="notif-desc" data-ko="알림을 켜면 캐릭터의 메시지를 받아볼 수 있어요." data-en="Enable alerts to hear from characters.">알림을 켜면 캐릭터의 메시지를 받아볼 수 있어요.</div>
     <button class="notif-cta" onclick="allowNotif()">
-      <span class="bs-cta-text" data-ko="알림 켜고 이어가기" data-en="Turn on notifs">알림 켜고 이어가기</span>
+      <span class="bs-cta-text" data-ko="알림 켜고 이어가기" data-en="Enable & Continue">알림 켜고 이어가기</span>
       <span class="bs-cta-shine" aria-hidden="true"></span>
     </button>
   </div>

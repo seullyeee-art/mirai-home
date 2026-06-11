@@ -1462,11 +1462,11 @@ main{
 .ab-dev-langs{padding-top:3px;border-top:1px solid rgba(255,255,255,0.08);margin-top:3px}
 .ab-dev-langs button{min-width:30px}
 
-/* ═══ 앱 다운로드 프로모션 배너 ═══ */
+/* ═══ 앱 다운로드 프로모션 배너 (모바일 전용) ═══ */
 .app-promo-banner.hidden{display:none !important}
-/* 데스크탑 (≥769px): 헤더 아래 풀폭 primary 그라 배너, store 버튼 숨김 */
 .app-promo-banner{
-  display:flex;align-items:center;gap:12px;
+  display:none;
+  align-items:center;gap:12px;
   padding:10px 16px;
   background:linear-gradient(116deg, var(--primary-normal), var(--primary-heavy));
   color:#fff;
@@ -1489,6 +1489,7 @@ main{
 /* 모바일 (≤768px): 바텀네비 위 sticky, 다크 blur, store 버튼 노출 */
 @media (max-width:768px){
   .app-promo-banner{
+    display:flex;
     position:fixed;left:0;right:0;
     bottom:var(--bottom-nav-height, 56px);
     z-index:50;

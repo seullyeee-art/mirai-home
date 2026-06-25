@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>MIRAI — Discover</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable-jp.min.css">
+<style>
+:root{
+  --primary-normal:#14C391;
+  --primary-strong:#14C092;
+  --tag-accent:#14C391;
+  --reel-nav:56px;        /* 바텀네비 높이 (다른 페이지 GNB와 동일) */
+  --reel-header:48px;     /* 상단 바 높이 = 다른 페이지 헤더 48px */
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:#000;overflow:hidden}
+body{
+  font-family:'Pretendard Variable JP','Pretendard JP',-apple-system,sans-serif;
+  color:#fff;display:flex;justify-content:center;
+}
+.stage{position:relative;width:100%;max-width:480px;height:100dvh;background:#000;overflow:hidden}
+@media (min-width:481px){body{background:#0c0c0d}.stage{box-shadow:0 0 0 1px rgba(255,255,255,0.06)}}
+
+/* ═══ 상단 카테고리 해시태그 필터 ═══ */
+.topfilter{
+  position:absolute;top:0;left:0;right:0;z-index:30;
+  display:flex;gap:18px;align-items:center;
+  height:calc(var(--reel-header) + env(safe-area-inset-top));
+  padding:env(safe-area-inset-top) 16px 0;
+  overflow-x:auto;scrollbar-width:none;
+  background:linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.3) 60%, rgba(0,0,0,0) 100%);
+  -webkit-overflow-scrolling:touch;
+}
+.topfilter::-webkit-scrollbar{display:none}
+.tf-tag{
+  flex:0 0 auto;background:none;border:none;cursor:pointer;
+  font-size:15px;font-weight:500;letter-spacing:-0.2px;
+  color:rgba(255,255,255,0.55);padding:0 0 3px;position:relative;
+  text-shadow:0 1px 4px rgba(0,0,0,0.5);
+}
+.tf-tag.active{color:#fff;font-weight:500}
+.tf-tag.active::after{
+  content:'';position:absolute;left:0;right:0;bottom:0;height:2.5px;border-radius:2px;background:#fff;
+}
+
+/* ═══ 세로 스냅 피드 ═══ */
+.feed{height:100dvh;overflow-y:scroll;scroll-snap-type:y mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.feed::-webkit-scrollbar{display:none}
+.reel{position:relative;height:100dvh;width:100%;scroll-snap-align:start;scroll-snap-stop:always;overflow:hidden}
+.reel-empty{
+  height:100dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;gap:6px;padding:0 32px;
+  font-size:16px;font-weight:500;line-height:1.6;color:rgba(255,255,255,0.6);
+}
+.reel-empty b{color:var(--tag-accent);font-weight:600}
+.reel-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 16%;transform:scale(1.06) translateY(-2.5%)}
+.reel.active .reel-bg{animation:kbreath 8s ease-in-out infinite alternate;will-change:transform}
+@keyframes kbreath{
+  from{transform:scale(1.06) translateY(-2.5%)}
+  to{transform:scale(1.18) translateY(2.5%)}
+}
+.reel-shade{position:absolute;inset:0;background:linear-gradient(180deg, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0) 20%, rgba(0,0,0,0) 38%, rgba(0,0,0,0.5) 66%, rgba(0,0,0,0.92) 100%)}
+
+/* ═══ 인포 카드 (좌하단) ═══ */
+.reel-info{
+  position:absolute;left:14px;right:78px;
+  bottom:calc(92px + var(--reel-nav) + env(safe-area-inset-bottom));z-index:10;
+}
+.reel-card{
+  background:rgba(18,18,20,0.55);
+  -webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);
+  border-radius:16px;padding:14px 16px;
+  opacity:0;transform:translateY(16px);
+  transition:opacity .45s ease, transform .45s ease;
+}
+.reel.active .reel-card{opacity:1;transform:none;transition-delay:.05s}
+.reel-name{font-size:21px;font-weight:600;letter-spacing:-0.3px;margin-bottom:7px;text-shadow:0 2px 8px rgba(0,0,0,0.5)}
+.reel-stats{display:flex;align-items:center;gap:14px;margin-bottom:9px;font-size:13px;font-weight:500;color:rgba(255,255,255,0.82)}
+.reel-stats span{display:inline-flex;align-items:center;gap:4px}
+.reel-stats svg{width:15px;height:15px;fill:rgba(255,255,255,0.85)}
+.reel-tags{display:flex;flex-wrap:wrap;gap:4px 8px;margin-bottom:9px;font-size:12.5px;font-weight:500}
+.reel-tags span{color:var(--tag-accent)}
+.reel-greeting{font-size:14px;font-weight:400;font-style:italic;line-height:1.55;color:rgba(255,255,255,0.88)}
+
+/* ═══ 우측 액션 스택 ═══ */
+.reel-actions{
+  position:absolute;right:12px;z-index:12;
+  bottom:calc(98px + var(--reel-nav) + env(safe-area-inset-bottom));
+  display:flex;flex-direction:column;align-items:center;gap:20px;
+  opacity:0;transform:translateY(16px);
+  transition:opacity .45s ease, transform .45s ease;
+}
+.reel.active .reel-actions{opacity:1;transform:none;transition-delay:.12s}
+.reel-act{display:flex;flex-direction:column;align-items:center;gap:5px;background:none;border:none;cursor:pointer;color:#fff}
+.reel-act svg{width:33px;height:33px;fill:#fff;filter:drop-shadow(0 1px 5px rgba(0,0,0,0.55));transition:fill .15s, transform .15s}
+.reel-act-label{font-size:12px;font-weight:500;text-shadow:0 1px 3px rgba(0,0,0,0.6)}
+.reel-act:active svg{transform:scale(0.82)}
+.reel-act.liked svg{fill:#FF4D6D}
+.reel-act.liked{animation:pop .3s ease}
+@keyframes pop{0%{transform:scale(1)}40%{transform:scale(1.18)}100%{transform:scale(1)}}
+
+/* ═══ CTA ═══ */
+.reel-cta{
+  position:absolute;left:14px;right:14px;
+  bottom:calc(20px + var(--reel-nav) + env(safe-area-inset-bottom));z-index:12;
+  height:52px;border:none;border-radius:14px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  font-size:16px;font-weight:600;letter-spacing:-0.2px;color:#fff;
+  background:linear-gradient(116deg, var(--primary-normal) 18%, var(--primary-strong) 92%);
+  box-shadow:0 8px 24px rgba(20,195,145,0.32);
+  opacity:0;transform:translateY(16px);
+  transition:opacity .45s ease, transform .45s ease;
+}
+.reel-cta svg{width:20px;height:20px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.reel-cta:active{transform:scale(0.98)}
+.reel.active .reel-cta{opacity:1;transform:none;transition-delay:.18s}
+
+.swipe-gesture{
+  position:absolute;left:50%;top:40%;transform:translate(-50%,-50%);
+  z-index:25;pointer-events:none;
+  display:flex;flex-direction:column;align-items:center;gap:18px;
+  transition:opacity .45s ease;
+}
+.swipe-gesture.gone{opacity:0}
+.sg-stage{position:relative;width:64px;height:140px}
+/* 손 (Phosphor hand-pointing fill) — 검지가 박스 중앙보다 왼쪽이라 살짝 우측 보정 */
+.sg-hand{
+  position:absolute;left:50%;bottom:0;width:58px;height:58px;margin-left:-25px;
+  color:#fff;filter:drop-shadow(0 4px 12px rgba(0,0,0,0.55));
+  animation:sgHand 2.6s cubic-bezier(0.5,0,0.2,1) infinite;
+}
+.sg-hand svg{width:100%;height:100%;fill:currentColor;display:block}
+/* 누를 때 손끝에서 퍼지는 링 (손에 붙어 자동 정렬) */
+.sg-hand::before{
+  content:'';position:absolute;top:-4px;left:50%;width:42px;height:42px;margin-left:-21px;border-radius:50%;
+  border:2px solid rgba(255,255,255,0.5);
+  animation:sgRipple 2.6s cubic-bezier(0.5,0,0.2,1) infinite;
+}
+.sg-label{
+  font-size:14.5px;font-weight:500;color:#fff;letter-spacing:-0.1px;text-shadow:0 1px 5px rgba(0,0,0,0.5);
+  background:rgba(0,0,0,0.3);padding:8px 18px;border-radius:999px;
+  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+}
+@keyframes sgHand{
+  0%{transform:translateY(0) scale(0.9);opacity:0}
+  12%{transform:translateY(0) scale(1);opacity:1}
+  24%{transform:translateY(0) scale(0.9)}
+  66%{transform:translateY(-78px) scale(1);opacity:1}
+  82%{transform:translateY(-78px) scale(0.94);opacity:0}
+  100%{transform:translateY(-78px) scale(0.9);opacity:0}
+}
+@keyframes sgRipple{
+  0%,10%{transform:scale(0.4);opacity:0}
+  18%{transform:scale(0.9);opacity:0.8}
+  44%{transform:scale(1.9);opacity:0}
+  100%{opacity:0}
+}
+
+/* ═══ 바텀 네비게이션 (다른 페이지 GNB와 동일, 폰 프레임 안에 고정) ═══ */
+.mobile-bottom-nav{
+  position:absolute;left:0;right:0;bottom:0;z-index:20;
+  display:flex;
+  height:calc(var(--reel-nav) + env(safe-area-inset-bottom));
+  padding:0 0 env(safe-area-inset-bottom);
+  background:rgba(15,15,16,0.72);
+  -webkit-backdrop-filter:blur(24px) saturate(180%);backdrop-filter:blur(24px) saturate(180%);
+  border:none;
+}
+.mobile-bottom-nav-item{
+  flex:1;display:flex;align-items:center;justify-content:center;height:100%;
+  text-decoration:none;color:rgba(255,255,255,0.5);transition:color .15s ease;
+}
+.mobile-bottom-nav-item.active{color:var(--primary-normal)}
+.mobile-bottom-nav-item svg{width:24px;height:24px;display:block}
+.mobile-bottom-nav-item.active svg{color:var(--primary-normal)}
+
+/* ═══ 댓글 바텀시트 ═══ */
+.cmt-backdrop{
+  position:absolute;inset:0;z-index:40;background:rgba(0,0,0,0.45);
+  opacity:0;pointer-events:none;transition:opacity .3s ease;
+}
+.cmt-backdrop.open{opacity:1;pointer-events:auto}
+.cmt-sheet{
+  position:absolute;left:0;right:0;bottom:0;z-index:41;
+  height:70dvh;display:flex;flex-direction:column;
+  background:#1b1b1d;border-radius:20px 20px 0 0;
+  transform:translateY(100%);
+  transition:transform .34s cubic-bezier(0.32,0.72,0,1);
+  box-shadow:0 -8px 32px rgba(0,0,0,0.5);
+  touch-action:none;
+}
+.cmt-sheet.open{transform:translateY(0)}
+.cmt-grip{display:flex;justify-content:center;padding:10px 0 4px;cursor:grab}
+.cmt-grip span{width:40px;height:4px;border-radius:2px;background:rgba(255,255,255,0.22)}
+.cmt-head{
+  display:flex;align-items:center;justify-content:center;position:relative;
+  padding:8px 16px 14px;
+  font-size:15px;font-weight:600;color:#fff;
+  border-bottom:1px solid rgba(255,255,255,0.07);
+}
+.cmt-close{
+  position:absolute;right:12px;top:50%;transform:translateY(-50%);
+  background:none;border:none;cursor:pointer;padding:6px;line-height:0;
+}
+.cmt-close svg{width:20px;height:20px;stroke:rgba(255,255,255,0.7);stroke-width:2.2;fill:none;stroke-linecap:round}
+.cmt-list{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:8px 16px 6px}
+.cmt-list::-webkit-scrollbar{display:none}
+.cmt-item{display:flex;gap:11px;padding:11px 0}
+.cmt-av{
+  flex:0 0 auto;width:36px;height:36px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:15px;font-weight:600;color:#fff;
+}
+.cmt-body{flex:1;min-width:0}
+.cmt-user{font-size:13px;font-weight:600;color:rgba(255,255,255,0.55);margin-bottom:3px}
+.cmt-text{font-size:14.5px;font-weight:400;line-height:1.45;color:#fff;word-break:break-word}
+.cmt-meta{display:flex;align-items:center;gap:16px;margin-top:7px;font-size:12.5px;color:rgba(255,255,255,0.5)}
+.cmt-meta button{background:none;border:none;color:inherit;font-size:12.5px;font-weight:600;cursor:pointer;padding:0}
+.cmt-like{display:flex;flex-direction:column;align-items:center;gap:3px;flex:0 0 auto;align-self:flex-start;padding-top:2px;background:none;border:none;cursor:pointer}
+.cmt-like svg{width:18px;height:18px;fill:rgba(255,255,255,0.4);transition:fill .15s,transform .15s}
+.cmt-like.on svg{fill:#FF4D6D}
+.cmt-like:active svg{transform:scale(0.8)}
+.cmt-like span{font-size:11.5px;font-weight:500;color:rgba(255,255,255,0.5)}
+.cmt-like.on span{color:#FF4D6D}
+.cmt-input{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 14px calc(10px + env(safe-area-inset-bottom));
+  border-top:1px solid rgba(255,255,255,0.07);background:#1b1b1d;
+}
+.cmt-input-av{
+  flex:0 0 auto;width:32px;height:32px;border-radius:50%;
+  background:linear-gradient(135deg,#14C391,#0E9B73);
+  display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:#fff;
+}
+.cmt-input input{
+  flex:1;height:40px;border:none;outline:none;border-radius:20px;
+  background:#2c2c2e;color:#fff;font-size:14.5px;padding:0 16px;
+  font-family:inherit;
+}
+.cmt-input input::placeholder{color:rgba(255,255,255,0.4)}
+.cmt-send{background:none;border:none;cursor:pointer;padding:6px;line-height:0;color:var(--primary-normal);opacity:0.4;transition:opacity .15s}
+.cmt-send.active{opacity:1}
+.cmt-send svg{width:24px;height:24px;fill:currentColor}
+</style>
+</head>
+<body>
+<div class="stage">
+  <!-- 상단 카테고리 해시태그 필터 -->
+  <nav class="topfilter" id="topfilter">
+    <button class="tf-tag active" data-filter="">#For You</button>
+    <button class="tf-tag" data-filter="DarkRomance">#DarkRomance</button>
+    <button class="tf-tag" data-filter="Mafia">#Mafia</button>
+    <button class="tf-tag" data-filter="Vampire">#Vampire</button>
+    <button class="tf-tag" data-filter="Alpha">#Alpha</button>
+    <button class="tf-tag" data-filter="Fantasy">#Fantasy</button>
+    <button class="tf-tag" data-filter="CEO">#CEO</button>
+    <button class="tf-tag" data-filter="Forbidden">#Forbidden</button>
+  </nav>
+
+  <div class="feed" id="feed"></div>
+
+  <div class="swipe-gesture" id="swipeHint">
+    <div class="sg-stage">
+      <span class="sg-hand"><svg viewBox="0 0 256 256"><path d="M224,104v50.93c0,46.2-36.85,84.55-83,85.06A83.71,83.71,0,0,1,80.6,215.4C58.79,192.33,34.15,136,34.15,136a16,16,0,0,1,6.53-22.23c7.66-4,17.1-.84,21.4,6.62l21,36.44a6.09,6.09,0,0,0,6,3.09l.12,0A8.19,8.19,0,0,0,96,151.74V32a16,16,0,0,1,16.77-16c8.61.4,15.23,7.82,15.23,16.43V104a8,8,0,0,0,8.53,8,8.17,8.17,0,0,0,7.47-8.25V88a16,16,0,0,1,16.77-16c8.61.4,15.23,7.82,15.23,16.43V112a8,8,0,0,0,8.53,8,8.17,8.17,0,0,0,7.47-8.25v-7.28c0-8.61,6.62-16,15.23-16.43A16,16,0,0,1,224,104Z"/></svg></span>
+    </div>
+    <span class="sg-label">Swipe up for more</span>
+  </div>
+
+  <!-- 댓글 바텀시트 -->
+  <div class="cmt-backdrop" id="cmtBackdrop"></div>
+  <div class="cmt-sheet" id="cmtSheet" role="dialog" aria-modal="true" aria-label="Comments">
+    <div class="cmt-grip" id="cmtGrip"><span></span></div>
+    <div class="cmt-head"><span id="cmtCount">0 comments</span>
+      <button class="cmt-close" id="cmtClose" aria-label="닫기"></button>
+    </div>
+    <div class="cmt-list" id="cmtList"></div>
+    <div class="cmt-input">
+      <div class="cmt-input-av">Y</div>
+      <input id="cmtField" type="text" placeholder="Add a comment…" autocomplete="off">
+      <button class="cmt-send" id="cmtSend" aria-label="보내기"></button>
+    </div>
+  </div>
+
+  <!-- 바텀 네비게이션 (다른 페이지와 동일 컴포넌트) -->
+  <mirai-bottom-nav active="reels"></mirai-bottom-nav>
+</div>
+
+<script src="https://cdn.jsdelivr.net/gh/seullyeee-art/mirai-shared@main/components.js" defer></script>
+<script>
+const REELS = [
+  {slug:'charles',  name:'Charles',  likes:'169.1K', comments:'1.1K', tags:['#Prince','#DarkRomance','#ColdHearted','#Royal','#ForbiddenLove'], greeting:'"You kept a prince waiting. Bold of you. Come closer, I won’t bite… yet."'},
+  {slug:'rafe',     name:'Rafe',     img:'./images/main/chars/rafe-mafia.png',  likes:'142.3K', comments:'984',  tags:['#Mafia','#Possessive','#BadBoy','#Dangerous','#Protective'], greeting:'"Come here. I don’t ask twice, and I never let go of what’s mine."'},
+  {slug:'adrian',   name:'Adrian',   img:'./images/main/chars/adrian-dark.png', likes:'128.6K', comments:'1.3K', tags:['#Obsessive','#Guardian','#Alpha','#DarkRomance','#Jealous'], greeting:'"I’ve been watching you all night. Don’t pretend you didn’t feel it."'},
+  {slug:'dietrich', name:'Dietrich', likes:'119.4K', comments:'877',  tags:['#Duke','#Ruthless','#Possessive','#Noble','#SlowBurn'], greeting:'"Careful. I don’t share what’s mine, and tonight that means you."'},
+  {slug:'kilian',   name:'Kilian',   likes:'104.9K', comments:'712',  tags:['#Knight','#Loyal','#Fantasy','#Devoted','#ForbiddenLove'], greeting:'"My blade is yours. So am I, if you’ll have a knight who kneels only for you."'},
+  {slug:'lucien',   name:'Lucien',   likes:'98.3K',  comments:'641',  tags:['#Swordsman','#Devoted','#Empire','#ColdHearted','#Fantasy'], greeting:'"One look from you and I forgot my own name. That’s never happened before."'},
+  {slug:'kael',     name:'Kael',     likes:'87.6K',  comments:'598',  tags:['#Hunter','#Vampire','#Cold','#Brooding','#Dangerous'], greeting:'"I hunt monsters for a living. You’re something else entirely… something I want."'},
+  {slug:'hugo',     name:'Hugo',     likes:'74.2K',  comments:'455',  tags:['#Mercenary','#Scarred','#Protective','#Rough','#SoftForYou'], greeting:'"Stay behind me. Always. I’d burn a kingdom before I let them touch you."'},
+  {slug:'stefan',   name:'Stefan',   likes:'64.5K',  comments:'402',  tags:['#Vampire','#Eternal','#Patient','#Seductive','#DarkRomance'], greeting:'"I’ve waited centuries. What’s one more night… spent learning every part of you?"'},
+  {slug:'ian',      name:'Ian',      likes:'52.3K',  comments:'318',  tags:['#CEO','#IceCold','#OneException','#Possessive','#Modern'], greeting:'"You’re the only thing not on my schedule. Reschedule everything. We’re talking."'},
+];
+
+const I = {
+  chatSm:'<svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>',
+  heart:'<svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>',
+  comment:'<svg viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M20 2H4C2.9 2 2 2.9 2 4v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM5.6 9a1.4 1.4 0 1 0 2.8 0 1.4 1.4 0 1 0-2.8 0zM10.6 9a1.4 1.4 0 1 0 2.8 0 1.4 1.4 0 1 0-2.8 0zM15.6 9a1.4 1.4 0 1 0 2.8 0 1.4 1.4 0 1 0-2.8 0z"/></svg>',
+  share:'<svg viewBox="0 0 24 24"><path d="M13.5 4.2c0-.86 1.04-1.3 1.65-.7l7.2 7.05c.4.4.4 1.05 0 1.45l-7.2 7.05c-.61.6-1.65.16-1.65-.7v-3.46c-5.06.07-8.61 1.43-11.03 4.5-.42.53-1.27.18-1.16-.49C2.37 11.9 6.2 7.7 13.5 7.18V4.2z"/></svg>',
+  more:'<svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>',
+  chatCta:'<svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>',
+  xmark:'<svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>',
+  heartTiny:'<svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>',
+  send:'<svg viewBox="0 0 24 24"><path d="M3.4 20.4l17.45-7.48c.81-.35.81-1.49 0-1.84L3.4 3.6c-.66-.29-1.39.2-1.39.91L2 9.12c0 .5.37.93.87.99L17 12 2.87 13.88c-.5.07-.87.5-.87 1l.01 4.61c0 .71.73 1.2 1.39.91z"/></svg>',
+};
+
+const feed = document.getElementById('feed');
+
+const reelHTML = r => `
+  <section class="reel" data-name="${r.name}">
+    <img class="reel-bg" src="${r.img || `./images/main/cards-male/${r.slug}.png`}" alt="" loading="lazy">
+    <div class="reel-shade"></div>
+    <div class="reel-info">
+      <div class="reel-card">
+        <h2 class="reel-name">${r.name}</h2>
+        <div class="reel-stats">
+          <span>${I.chatSm}${r.comments}</span>
+        </div>
+        <div class="reel-tags">${r.tags.map(t=>`<span>${t}</span>`).join('')}</div>
+        <p class="reel-greeting">${r.greeting}</p>
+      </div>
+    </div>
+    <div class="reel-actions">
+      <button class="reel-act act-like" onclick="toggleLike(this)" aria-label="좋아요">
+        ${I.heart}<span class="reel-act-label">Like</span>
+      </button>
+      <button class="reel-act" onclick="openComments('${r.slug}')" aria-label="댓글">${I.comment}<span class="reel-act-label">${r.comments}</span></button>
+      <button class="reel-act" aria-label="공유">${I.share}<span class="reel-act-label">Share</span></button>
+      <button class="reel-act" aria-label="더보기">${I.more}<span class="reel-act-label">More</span></button>
+    </div>
+    <button class="reel-cta">Start a Conversation</button>
+  </section>`;
+
+let io;
+function renderFeed(filter){
+  const list = filter
+    ? REELS.filter(r => r.tags.some(t => t.toLowerCase().includes(filter.toLowerCase())))
+    : REELS;
+
+  if (io) io.disconnect();
+
+  if (!list.length){
+    feed.innerHTML = `<div class="reel-empty">No characters under <b>#${filter}</b> yet.<br>Try another vibe.</div>`;
+    return;
+  }
+
+  feed.innerHTML = list.map(reelHTML).join('');
+  feed.scrollTop = 0;
+
+  const reels = [...feed.querySelectorAll('.reel')];
+  const setActive = el => reels.forEach(r => r.classList.toggle('active', r === el));
+  io = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting && e.intersectionRatio > 0.6) setActive(e.target); });
+  }, {threshold:[0.6], root:feed});
+  reels.forEach(r => io.observe(r));
+  setActive(reels[0]);
+}
+renderFeed('');
+
+function toggleLike(btn){ btn.classList.toggle('liked'); }
+
+const hint = document.getElementById('swipeHint');
+feed.addEventListener('scroll', () => hint.classList.add('gone'), {once:true});
+
+/* ═══ 댓글 바텀시트 로직 ═══ */
+const AVCOLORS = ['#FF6FD0','#7C8CFF','#FFB23E','#34D1BF','#FF7A6B','#B388FF','#4FC3F7','#F06292'];
+const COMMENTS = [
+  {user:'@minji_07',   text:'okay the way he said that… I’m DONE 😩🔥', likes:'2.4K', time:'2d', rep:32},
+  {user:'@late_night', text:'no bc why is he so fine, replaying this 10 times', likes:'1.1K', time:'1d', rep:8},
+  {user:'@hopelessrom', text:'this is exactly my type and that’s a problem', likes:'934', time:'3d', rep:4},
+  {user:'@vellichor',  text:'the eye contact got me weak ngl', likes:'612', time:'5h', rep:0},
+  {user:'@sera.x',     text:'someone check on me I’m not okay after this', likes:'480', time:'12h', rep:2},
+  {user:'@quietstorm', text:'started the chat immediately, no regrets 💅', likes:'301', time:'1d', rep:1},
+  {user:'@yuna_reads', text:'the slow burn potential here is INSANE', likes:'255', time:'6h', rep:0},
+  {user:'@moonlit',    text:'why do they always come for my whole heart like this', likes:'188', time:'2h', rep:0},
+  {user:'@itskira',    text:'this app is dangerous for me fr 😭', likes:'97', time:'4h', rep:0},
+];
+
+const cmtBackdrop = document.getElementById('cmtBackdrop');
+const cmtSheet    = document.getElementById('cmtSheet');
+const cmtList     = document.getElementById('cmtList');
+const cmtCount    = document.getElementById('cmtCount');
+document.getElementById('cmtClose').innerHTML = I.xmark;
+document.getElementById('cmtSend').innerHTML  = I.send;
+
+const cmtItemHTML = (c, i) => `
+  <div class="cmt-item">
+    <div class="cmt-av" style="background:${AVCOLORS[i % AVCOLORS.length]}">${c.user[1].toUpperCase()}</div>
+    <div class="cmt-body">
+      <div class="cmt-user">${c.user} · ${c.time}</div>
+      <div class="cmt-text">${c.text}</div>
+      <div class="cmt-meta"><span>Reply</span>${c.rep ? `<span>View ${c.rep} replies</span>` : ''}</div>
+    </div>
+    <button class="cmt-like" onclick="this.classList.toggle('on')">${I.heartTiny}<span>${c.likes}</span></button>
+  </div>`;
+
+function openComments(slug){
+  const r = REELS.find(x => x.slug === slug);
+  cmtCount.textContent = `${r ? r.comments : ''} comments`;
+  cmtList.innerHTML = COMMENTS.map(cmtItemHTML).join('');
+  cmtList.scrollTop = 0;
+  cmtBackdrop.classList.add('open');
+  cmtSheet.classList.add('open');
+}
+function closeComments(){
+  cmtBackdrop.classList.remove('open');
+  cmtSheet.classList.remove('open');
+}
+cmtBackdrop.addEventListener('click', closeComments);
+document.getElementById('cmtClose').addEventListener('click', closeComments);
+
+// 입력바: 텍스트 있을 때 전송 버튼 활성화
+const cmtField = document.getElementById('cmtField');
+const cmtSend  = document.getElementById('cmtSend');
+cmtField.addEventListener('input', () => cmtSend.classList.toggle('active', cmtField.value.trim().length > 0));
+
+// 그립/헤더 드래그로 닫기
+let dragStartY = null, dragDelta = 0;
+const grip = document.getElementById('cmtGrip');
+function onDragStart(e){ dragStartY = (e.touches ? e.touches[0].clientY : e.clientY); dragDelta = 0; cmtSheet.style.transition = 'none'; }
+function onDragMove(e){
+  if (dragStartY === null) return;
+  const y = (e.touches ? e.touches[0].clientY : e.clientY);
+  dragDelta = Math.max(0, y - dragStartY);
+  cmtSheet.style.transform = `translateY(${dragDelta}px)`;
+}
+function onDragEnd(){
+  if (dragStartY === null) return;
+  cmtSheet.style.transition = '';
+  cmtSheet.style.transform = '';
+  if (dragDelta > 90) closeComments();
+  dragStartY = null;
+}
+grip.addEventListener('touchstart', onDragStart, {passive:true});
+grip.addEventListener('touchmove', onDragMove, {passive:true});
+grip.addEventListener('touchend', onDragEnd);
+grip.addEventListener('mousedown', e => { onDragStart(e); document.addEventListener('mousemove', onDragMove); document.addEventListener('mouseup', function up(){ onDragEnd(); document.removeEventListener('mousemove', onDragMove); document.removeEventListener('mouseup', up); }); });
+
+// 상단 필터: active 토글 + 피드 필터링
+document.getElementById('topfilter').addEventListener('click', e => {
+  const t = e.target.closest('.tf-tag'); if (!t) return;
+  document.querySelectorAll('.tf-tag').forEach(x => x.classList.remove('active'));
+  t.classList.add('active');
+  hint.classList.add('gone');
+  renderFeed(t.dataset.filter);
+});
+</script>
+</body>
+</html>

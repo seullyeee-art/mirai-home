@@ -265,7 +265,16 @@ main{
 }
 
 /* ═══ CHIPS WRAP + 펼치기 버튼 + 카테고리 바텀시트 ═══ */
-.chips-wrap{position:relative}
+/* 데스크탑: 스크롤 내리면 헤더 숨고 칩 상단 고정, 올리면 헤더+칩 같이 */
+.chips-wrap{
+  position:sticky;top:60px;z-index:90;
+  background:var(--bg-normal);
+  padding-top:10px;
+  transition:top .28s cubic-bezier(0.4,0,0.2,1);
+}
+.header{transition:transform .28s cubic-bezier(0.4,0,0.2,1)}
+body.nav-down .header{transform:translateY(-100%)}
+body.nav-down .chips-wrap{top:0}
 .chips-rows,.chips-row{display:contents}
 .cat-fade{
   display:none;
@@ -2193,6 +2202,13 @@ syncRecents();
   track.addEventListener('scroll', updateEdges, {passive:true});
   window.addEventListener('resize', updateEdges);
   updateEdges();
+})();
+// 스크롤 테스트용 카드 복제 (sticky 칩 동작 확인용 — 충분한 스크롤 길이 확보)
+(function(){
+  const grid = document.querySelector('.grid');
+  if (!grid) return;
+  const originals = [...grid.children];
+  originals.forEach(c => grid.appendChild(c.cloneNode(true)));
 })();
 document.querySelectorAll('.card-heart').forEach(btn => {
   btn.addEventListener('click', e => {

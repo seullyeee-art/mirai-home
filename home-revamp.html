@@ -229,22 +229,21 @@ main{
 
 /* ═══ CATEGORY CHIPS ═══ */
 .chips{
-  display:flex;gap:8px;
-  margin:0 56px 14px 0;
-  overflow-x:auto;
-  scrollbar-width:none;
-  padding-bottom:4px;
+  display:flex;gap:6px;flex-wrap:nowrap;
+  margin:0 0 14px 0;
+  overflow-x:auto;scrollbar-width:none;
   position:relative;
 }
 .chips::-webkit-scrollbar{display:none}
 .chip{
   flex-shrink:0;
-  padding:9px 18px;
+  white-space:nowrap;
+  padding:8px 16px;
   border-radius:10px;
   background:var(--fill-alternative);
   color:var(--label-normal);
   /* type: label-1-normal */
-  font-size:14px;font-weight:500;line-height:1.429;
+  font-size:13.5px;font-weight:500;line-height:1.4;
   letter-spacing:0.0145em;
   transition:background 0.15s ease, transform 0.1s ease;
 }
@@ -269,13 +268,37 @@ main{
 .chips-wrap{position:relative}
 .chips-rows,.chips-row{display:contents}
 .cat-fade{
+  display:none;
   position:absolute;
-  right:48px;top:0;bottom:0;
+  right:0;top:0;bottom:0;
   width:28px;
   background:linear-gradient(to right, rgba(27,28,30,0) 0%, var(--bg-normal) 100%);
   pointer-events:none;
   z-index:1;
 }
+/* ─ 데스크탑 호버 스크롤 화살표 ─ */
+.chip-arrow{
+  position:absolute;top:50%;transform:translateY(-50%);
+  width:30px;height:30px;border-radius:50%;
+  /* 반투명 fill을 솔리드 bg 위에 합성 → 완전 불투명 */
+  background:linear-gradient(0deg, var(--fill-strong), var(--fill-strong)), var(--bg-normal);
+  border:1px solid var(--line-normal);
+  color:var(--label-strong);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;z-index:4;
+  opacity:0;visibility:hidden;
+  transition:opacity .15s ease, visibility .15s ease, background .15s ease, transform .1s ease;
+  box-shadow:0 2px 10px rgba(0,0,0,0.35);
+}
+.chip-arrow.left{left:-6px}
+.chip-arrow.right{right:-6px}
+.chip-arrow svg{width:16px;height:16px}
+.chip-arrow:hover{background:linear-gradient(0deg, var(--fill-strong), var(--fill-strong)), linear-gradient(0deg, var(--fill-normal), var(--fill-normal)), var(--bg-normal)}
+.chip-arrow:active{transform:translateY(-50%) scale(0.92)}
+.chips-wrap:hover .chip-arrow{opacity:1;visibility:visible}
+/* 끝단 도달 시 해당 방향 화살표 숨김 (호버 중에도) */
+.chips-wrap.at-start .chip-arrow.left{opacity:0;visibility:hidden;pointer-events:none}
+.chips-wrap.at-end .chip-arrow.right{opacity:0;visibility:hidden;pointer-events:none}
 .cat-expand-btn{
   position:absolute;
   right:8px;top:50%;transform:translateY(-50%);
@@ -489,7 +512,6 @@ main{
 .card-tags::-webkit-scrollbar{display:none}
 .card-tags-track{display:flex;width:max-content}
 .card-tags-track span{flex:0 0 auto;margin-right:8px;color:rgba(255,255,255,0.5);white-space:nowrap}
-.card-tags-track span:first-child{color:var(--primary-normal)}
 .card-info::before{
   content:'';position:absolute;left:0;right:0;bottom:-10px;top:-24px;z-index:-1;
   background:linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.55) 55%, rgba(0,0,0,0.8) 100%);
@@ -1039,8 +1061,8 @@ main{
   .chips-row{display:flex;gap:6px}
   .chip{height:30px;padding:0 11px;font-size:12.5px;display:inline-flex;align-items:center;flex:0 0 auto;white-space:nowrap}
   /* 오른쪽 스크롤 페이드는 끝에 붙게, 확장 버튼은 숨김 */
-  .cat-fade{right:0;width:32px;background:linear-gradient(to right, rgba(27,28,30,0), var(--bg-normal))}
-  .chips-next,.cat-expand-btn{display:none}
+  .cat-fade{display:block;right:0;width:32px;background:linear-gradient(to right, rgba(27,28,30,0), var(--bg-normal))}
+  .chips-next,.cat-expand-btn,.chip-arrow{display:none}
 
   /* 스크롤 내리면 헤더 숨김(태그탭만 상단 고정), 올리면 헤더+태그탭 둘 다 */
   .header{transition:transform .28s cubic-bezier(0.4,0,0.2,1)}
@@ -1709,44 +1731,33 @@ main{
         <button class="chip">🔥 Trending</button>
         <button class="chip">✨ New</button>
         <button class="chip">Male</button>
-        <button class="chip">Female</button>
-        <button class="chip">For Men</button>
         <button class="chip">Fantasy</button>
         <button class="chip">Romance</button>
         <button class="chip">Modern</button>
         <button class="chip">Dominant</button>
         <button class="chip">Slice of Life</button>
-        <button class="chip">Urban Fantasy</button>
-        <button class="chip">Pure Love</button>
         <button class="chip">Reverse Harem</button>
-        <button class="chip">Tsundere</button>
         </div>
         <div class="chips-row">
-        <button class="chip">Redemption</button>
         <button class="chip">Mafia</button>
         <button class="chip">Vampire</button>
         <button class="chip">Alpha</button>
         <button class="chip">CEO</button>
         <button class="chip">Royal</button>
-        <button class="chip">Isekai</button>
         <button class="chip">Yandere</button>
-        <button class="chip">Childhood Friend</button>
         <button class="chip">Enemies to Lovers</button>
         <button class="chip">Forbidden</button>
         <button class="chip">Possessive</button>
-        <button class="chip">Demon</button>
-        <button class="chip">Knight</button>
         <button class="chip">Werewolf</button>
         </div>
       </div>
     </nav>
     <div class="cat-fade" aria-hidden="true"></div>
-    <button class="cat-expand-btn" id="cat-expand-btn" aria-label="전체 카테고리 보기">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <line x1="4" y1="7" x2="20" y2="7"/>
-        <line x1="4" y1="12" x2="20" y2="12"/>
-        <line x1="4" y1="17" x2="14" y2="17"/>
-      </svg>
+    <button class="chip-arrow left" id="chip-arrow-left" aria-label="이전 카테고리" tabindex="-1">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <button class="chip-arrow right" id="chip-arrow-right" aria-label="다음 카테고리" tabindex="-1">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
     </button>
   </div>
 
@@ -2164,6 +2175,25 @@ document.querySelectorAll('.chip').forEach(chip => {
   });
 });
 syncRecents();
+// 데스크탑 칩 호버 화살표 스크롤
+(function(){
+  const wrap = document.querySelector('.chips-wrap');
+  const track = document.querySelector('.chips');
+  const aL = document.getElementById('chip-arrow-left');
+  const aR = document.getElementById('chip-arrow-right');
+  if (!wrap || !track || !aL || !aR) return;
+  const updateEdges = () => {
+    const max = track.scrollWidth - track.clientWidth;
+    wrap.classList.toggle('at-start', track.scrollLeft <= 1);
+    wrap.classList.toggle('at-end', track.scrollLeft >= max - 1);
+  };
+  const step = () => Math.max(160, track.clientWidth * 0.7);
+  aL.addEventListener('click', () => track.scrollBy({left:-step(), behavior:'smooth'}));
+  aR.addEventListener('click', () => track.scrollBy({left: step(), behavior:'smooth'}));
+  track.addEventListener('scroll', updateEdges, {passive:true});
+  window.addEventListener('resize', updateEdges);
+  updateEdges();
+})();
 document.querySelectorAll('.card-heart').forEach(btn => {
   btn.addEventListener('click', e => {
     e.stopPropagation();

@@ -242,6 +242,52 @@ body{
 .cmt-send{background:none;border:none;cursor:pointer;padding:6px;line-height:0;color:var(--primary-normal);opacity:0.4;transition:opacity .15s}
 .cmt-send.active{opacity:1}
 .cmt-send svg{width:24px;height:24px;fill:currentColor}
+
+/* ═══ More 액션 시트 (인스타 릴스식) ═══ */
+.act-backdrop{
+  position:absolute;inset:0;z-index:42;background:rgba(0,0,0,0.45);
+  opacity:0;pointer-events:none;transition:opacity .3s ease;
+}
+.act-backdrop.open{opacity:1;pointer-events:auto}
+.act-sheet{
+  position:absolute;left:0;right:0;bottom:0;z-index:43;
+  background:#1b1b1d;border-radius:20px 20px 0 0;
+  padding-bottom:calc(8px + env(safe-area-inset-bottom));
+  transform:translateY(100%);
+  transition:transform .34s cubic-bezier(0.32,0.72,0,1);
+  box-shadow:0 -8px 32px rgba(0,0,0,0.5);
+  touch-action:none;
+}
+.act-sheet.open{transform:translateY(0)}
+.act-grip{display:flex;justify-content:center;padding:10px 0 6px;cursor:grab}
+.act-grip span{width:40px;height:4px;border-radius:2px;background:rgba(255,255,255,0.22)}
+.act-row{
+  display:flex;align-items:center;gap:15px;width:100%;
+  padding:15px 20px;background:none;border:none;cursor:pointer;
+  font-family:inherit;font-size:15.5px;font-weight:500;color:#fff;text-align:left;
+  transition:background .15s;
+}
+.act-row:active{background:rgba(255,255,255,0.06)}
+.act-row svg{width:24px;height:24px;flex:0 0 auto;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.act-txt{display:flex;flex-direction:column;gap:2px;min-width:0}
+.act-txt small{font-size:12.5px;font-weight:400;color:rgba(255,255,255,0.5)}
+.act-row.danger{color:#FF5A5F}
+.act-sep{height:1px;background:rgba(255,255,255,0.07);margin:4px 0}
+
+/* ═══ 토스트 (피드백) ═══ */
+.reel-toast{
+  position:absolute;left:50%;z-index:50;
+  bottom:calc(var(--reel-nav) + 30px + env(safe-area-inset-bottom));
+  max-width:calc(100% - 48px);
+  background:rgba(0,0,0,0.78);
+  -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+  color:#fff;font-size:14px;font-weight:500;letter-spacing:-0.1px;
+  padding:11px 18px;border-radius:999px;text-align:center;
+  opacity:0;pointer-events:none;
+  transform:translateX(-50%) translateY(12px);
+  transition:opacity .25s ease, transform .25s ease;
+}
+.reel-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 </style>
 </head>
 <body>
@@ -282,6 +328,16 @@ body{
     </div>
   </div>
 
+  <!-- More 액션 시트 -->
+  <div class="act-backdrop" id="moreBackdrop"></div>
+  <div class="act-sheet" id="moreSheet" role="dialog" aria-modal="true" aria-label="More options">
+    <div class="act-grip" id="moreGrip"><span></span></div>
+    <div id="moreList"></div>
+  </div>
+
+  <!-- 토스트 -->
+  <div class="reel-toast" id="reelToast"></div>
+
   <!-- 바텀 네비게이션 (다른 페이지와 동일 컴포넌트) -->
   <mirai-bottom-nav active="reels"></mirai-bottom-nav>
 </div>
@@ -311,6 +367,10 @@ const I = {
   xmark:'<svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg>',
   heartTiny:'<svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>',
   send:'<svg viewBox="0 0 24 24"><path d="M3.4 20.4l17.45-7.48c.81-.35.81-1.49 0-1.84L3.4 3.6c-.66-.29-1.39.2-1.39.91L2 9.12c0 .5.37.93.87.99L17 12 2.87 13.88c-.5.07-.87.5-.87 1l.01 4.61c0 .71.73 1.2 1.39.91z"/></svg>',
+  eyeOff:'<svg viewBox="0 0 24 24"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>',
+  flag:'<svg viewBox="0 0 24 24"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>',
+  share2:'<svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>',
+  link:'<svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>',
 };
 
 const feed = document.getElementById('feed');
@@ -335,7 +395,7 @@ const reelHTML = r => `
       </button>
       <button class="reel-act" onclick="openComments('${r.slug}')" aria-label="댓글">${I.comment}<span class="reel-act-label">${r.comments}</span></button>
       <button class="reel-act" aria-label="공유">${I.share}<span class="reel-act-label">Share</span></button>
-      <button class="reel-act" aria-label="더보기">${I.more}<span class="reel-act-label">More</span></button>
+      <button class="reel-act" onclick="openMore('${r.slug}')" aria-label="더보기">${I.more}<span class="reel-act-label">More</span></button>
     </div>
     <button class="reel-cta">Start a Conversation</button>
   </section>`;
@@ -444,6 +504,71 @@ grip.addEventListener('touchstart', onDragStart, {passive:true});
 grip.addEventListener('touchmove', onDragMove, {passive:true});
 grip.addEventListener('touchend', onDragEnd);
 grip.addEventListener('mousedown', e => { onDragStart(e); document.addEventListener('mousemove', onDragMove); document.addEventListener('mouseup', function up(){ onDragEnd(); document.removeEventListener('mousemove', onDragMove); document.removeEventListener('mouseup', up); }); });
+
+/* ═══ More 액션 시트 로직 ═══ */
+const MORE_ACTIONS = [
+  {act:'notinterested', icon:I.eyeOff, label:'Not interested', sub:'See fewer like this'},
+  {act:'report', icon:I.flag, label:'Report', danger:true},
+  {sep:true},
+  {act:'share', icon:I.share2, label:'Share to…'},
+  {act:'copy', icon:I.link, label:'Copy link'},
+];
+const moreBackdrop = document.getElementById('moreBackdrop');
+const moreSheet    = document.getElementById('moreSheet');
+const moreList     = document.getElementById('moreList');
+const reelToast    = document.getElementById('reelToast');
+let moreSlug = null, toastTimer = null;
+
+moreList.innerHTML = MORE_ACTIONS.map(a => a.sep
+  ? '<div class="act-sep"></div>'
+  : `<button class="act-row${a.danger?' danger':''}" data-act="${a.act}">${a.icon}<span class="act-txt"><span>${a.label}</span>${a.sub?`<small class="more-sub">${a.sub}</small>`:''}</span></button>`
+).join('');
+const moreSub = moreList.querySelector('.more-sub');
+
+function openMore(slug){
+  moreSlug = slug;
+  const r = REELS.find(x => x.slug === slug);
+  if (moreSub && r) moreSub.textContent = `See fewer characters like ${r.name}`;
+  moreBackdrop.classList.add('open');
+  moreSheet.classList.add('open');
+}
+function closeMore(){
+  moreBackdrop.classList.remove('open');
+  moreSheet.classList.remove('open');
+}
+moreBackdrop.addEventListener('click', closeMore);
+
+moreList.addEventListener('click', e => {
+  const row = e.target.closest('.act-row'); if (!row) return;
+  const r = REELS.find(x => x.slug === moreSlug);
+  const name = r ? r.name : 'this character';
+  closeMore();
+  showToast({
+    notinterested: `Got it. You'll see fewer like ${name}.`,
+    report: `Thanks for letting us know. We'll review ${name}.`,
+    share: `Sharing ${name}…`,
+    copy: 'Link copied to clipboard',
+  }[row.dataset.act]);
+});
+
+function showToast(msg){
+  if (!msg) return;
+  reelToast.textContent = msg;
+  reelToast.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => reelToast.classList.remove('show'), 2400);
+}
+
+// 그립 드래그로 닫기 (More 시트)
+let mDragY = null, mDelta = 0;
+const moreGrip = document.getElementById('moreGrip');
+function mStart(e){ mDragY = (e.touches ? e.touches[0].clientY : e.clientY); mDelta = 0; moreSheet.style.transition = 'none'; }
+function mMove(e){ if (mDragY === null) return; mDelta = Math.max(0, (e.touches ? e.touches[0].clientY : e.clientY) - mDragY); moreSheet.style.transform = `translateY(${mDelta}px)`; }
+function mEnd(){ if (mDragY === null) return; moreSheet.style.transition = ''; moreSheet.style.transform = ''; if (mDelta > 70) closeMore(); mDragY = null; }
+moreGrip.addEventListener('touchstart', mStart, {passive:true});
+moreGrip.addEventListener('touchmove', mMove, {passive:true});
+moreGrip.addEventListener('touchend', mEnd);
+moreGrip.addEventListener('mousedown', e => { mStart(e); document.addEventListener('mousemove', mMove); document.addEventListener('mouseup', function up(){ mEnd(); document.removeEventListener('mousemove', mMove); document.removeEventListener('mouseup', up); }); });
 
 // 상단 필터: active 토글 + 피드 필터링
 document.getElementById('topfilter').addEventListener('click', e => {

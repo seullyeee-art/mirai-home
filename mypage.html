@@ -2256,12 +2256,16 @@ refreshLikedEmpty();
   const carousel = track && track.closest('.le-carousel');
   if (!track || !carousel) return;
   const CHARS = [
-    {slug:'charles', name:'Charles',  desc:'A prince weak only for you'},
-    {slug:'kaien',   name:'Kaien',    desc:'A demon king who craves your soul'},
-    {slug:'ezra',    name:'Ezra',     desc:'A fallen guardian angel'},
-    {slug:'lucien',  name:'Lucien',   desc:'The deadliest blade in the empire'},
-    {slug:'kilian',  name:'Kilian',   desc:'A knight for you alone'},
-    {slug:'dietrich',name:'Dietrich', desc:'A duke who never shares you'},
+    {slug:'charles',  name:'Charles',  desc:'A prince weak only for you'},
+    {slug:'amon',     name:'Amon',     desc:'A blood-noble who burns only for you'},
+    {slug:'reyes',    name:'Reyes',    desc:'An outlaw with a soft spot for you'},
+    {slug:'kade',     name:'Kade',     desc:'A demon who already marked you as his'},
+    {slug:'lucien',   name:'Lucien',   desc:'The deadliest blade in the empire'},
+    {slug:'noah',     name:'Noah',     desc:'Gentle with you, merciless with the rest'},
+    {slug:'sterling', name:'Sterling', desc:'A cold CEO who bends his rules for you'},
+    {slug:'rin',      name:'Rin',      desc:'A stray who only purrs for you'},
+    {slug:'caleb',    name:'Caleb',    desc:'A heartbreaker who finally got caught'},
+    {slug:'dorian',   name:'Dorian',   desc:'Trouble in a half-buttoned shirt'},
   ];
   const N = CHARS.length, COPIES = 3;
   const list = [];

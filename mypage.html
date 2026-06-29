@@ -971,6 +971,43 @@ main{
   .le-title{font-size:17px}
 }
 
+/* ═══ 빈 상태 (문구 + 버튼) — 내 캐릭터 / 갤러리 ═══ */
+.mp-empty{
+  display:flex;flex-direction:column;align-items:center;text-align:center;
+  padding:52px 16px 56px;
+}
+.mp-empty-icon{
+  width:62px;height:62px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--fill-alternative);
+  margin-bottom:18px;
+}
+.mp-empty-icon svg{width:28px;height:28px;color:var(--label-assistive)}
+.mp-empty-title{
+  font-size:18px;font-weight:700;color:var(--label-strong);
+  letter-spacing:-0.01em;margin-bottom:7px;
+}
+.mp-empty-sub{
+  font-size:14px;font-weight:400;color:var(--label-alternative);
+  line-height:1.5;margin-bottom:22px;
+}
+.mp-empty-btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:7px;
+  height:46px;padding:0 24px;border-radius:12px;
+  background:linear-gradient(116deg, var(--primary-normal) 18%, var(--primary-heavy) 92%);
+  color:#fff;font-size:15px;font-weight:600;letter-spacing:-0.01em;
+  text-decoration:none;cursor:pointer;border:none;
+  box-shadow:0 8px 22px rgba(20,195,145,0.26);
+  transition:transform .1s ease, box-shadow .15s ease;
+}
+.mp-empty-btn:hover{box-shadow:0 10px 28px rgba(20,195,145,0.38)}
+.mp-empty-btn:active{transform:scale(0.98)}
+.mp-empty-btn svg{width:18px;height:18px}
+@media (max-width:768px){
+  .mp-empty{padding:36px 16px 40px}
+  .mp-empty-title{font-size:17px}
+}
+
 /* 좋아요 해제 확인 모달 */
 .confirm-modal-backdrop{
   position:fixed;inset:0;
@@ -1735,7 +1772,19 @@ body.guest .mypage-invite{display:none}
 
     <!-- 내 캐릭터 -->
     <div class="mypage-panel" id="panel-characters">
-      <div class="mp-card-grid">
+      <!-- 빈 상태: 만든 캐릭터 없음 -->
+      <div class="mp-empty">
+        <div class="mp-empty-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </div>
+        <div class="mp-empty-title">아직 만든 캐릭터가 없어요</div>
+        <div class="mp-empty-sub">나만의 캐릭터를 만들어 대화를 시작해보세요</div>
+        <a href="#" class="mp-empty-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          캐릭터 만들기
+        </a>
+      </div>
+      <div class="mp-card-grid" style="display:none">
         <article class="mp-card">
           <a href="#" class="mp-card-link" aria-label="이름 없는 모험가 플레이"></a>
           <img src="./images/main/thumbs/adventurer-strongest.png" alt="">
@@ -1994,7 +2043,19 @@ body.guest .mypage-invite{display:none}
 
     <!-- 갤러리 (수집한 이미지) -->
     <div class="mypage-panel" id="panel-gallery">
-      <section class="grid" aria-label="갤러리">
+      <!-- 빈 상태: 저장한 이미지 없음 -->
+      <div class="mp-empty">
+        <div class="mp-empty-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        </div>
+        <div class="mp-empty-title">아직 저장한 이미지가 없어요</div>
+        <div class="mp-empty-sub">마음에 드는 이미지를 만들고 저장하면 여기에 모여요</div>
+        <a href="#" class="mp-empty-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          이미지 만들기
+        </a>
+      </div>
+      <section class="grid" aria-label="갤러리" style="display:none">
         <a href="../mirai-gallery/gallery-prototype.html" class="gallery-card">
           <img class="gallery-card-img" src="./images/main/thumbs/adventurer-strongest.png" alt="">
           <span class="gallery-badge">
@@ -2286,8 +2347,10 @@ tabs.forEach((t, idx) => {
     tabs.forEach(n => n.classList.remove('active'));
     t.classList.add('active');
     panels.forEach((p, i) => p?.classList.toggle('active', i === idx));
-    // 서브탭(전체/공개/비공개)은 '내 캐릭터' 탭에서만
-    if (subtabs) subtabs.style.display = (panels[idx] && panels[idx].id === 'panel-characters') ? 'flex' : 'none';
+    // 서브탭(전체/공개/비공개)은 '내 캐릭터' 탭 + 캐릭터가 있을 때만 (빈 상태면 숨김)
+    const charsGrid = document.querySelector('#panel-characters .mp-card-grid');
+    const charsHasContent = charsGrid && getComputedStyle(charsGrid).display !== 'none' && charsGrid.querySelector('.mp-card');
+    if (subtabs) subtabs.style.display = (panels[idx] && panels[idx].id === 'panel-characters' && charsHasContent) ? 'flex' : 'none';
   });
 });
 document.querySelectorAll('.mypage-subtab').forEach(t => {

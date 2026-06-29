@@ -900,6 +900,79 @@ main{
   transition:opacity 0.2s ease, transform 0.2s ease;
 }
 
+/* ═══ 좋아요 빈 상태 (캐러셀) ═══ */
+.liked-empty{
+  display:none;
+  flex-direction:column;align-items:center;
+  padding:28px 16px 56px;text-align:center;
+}
+.liked-empty.show{display:flex}
+.le-carousel{
+  position:relative;width:100%;overflow:hidden;
+  --le-size:172px;
+  height:calc(var(--le-size) * 1.4);
+  display:flex;align-items:center;
+  margin-bottom:30px;
+  -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 15%,#000 85%,transparent 100%);
+  mask-image:linear-gradient(90deg,transparent 0,#000 15%,#000 85%,transparent 100%);
+}
+.le-track{
+  position:relative;display:flex;align-items:center;gap:16px;
+  transition:transform .55s cubic-bezier(.4,0,.2,1);
+  will-change:transform;
+}
+.le-carousel.no-anim .le-track,
+.le-carousel.no-anim .le-card{transition:none !important}
+.le-card{
+  position:relative;flex:0 0 auto;
+  width:var(--le-size);height:var(--le-size);
+  border-radius:18px;overflow:hidden;
+  background:var(--fill-alternative);
+  border:1px solid var(--line-alternative);
+  opacity:0.36;transform:scale(0.8);
+  transition:transform .55s cubic-bezier(.4,0,.2,1), opacity .55s ease;
+}
+.le-card.center{
+  opacity:1;transform:scale(1.3);z-index:2;
+  box-shadow:0 20px 46px rgba(0,0,0,0.52);
+}
+.le-card img{display:block;width:100%;height:100%;object-fit:cover;object-position:center 12%}
+.le-card-cap{
+  position:absolute;left:0;right:0;bottom:0;
+  padding:18px 11px 10px;text-align:left;
+  background:linear-gradient(to top, rgba(0,0,0,0.86) 0%, rgba(0,0,0,0.25) 58%, rgba(0,0,0,0) 100%);
+  opacity:0;transition:opacity .45s ease;
+}
+.le-card.center .le-card-cap{opacity:1}
+.le-card-name{font-size:13px;font-weight:700;color:#fff;line-height:1.2;margin-bottom:3px}
+.le-card-desc{
+  font-size:10px;font-weight:400;color:rgba(255,255,255,0.82);line-height:1.3;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.le-title{
+  font-size:19px;font-weight:700;color:var(--label-strong);
+  letter-spacing:-0.01em;margin-bottom:8px;
+}
+.le-sub{
+  font-size:14px;font-weight:400;color:var(--label-alternative);
+  line-height:1.5;margin-bottom:24px;
+}
+.le-cta{
+  display:inline-flex;align-items:center;justify-content:center;
+  height:48px;padding:0 30px;border-radius:12px;
+  background:linear-gradient(116deg, var(--primary-normal) 18%, var(--primary-heavy) 92%);
+  color:#fff;font-size:16px;font-weight:600;letter-spacing:-0.01em;
+  text-decoration:none;
+  box-shadow:0 8px 24px rgba(20,195,145,0.28);
+  transition:transform .1s ease, box-shadow .15s ease;
+}
+.le-cta:hover{box-shadow:0 10px 30px rgba(20,195,145,0.4)}
+.le-cta:active{transform:scale(0.98)}
+@media (max-width:768px){
+  .le-carousel{--le-size:142px}
+  .le-title{font-size:17px}
+}
+
 /* 좋아요 해제 확인 모달 */
 .confirm-modal-backdrop{
   position:fixed;inset:0;
@@ -1631,7 +1704,7 @@ body.guest .mypage-invite{display:none}
     </section>
 
     <div class="mypage-tabs">
-      <button class="mypage-tab active" aria-label="내 캐릭터">
+      <button class="mypage-tab" aria-label="내 캐릭터">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
       </button>
       <button class="mypage-tab" aria-label="내 페르소나">
@@ -1640,12 +1713,12 @@ body.guest .mypage-invite{display:none}
       <button class="mypage-tab" aria-label="갤러리">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
       </button>
-      <button class="mypage-tab" aria-label="좋아하는 캐릭터">
+      <button class="mypage-tab active" aria-label="좋아하는 캐릭터">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
       </button>
     </div>
 
-    <div class="mypage-subtabs" data-tab="characters">
+    <div class="mypage-subtabs" data-tab="characters" style="display:none">
       <span class="mypage-subtab active">전체</span>
       <span class="mypage-subtab">공개</span>
       <span class="mypage-subtab">비공개</span>
@@ -1658,7 +1731,7 @@ body.guest .mypage-invite{display:none}
     </div>
 
     <!-- 내 캐릭터 -->
-    <div class="mypage-panel active" id="panel-characters">
+    <div class="mypage-panel" id="panel-characters">
       <div class="mp-card-grid">
         <article class="mp-card">
           <a href="#" class="mp-card-link" aria-label="이름 없는 모험가 플레이"></a>
@@ -2019,117 +2092,17 @@ body.guest .mypage-invite{display:none}
     </div>
 
     <!-- 좋아하는 캐릭터 -->
-    <div class="mypage-panel" id="panel-liked">
-      <section class="grid" aria-label="좋아하는 캐릭터">
-        <article class="card">
-          <img class="card-img" src="./images/main/thumbs/leeyeonwoo.png" alt="">
-          <button class="card-heart" aria-label="좋아요 해제" aria-pressed="true"><svg viewBox="0 0 24 24"><path d="M12 21s-7-4.5-9.5-9.5C.5 7 4 3 8 3c2 0 3.5 1 4 2 .5-1 2-2 4-2 4 0 7.5 4 5.5 8.5C19 16.5 12 21 12 21z"/></svg></button>
-          <div class="card-views"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>82.1K</div>
-          <div class="card-info">
-            <div class="card-title">이연우 — 옆자리 그 애</div>
-            <div class="card-desc">언제부터인지 너만 보면 시선을 피하는 이연우. 알고 보니 1학년 때부터 너만 바라보고 있었다.</div>
-          </div>
-        </article>
-        <article class="card">
-          <img class="card-img" src="./images/main/thumbs/ghoul-zone.png" alt="">
-          <button class="card-heart" aria-label="좋아요 해제" aria-pressed="true"><svg viewBox="0 0 24 24"><path d="M12 21s-7-4.5-9.5-9.5C.5 7 4 3 8 3c2 0 3.5 1 4 2 .5-1 2-2 4-2 4 0 7.5 4 5.5 8.5C19 16.5 12 21 12 21z"/></svg></button>
-          <div class="card-views"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>24.1K</div>
-          <div class="card-info">
-            <div class="card-title">구울 존: 마지막 인간</div>
-            <div class="card-desc">전염병이 휩쓴 도시에서 마지막 인간으로 살아남은 당신, 구울들의 왕이 너를 발견했다.</div>
-          </div>
-        </article>
-        <article class="card">
-          <img class="card-img" src="./images/main/thumbs/ice-palace.png" alt="">
-          <button class="card-heart" aria-label="좋아요 해제" aria-pressed="true"><svg viewBox="0 0 24 24"><path d="M12 21s-7-4.5-9.5-9.5C.5 7 4 3 8 3c2 0 3.5 1 4 2 .5-1 2-2 4-2 4 0 7.5 4 5.5 8.5C19 16.5 12 21 12 21z"/></svg></button>
-          <div class="card-views"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>21.1K</div>
-          <div class="card-info">
-            <div class="card-title">빙궁의 공주</div>
-            <div class="card-desc">설원 너머 봉인된 빙궁의 막내 공주로 깨어났다. 얼어붙은 왕좌의 후계자는 너 하나뿐.</div>
-          </div>
-        </article>
-        <article class="card">
-          <img class="card-img" src="./images/main/thumbs/saved-villain.png" alt="">
-          <button class="card-heart" aria-label="좋아요 해제" aria-pressed="true"><svg viewBox="0 0 24 24"><path d="M12 21s-7-4.5-9.5-9.5C.5 7 4 3 8 3c2 0 3.5 1 4 2 .5-1 2-2 4-2 4 0 7.5 4 5.5 8.5C19 16.5 12 21 12 21z"/></svg></button>
-          <div class="card-views"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>43.8K</div>
-          <div class="card-info">
-            <div class="card-title">멸망 직전 빌런을 구했다</div>
-            <div class="card-desc">소설 속 빌런의 죽음을 막아준 대가, 다음 페이지부터 그는 너의 그림자가 됐다.</div>
-          </div>
-        </article>
-        <article class="card">
-          <img class="card-img" src="./images/main/thumbs/adventurer-strongest.png" alt="">
-          <button class="card-heart" aria-label="좋아요 해제" aria-pressed="true"><svg viewBox="0 0 24 24"><path d="M12 21s-7-4.5-9.5-9.5C.5 7 4 3 8 3c2 0 3.5 1 4 2 .5-1 2-2 4-2 4 0 7.5 4 5.5 8.5C19 16.5 12 21 12 21z"/></svg></button>
-          <div class="card-views"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>113.6K</div>
-          <div class="card-info">
-            <div class="card-title">이름 없는 모험가, 대륙 최강까지</div>
-            <div class="card-desc">변방의 무명 모험가였던 당신, 어느 날 깨어난 신의 힘으로 대륙을 뒤집어 놓을 운명이 시작된다.</div>
-          </div>
-        </article>
-        <article class="card">
-          <img class="card-img" src="./images/main/thumbs/iljin-taming.png" alt="">
-          <button class="card-heart" aria-label="좋아요 해제" aria-pressed="true"><svg viewBox="0 0 24 24"><path d="M12 21s-7-4.5-9.5-9.5C.5 7 4 3 8 3c2 0 3.5 1 4 2 .5-1 2-2 4-2 4 0 7.5 4 5.5 8.5C19 16.5 12 21 12 21z"/></svg></button>
-          <div class="card-views"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>95.8K</div>
-          <div class="card-info">
-            <div class="card-title">학교 일진 길들이기</div>
-            <div class="card-desc">전학 첫날 너에게 시비를 건 일진, 알고 보니 옆자리 짝꿍. 길들여야 졸업할 수 있다.</div>
-          </div>
-        </article>
-        <article class="card">
-          <img class="card-img" src="./images/main/thumbs/wounded-wolf.png" alt="">
-          <button class="card-heart" aria-label="좋아요 해제" aria-pressed="true"><svg viewBox="0 0 24 24"><path d="M12 21s-7-4.5-9.5-9.5C.5 7 4 3 8 3c2 0 3.5 1 4 2 .5-1 2-2 4-2 4 0 7.5 4 5.5 8.5C19 16.5 12 21 12 21z"/></svg></button>
-          <div class="card-views"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>34.2K</div>
-          <div class="card-info">
-            <div class="card-title">다친 늑대를 주웠다</div>
-            <div class="card-desc">눈보라 속에서 발견한 큰 검은 늑대, 집에서 깨어난 다음 날 그 자리에 알몸의 남자가 있었다.</div>
-          </div>
-        </article>
-        <article class="card">
-          <img class="card-img" src="./images/main/thumbs/despised-bride.png" alt="">
-          <button class="card-heart" aria-label="좋아요 해제" aria-pressed="true"><svg viewBox="0 0 24 24"><path d="M12 21s-7-4.5-9.5-9.5C.5 7 4 3 8 3c2 0 3.5 1 4 2 .5-1 2-2 4-2 4 0 7.5 4 5.5 8.5C19 16.5 12 21 12 21z"/></svg></button>
-          <div class="card-views"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>17.6K</div>
-          <div class="card-info">
-            <div class="card-title">멸시받는 신부</div>
-            <div class="card-desc">정략결혼으로 팔려간 공작가, 남편은 첫날부터 너를 외면했다. 무시 속에서 진실이 드러난다.</div>
-          </div>
-        </article>
-        <article class="card">
-          <img class="card-img" src="./images/main/thumbs/masodo-magical.png" alt="">
-          <button class="card-heart" aria-label="좋아요 해제" aria-pressed="true"><svg viewBox="0 0 24 24"><path d="M12 21s-7-4.5-9.5-9.5C.5 7 4 3 8 3c2 0 3.5 1 4 2 .5-1 2-2 4-2 4 0 7.5 4 5.5 8.5C19 16.5 12 21 12 21z"/></svg></button>
-          <div class="card-views"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>9.7K</div>
-          <div class="card-info">
-            <div class="card-title">마조도 마법소녀의 비밀</div>
-            <div class="card-desc">변신만 하면 무적이 되는 마법소녀, 가면 너머의 얼굴을 본 사람은 단 한 명뿐이다.</div>
-          </div>
-        </article>
-        <article class="card">
-          <img class="card-img" src="./images/main/thumbs/hypnosis-change.png" alt="">
-          <button class="card-heart" aria-label="좋아요 해제" aria-pressed="true"><svg viewBox="0 0 24 24"><path d="M12 21s-7-4.5-9.5-9.5C.5 7 4 3 8 3c2 0 3.5 1 4 2 .5-1 2-2 4-2 4 0 7.5 4 5.5 8.5C19 16.5 12 21 12 21z"/></svg></button>
-          <div class="card-views"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>86.6K</div>
-          <div class="card-info">
-            <div class="card-title">최면이 바꿔 놓은 일상</div>
-            <div class="card-desc">우연히 손에 들어온 최면 어플, 한 번만 시험해 보려 했는데 다음 날 모두가 너를 다르게 본다.</div>
-          </div>
-        </article>
-        <article class="card">
-          <img class="card-img" src="./images/main/thumbs/yusayeon.jpg" alt="">
-          <button class="card-heart" aria-label="좋아요 해제" aria-pressed="true"><svg viewBox="0 0 24 24"><path d="M12 21s-7-4.5-9.5-9.5C.5 7 4 3 8 3c2 0 3.5 1 4 2 .5-1 2-2 4-2 4 0 7.5 4 5.5 8.5C19 16.5 12 21 12 21z"/></svg></button>
-          <div class="card-views"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>76.5K</div>
-          <div class="card-info">
-            <div class="card-title">유사연 — 차가운 미녀 상사</div>
-            <div class="card-desc">팀에서 가장 차가운 유사연 선배, 회식 다음 날부터 너에게만 다른 표정을 보이기 시작한다.</div>
-          </div>
-        </article>
-        <article class="card">
-          <img class="card-img" src="./images/main/thumbs/friend-areum.png" alt="">
-          <button class="card-heart" aria-label="좋아요 해제" aria-pressed="true"><svg viewBox="0 0 24 24"><path d="M12 21s-7-4.5-9.5-9.5C.5 7 4 3 8 3c2 0 3.5 1 4 2 .5-1 2-2 4-2 4 0 7.5 4 5.5 8.5C19 16.5 12 21 12 21z"/></svg></button>
-          <div class="card-views"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>12.4K</div>
-          <div class="card-info">
-            <div class="card-title">친구 아름 — 오랜 친구</div>
-            <div class="card-desc">중학교 때부터 함께한 단짝 아름, 술자리 끝나고 둘만 남은 새벽에 분위기가 변했다.</div>
-          </div>
-        </article>
-      </section>
+    <div class="mypage-panel active" id="panel-liked">
+      <!-- 빈 상태: 좋아요한 캐릭터 없음 -->
+      <div class="liked-empty show" id="liked-empty">
+        <div class="le-carousel">
+          <div class="le-track" id="le-track"><!-- JS가 자동 캐러셀 채움 --></div>
+        </div>
+        <h3 class="le-title">아직 좋아요한 캐릭터가 없어요</h3>
+        <p class="le-sub">마음에 드는 캐릭터에 하트를 눌러 모아보세요</p>
+        <a href="home-revamp.html" class="le-cta">캐릭터 둘러보기</a>
+      </div>
+      <section class="grid" aria-label="좋아하는 캐릭터" style="display:none"></section>
     </div>
   </div>
 </section>
@@ -2191,7 +2164,7 @@ body.guest .mypage-invite{display:none}
       card.classList.add('removing');
       // 모달 먼저 닫고 카드는 페이드 후 DOM 제거 → grid 자동 재정렬
       closeConfirm();
-      setTimeout(() => card.remove(), 220);
+      setTimeout(() => { card.remove(); refreshLikedEmpty(); }, 220);
     }
   });
   cancelBtn.addEventListener('click', closeConfirm);
@@ -2199,6 +2172,77 @@ body.guest .mypage-invite{display:none}
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape' && modal.classList.contains('open')) closeConfirm();
   });
+})();
+
+// 좋아요 빈 상태 토글 — 카드가 0개면 캐러셀 빈 화면, 있으면 그리드
+function refreshLikedEmpty(){
+  const panel = document.getElementById('panel-liked');
+  if (!panel) return;
+  const grid = panel.querySelector('.grid');
+  const empty = document.getElementById('liked-empty');
+  const has = !!(grid && grid.querySelector('.card'));
+  if (empty) empty.classList.toggle('show', !has);
+  if (grid) grid.style.display = has ? '' : 'none';
+}
+refreshLikedEmpty();
+
+// 좋아요 빈 상태 — 자동 캐러셀 (정방형 썸네일 coverflow, 무한 회전)
+(function(){
+  const track = document.getElementById('le-track');
+  const carousel = track && track.closest('.le-carousel');
+  if (!track || !carousel) return;
+  const CHARS = [
+    {slug:'charles', name:'Charles',  desc:'너에게만 약한 황태자'},
+    {slug:'kaien',   name:'Kaien',    desc:'영혼까지 탐하는 마왕'},
+    {slug:'ezra',    name:'Ezra',     desc:'타락한 수호 천사'},
+    {slug:'lucien',  name:'Lucien',   desc:'제국 최강의 검'},
+    {slug:'kilian',  name:'Kilian',   desc:'오직 너의 기사'},
+    {slug:'dietrich',name:'Dietrich', desc:'독점욕의 공작'},
+  ];
+  const N = CHARS.length, COPIES = 3;
+  const list = [];
+  for (let c=0;c<COPIES;c++) for (const ch of CHARS) list.push(ch);
+  track.innerHTML = list.map(ch => `
+    <div class="le-card">
+      <img src="./images/main/cards-male/${ch.slug}.png" alt="" loading="lazy">
+      <div class="le-card-cap">
+        <div class="le-card-name">${ch.name}</div>
+        <div class="le-card-desc">${ch.desc}</div>
+      </div>
+    </div>`).join('');
+  const cards = [...track.children];
+  let active = N; // 가운데 카피에서 시작
+
+  function place(){
+    cards.forEach((c,i)=>c.classList.toggle('center', i===active));
+    if (!carousel.clientWidth) return;
+    const card = cards[active];
+    const x = carousel.clientWidth/2 - (card.offsetLeft + card.offsetWidth/2);
+    track.style.transform = `translateX(${x}px)`;
+  }
+  function next(){
+    active++;
+    place();
+    if (active >= 2*N){
+      setTimeout(()=>{
+        carousel.classList.add('no-anim');
+        active -= N;
+        place();
+        void carousel.offsetWidth; // reflow
+        carousel.classList.remove('no-anim');
+      }, 580);
+    }
+  }
+  // 초기 배치 (애니메이션 없이)
+  carousel.classList.add('no-anim');
+  place();
+  void carousel.offsetWidth;
+  carousel.classList.remove('no-anim');
+
+  let timer = setInterval(next, 2600);
+  carousel.addEventListener('mouseenter', () => clearInterval(timer));
+  carousel.addEventListener('mouseleave', () => { timer = setInterval(next, 2600); });
+  window.addEventListener('resize', place);
 })();
 
 // 카드/페르소나 더보기 메뉴 (수정/삭제)

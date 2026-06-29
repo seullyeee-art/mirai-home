@@ -908,13 +908,13 @@ main{
 }
 .liked-empty.show{display:flex}
 .le-carousel{
-  position:relative;width:100%;overflow:hidden;
+  position:relative;width:100%;
+  /* 가로만 클리핑(peek), 세로는 그림자 보이게 */
+  overflow-x:clip;overflow-y:visible;
   --le-size:172px;
   height:calc(var(--le-size) * 1.4);
   display:flex;align-items:center;
-  margin-bottom:30px;
-  -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 15%,#000 85%,transparent 100%);
-  mask-image:linear-gradient(90deg,transparent 0,#000 15%,#000 85%,transparent 100%);
+  margin-bottom:38px;
 }
 .le-track{
   position:relative;display:flex;align-items:center;gap:16px;
@@ -926,15 +926,14 @@ main{
 .le-card{
   position:relative;flex:0 0 auto;
   width:var(--le-size);height:var(--le-size);
-  border-radius:18px;overflow:hidden;
+  border-radius:12px;overflow:hidden;
   background:var(--fill-alternative);
-  border:1px solid var(--line-alternative);
   opacity:0.36;transform:scale(0.8);
   transition:transform .55s cubic-bezier(.4,0,.2,1), opacity .55s ease;
 }
 .le-card.center{
   opacity:1;transform:scale(1.3);z-index:2;
-  box-shadow:0 20px 46px rgba(0,0,0,0.52);
+  box-shadow:0 16px 40px rgba(0,0,0,0.42);
 }
 .le-card img{display:block;width:100%;height:100%;object-fit:cover;object-position:center 12%}
 .le-card-cap{
@@ -1562,8 +1561,8 @@ body.guest .mypage-name::after{content:" (게스트)";color:var(--label-alternat
   color:var(--label-normal);font-family:inherit;
   font-size:13px;font-weight:600;cursor:pointer;
 }
-.mypage-invite svg{width:15px;height:15px;color:var(--primary-normal)}
-.mypage-invite:hover{background:var(--fill-normal);border-color:rgba(20,195,145,0.32)}
+.mypage-invite svg{width:15px;height:15px;color:var(--label-neutral)}
+.mypage-invite:hover{background:var(--fill-normal);border-color:var(--line-normal)}
 .mypage-invite:active{background:var(--fill-strong)}
 body.guest .mypage-invite{display:none}
 </style>
@@ -1704,6 +1703,9 @@ body.guest .mypage-invite{display:none}
     </section>
 
     <div class="mypage-tabs">
+      <button class="mypage-tab active" aria-label="좋아하는 캐릭터">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      </button>
       <button class="mypage-tab" aria-label="내 캐릭터">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
       </button>
@@ -1712,9 +1714,6 @@ body.guest .mypage-invite{display:none}
       </button>
       <button class="mypage-tab" aria-label="갤러리">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-      </button>
-      <button class="mypage-tab active" aria-label="좋아하는 캐릭터">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
       </button>
     </div>
 
@@ -2276,14 +2275,15 @@ document.addEventListener('click', () => {
 
 // 마이페이지 탭 — 패널 전환 + 캐릭터 탭에서만 서브탭 노출
 const tabs = document.querySelectorAll('.mypage-tab');
-const panels = ['panel-characters', 'panel-personas', 'panel-gallery', 'panel-liked'].map(id => document.getElementById(id));
+const panels = ['panel-liked', 'panel-characters', 'panel-personas', 'panel-gallery'].map(id => document.getElementById(id));
 const subtabs = document.querySelector('.mypage-subtabs');
 tabs.forEach((t, idx) => {
   t.addEventListener('click', () => {
     tabs.forEach(n => n.classList.remove('active'));
     t.classList.add('active');
     panels.forEach((p, i) => p?.classList.toggle('active', i === idx));
-    if (subtabs) subtabs.style.display = (idx === 0) ? 'flex' : 'none';
+    // 서브탭(전체/공개/비공개)은 '내 캐릭터' 탭에서만
+    if (subtabs) subtabs.style.display = (panels[idx] && panels[idx].id === 'panel-characters') ? 'flex' : 'none';
   });
 });
 document.querySelectorAll('.mypage-subtab').forEach(t => {

@@ -570,19 +570,19 @@ main{
 
 .mypage-currency{
   display:flex;align-items:stretch;
-  padding:16px 18px;
+  padding:12px 16px;
   background:linear-gradient(135deg, rgba(19, 187, 143, 0.10), rgba(19, 187, 143, 0.03));
   border-radius:14px;
-  margin-bottom:24px;
+  margin-bottom:16px;
 }
 .currency-card{
   flex:1;min-width:0;
-  display:flex;flex-direction:column;justify-content:space-between;gap:10px;
+  display:flex;flex-direction:column;justify-content:space-between;gap:7px;
 }
 .currency-divider{
   width:1px;
   align-self:center;
-  height:36px;
+  height:30px;
   background:var(--line-alternative);
   margin:0 16px;
   flex-shrink:0;
@@ -609,25 +609,25 @@ main{
 .currency-manage:hover{color:var(--label-strong)}
 .currency-manage svg{width:12px;height:12px}
 .currency-value{
-  font-size:18px;font-weight:700;line-height:1.4;
+  font-size:16px;font-weight:700;line-height:1.4;
   color:var(--primary-normal);
   letter-spacing:-0.002em;
 }
 .currency-amount{
   display:flex;align-items:center;gap:6px;
-  font-size:18px;font-weight:700;line-height:1.4;
+  font-size:16px;font-weight:700;line-height:1.4;
   color:var(--label-strong);
   letter-spacing:-0.002em;
 }
 .currency-icon-mir{
-  width:24px;height:24px;
+  width:22px;height:22px;
   object-fit:contain;
   flex-shrink:0;
   display:block;
 }
 .currency-action{
   align-self:flex-start;
-  height:30px;padding:0 14px;
+  height:28px;padding:0 13px;
   display:inline-flex;align-items:center;justify-content:center;
   border-radius:8px;
   background:rgba(255,255,255,0.08);
@@ -904,7 +904,7 @@ main{
 .liked-empty{
   display:none;
   flex-direction:column;align-items:center;
-  padding:28px 16px 56px;text-align:center;
+  padding:12px 16px 32px;text-align:center;
 }
 .liked-empty.show{display:flex}
 .le-carousel{
@@ -914,7 +914,7 @@ main{
   --le-size:172px;
   height:calc(var(--le-size) * 1.4);
   display:flex;align-items:center;
-  margin-bottom:38px;
+  margin-bottom:24px;
 }
 .le-track{
   position:relative;display:flex;align-items:center;gap:16px;
@@ -950,11 +950,11 @@ main{
 }
 .le-title{
   font-size:19px;font-weight:700;color:var(--label-strong);
-  letter-spacing:-0.01em;margin-bottom:8px;
+  letter-spacing:-0.01em;margin-bottom:6px;
 }
 .le-sub{
   font-size:14px;font-weight:400;color:var(--label-alternative);
-  line-height:1.5;margin-bottom:24px;
+  line-height:1.5;margin-bottom:18px;
 }
 .le-cta{
   display:inline-flex;align-items:center;justify-content:center;
@@ -968,7 +968,6 @@ main{
 .le-cta:hover{box-shadow:0 10px 30px rgba(20,195,145,0.4)}
 .le-cta:active{transform:scale(0.98)}
 @media (max-width:768px){
-  .le-carousel{--le-size:142px}
   .le-title{font-size:17px}
 }
 
@@ -1418,12 +1417,17 @@ main{
   .mypage-avatar{width:52px;height:52px}
   .mypage-name{font-size:16px}
   .mypage-edit{padding:6px 12px;font-size:12px}
-  .mypage-bio{padding:10px 14px;margin-bottom:10px}
+  .mypage-bio{padding:9px 14px;margin-bottom:9px}
   .mypage-bio-text{font-size:13px}
-  .mypage-currency{padding:12px 14px;margin-bottom:16px}
-  .currency-value,.currency-amount{font-size:16px}
-  .currency-action{height:28px;padding:0 12px;font-size:11.5px}
-  .currency-divider{height:32px;margin:0 12px}
+  .mypage-currency{padding:10px 13px;margin-bottom:12px}
+  .currency-card{gap:5px}
+  .currency-value,.currency-amount{font-size:15px}
+  .currency-action{height:27px;padding:0 12px;font-size:11.5px}
+  .currency-divider{height:28px;margin:0 12px}
+  /* 빈 화면 — 캐러셀 작게 + 간격 더 축소해서 멘트·CTA까지 보이게 */
+  .liked-empty{padding:8px 16px 24px}
+  .le-carousel{--le-size:130px;margin-bottom:18px}
+  .le-sub{margin-bottom:16px}
 
   /* 데스크탑 히어로 숨김, 모바일 배너 노출 */
   .hero{display:none}

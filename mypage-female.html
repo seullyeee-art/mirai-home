@@ -2303,9 +2303,12 @@ refreshLikedEmpty();
   void carousel.offsetWidth;
   carousel.classList.remove('no-anim');
 
-  let timer = setInterval(next, 2600);
-  carousel.addEventListener('mouseenter', () => clearInterval(timer));
-  carousel.addEventListener('mouseleave', () => { timer = setInterval(next, 2600); });
+  // 매 틱마다 호버/표시 상태를 체크 — 인터벌을 clear/restart하지 않아 탭 전환 후에도 안 멈춤
+  setInterval(() => {
+    if (!carousel.clientWidth) return;       // 다른 탭(숨김)이면 건너뜀(인터벌 유지)
+    if (carousel.matches(':hover')) return;  // 마우스 호버 시 일시정지
+    next();
+  }, 2600);
   window.addEventListener('resize', place);
 })();
 

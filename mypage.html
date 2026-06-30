@@ -917,7 +917,7 @@ main{
   margin-bottom:24px;
 }
 .le-track{
-  position:relative;display:flex;align-items:center;gap:16px;
+  position:relative;display:flex;align-items:center;gap:8px;
   transition:transform .55s cubic-bezier(.4,0,.2,1);
   will-change:transform;
 }
@@ -2192,14 +2192,14 @@ refreshLikedEmpty();
   const carousel = track && track.closest('.le-carousel');
   if (!track || !carousel) return;
   const CHARS = [
-    {slug:'charles',  name:'Charles',  desc:'An ice-cold prince who melts at your touch'},
-    {slug:'amon',     name:'Amon',     desc:'A blood-noble who burned centuries to find you'},
-    {slug:'kade',     name:'Kade',     desc:'A demon who carved your name into his soul'},
-    {slug:'lucien',   name:'Lucien',   desc:'Deadliest blade alive, undone by one look'},
-    {slug:'sterling', name:'Sterling', desc:'A cold CEO who breaks every rule he wrote'},
-    {slug:'rin',      name:'Rin',      desc:'A stray who bares his fangs for everyone but you'},
-    {slug:'caleb',    name:'Caleb',    desc:'A heartbreaker who finally lost his own heart'},
-    {slug:'dorian',   name:'Dorian',   desc:'Trouble wrapped in a half-buttoned shirt'},
+    {slug:'charles',  name:'Charles',  desc:'Cold imperial prince'},
+    {slug:'amon',     name:'Amon',     desc:'Eternal blood-noble'},
+    {slug:'kade',     name:'Kade',     desc:'Obsessive demon lord'},
+    {slug:'lucien',   name:'Lucien',   desc:'Peerless royal blade'},
+    {slug:'sterling', name:'Sterling', desc:'Ice-cold CEO'},
+    {slug:'rin',      name:'Rin',      desc:'Untamed stray catboy'},
+    {slug:'caleb',    name:'Caleb',    desc:'Reformed playboy'},
+    {slug:'dorian',   name:'Dorian',   desc:'Smoldering bad boy'},
   ];
   const N = CHARS.length, COPIES = 3;
   const list = [];

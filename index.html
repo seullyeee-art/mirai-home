@@ -1447,7 +1447,7 @@ main{
   border:1px solid var(--line-alternative);
 }
 @media (max-width:768px){
-  .ab-dev{bottom:auto; top:64px; right:12px}
+  .ab-dev{display:none}
 }
 .ab-dev-row{display:flex; gap:3px}
 .ab-dev button{
@@ -1534,6 +1534,183 @@ main{
   .app-promo-banner{gap:8px;padding:10px 10px}
   .app-promo-store{padding:0 10px;font-size:11px}
 }
+
+/* ═══ 취향설문 유도 스낵바 (첫 세션 진입 트리거) ═══ */
+.taste-snackbar{
+  position:fixed;left:50%;
+  bottom:calc(var(--bottom-nav-height, 56px) + 14px);
+  transform:translateX(-50%) translateY(180%);
+  width:min(440px, calc(100% - 24px));
+  z-index:60;
+  display:flex;align-items:center;gap:11px;
+  padding:11px 11px 11px 13px;
+  border-radius:16px;
+  background:
+    linear-gradient(116deg, rgba(20,195,145,0.20) 0%, rgba(20,195,145,0.05) 100%),
+    rgba(24,30,28,0.92);
+  backdrop-filter:blur(24px) saturate(1.6);
+  -webkit-backdrop-filter:blur(24px) saturate(1.6);
+  border:1px solid rgba(20,195,145,0.28);
+  box-shadow:0 14px 36px rgba(0,0,0,0.46);
+  color:#fff;opacity:0;pointer-events:none;
+  transition:transform 540ms cubic-bezier(0.22,1,0.36,1), opacity 320ms ease;
+}
+.taste-snackbar.show{transform:translateX(-50%) translateY(0);opacity:1;pointer-events:auto}
+.taste-snackbar.hidden{display:none !important}
+.taste-snackbar .ts-icon{
+  width:40px;height:40px;border-radius:11px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg, rgba(20,195,145,0.36), rgba(20,195,145,0.12));
+}
+.taste-snackbar .ts-icon img{width:24px;height:24px;object-fit:contain}
+.taste-snackbar .ts-text{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.taste-snackbar .ts-title{font-size:14px;font-weight:800;letter-spacing:-0.01em;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.taste-snackbar .ts-title b{color:var(--primary-normal);font-weight:800}
+.taste-snackbar .ts-sub{font-size:12px;font-weight:500;color:rgba(255,255,255,0.70);line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.taste-snackbar .ts-cta{
+  flex-shrink:0;height:36px;padding:0 16px;border-radius:12px;border:none;cursor:pointer;
+  background:linear-gradient(116deg, var(--primary-normal) 19%, var(--primary-strong) 92%);
+  color:#fff;font-size:13px;font-weight:700;letter-spacing:-0.01em;
+  text-decoration:none;display:inline-flex;align-items:center;justify-content:center;
+  transition:transform 120ms ease;
+}
+.taste-snackbar .ts-cta:active{transform:scale(0.96)}
+.taste-snackbar .ts-close{
+  width:26px;height:26px;border-radius:7px;border:none;background:transparent;cursor:pointer;
+  display:inline-flex;align-items:center;justify-content:center;
+  color:rgba(255,255,255,0.5);flex-shrink:0;padding:0;
+}
+.taste-snackbar .ts-close svg{width:16px;height:16px}
+@media (max-width:768px){
+  .taste-snackbar{width:calc(100% - 20px);bottom:calc(var(--bottom-nav-height, 56px) + 10px)}
+}
+@media (max-width:380px){
+  .taste-snackbar{gap:9px;padding:10px}
+  .taste-snackbar .ts-cta{padding:0 13px}
+}
+
+/* ═══ 취향설문 풀스크린 인트로 (첫 런치 강제 진입 변형 · ?entry=force) ═══ */
+.taste-intro{
+  position:fixed;inset:0;z-index:1200;
+  display:flex;align-items:center;justify-content:center;padding:24px;
+  background:radial-gradient(135% 95% at 50% 42%, rgba(8,8,10,0.90) 0%, rgba(10,11,13,0.66) 62%, rgba(10,11,13,0.48) 100%);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  opacity:0;visibility:hidden;transition:opacity 320ms ease, visibility 320ms ease;
+}
+.taste-intro.show{opacity:1;visibility:visible}
+.taste-intro.hidden{display:none !important}
+.ti-card{
+  width:100%;max-width:360px;
+  background:transparent;
+  border:none;
+  border-radius:24px;
+  padding:28px 24px 22px;
+  text-align:center;
+  box-shadow:none;
+  transform:translateY(16px) scale(0.98);
+  transition:transform 360ms cubic-bezier(0.22,1,0.36,1);
+}
+.taste-intro.show .ti-card{transform:translateY(0) scale(1)}
+.ti-hero{
+  width:200px;height:auto;margin:0 auto 8px;border-radius:50%;
+  background:radial-gradient(circle at 50% 45%, rgba(20,195,145,0.12) 0%, rgba(20,195,145,0) 66%);
+}
+.ti-hero img{width:100%;height:auto;display:block;object-fit:contain;filter:drop-shadow(0 6px 16px rgba(20,195,145,0.4));animation:mir-float 3.6s ease-in-out infinite}
+@keyframes mir-float{
+  0%,100%{transform:translateY(0) rotate(-3deg)}
+  50%{transform:translateY(-8px) rotate(3deg)}
+}
+@media (prefers-reduced-motion: reduce){
+  .ti-cta::before{animation:none;display:none}
+  .ti-hero img{animation:none}
+}
+@media (min-width:768px){.br-m{display:none}.ti-card{max-width:480px}.ti-hero{width:340px;margin-bottom:8px}}
+@media (max-width:767px){.ti-hero.hero-a{width:172px;margin-bottom:14px}}
+.ti-badge{
+  display:inline-flex;align-items:center;
+  padding:5px 12px;margin-bottom:14px;border-radius:999px;
+  background:rgba(20,195,145,0.14);border:1px solid rgba(20,195,145,0.32);
+  color:var(--primary-normal);font-size:12px;font-weight:800;letter-spacing:-0.01em;
+}
+.ti-title{font-size:22px;font-weight:800;line-height:1.34;letter-spacing:-0.02em;color:var(--label-strong);margin:0 0 8px;text-shadow:0 2px 14px rgba(0,0,0,0.45)}
+.ti-title b{color:inherit}
+.ti-sub{font-size:14px;line-height:1.55;color:var(--label-neutral);margin:0 0 22px;text-shadow:0 1px 10px rgba(0,0,0,0.4)}
+.ti-sub b{color:var(--primary-normal);font-weight:700}
+.ti-sub .mir-inline{width:16px;height:16px;object-fit:contain;display:inline-block;vertical-align:-0.2em;margin-right:3px}
+.ti-cta{
+  position:relative;overflow:hidden;
+  display:flex;align-items:center;justify-content:center;
+  width:100%;height:54px;border-radius:14px;border:none;cursor:pointer;
+  background:linear-gradient(116deg, var(--primary-normal) 19%, var(--primary-strong) 92%);
+  color:#fff;font-size:16px;font-weight:700;letter-spacing:-0.01em;text-decoration:none;
+  box-shadow:0 6px 20px rgba(20,195,145,0.28);
+  transition:transform 120ms ease, filter 160ms ease;
+}
+.ti-cta::before{
+  content:'';position:absolute;top:0;left:-80%;width:60%;height:100%;
+  background:linear-gradient(100deg, transparent 0%, rgba(255,255,255,0.55) 50%, transparent 100%);
+  transform:skewX(-20deg);pointer-events:none;
+  animation:cta-shine 3.2s ease-in-out infinite;
+}
+@keyframes cta-shine{
+  0%{left:-80%}
+  40%{left:140%}
+  100%{left:140%}
+}
+.ti-cta:hover{filter:brightness(1.06)}
+.ti-cta:active{transform:scale(0.98)}
+.ti-skip{
+  width:100%;height:40px;margin-top:6px;border:none;background:transparent;cursor:pointer;
+  color:var(--label-alternative);font-size:14px;font-weight:600;
+  transition:color 160ms ease;
+}
+.ti-skip:hover{color:var(--label-neutral)}
+
+/* ═══ 취향설문 바텀시트 (아래서 슬라이드업 · ?entry=sheet) ═══ */
+.taste-sheet-backdrop{
+  position:fixed;inset:0;z-index:1190;
+  background:rgba(10,10,11,0.55);
+  backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);
+  opacity:0;visibility:hidden;transition:opacity 300ms ease, visibility 300ms ease;
+}
+.taste-sheet-backdrop.show{opacity:1;visibility:visible}
+.taste-sheet-backdrop.hidden{display:none !important}
+.taste-sheet{
+  position:fixed;left:50%;bottom:0;
+  transform:translateX(-50%) translateY(101%);
+  width:100%;max-width:520px;z-index:1200;
+  background:var(--bg-normal);
+  border:1px solid rgba(255,255,255,0.08);
+  border-bottom:none;
+  border-radius:24px 24px 0 0;
+  padding:10px 24px max(env(safe-area-inset-bottom,0px),22px);
+  box-shadow:0 -18px 50px rgba(0,0,0,0.5);
+  text-align:center;
+  transition:transform 440ms cubic-bezier(0.22,1,0.36,1);
+}
+.taste-sheet.show{transform:translateX(-50%) translateY(0)}
+.taste-sheet.hidden{display:none !important}
+.sheet-grabber{
+  width:40px;height:4px;border-radius:999px;
+  background:rgba(255,255,255,0.18);
+  margin:0 auto 18px;
+}
+
+/* ═══ 문구 A/B 프리뷰 토글 (프리뷰에서만 show) ═══ */
+.copy-toggle{
+  position:fixed;top:max(env(safe-area-inset-top,0px),12px);left:50%;transform:translateX(-50%);
+  z-index:1300;display:none;gap:3px;padding:3px;
+  background:rgba(0,0,0,0.55);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+  border-radius:999px;border:1px solid rgba(255,255,255,0.14);
+}
+.copy-toggle.show{display:flex}
+.copy-toggle button{
+  min-width:40px;height:30px;border:none;border-radius:999px;cursor:pointer;
+  background:transparent;color:rgba(255,255,255,0.6);
+  font-family:inherit;font-size:13px;font-weight:800;letter-spacing:0.02em;
+  transition:background 140ms ease,color 140ms ease;
+}
+.copy-toggle button.active{background:var(--primary-normal);color:#fff}
 </style>
 <script src="https://cdn.jsdelivr.net/gh/seullyeee-art/mirai-shared@main/components.js" defer></script>
 </head>
@@ -1564,6 +1741,52 @@ main{
     </a>
   </div>
 </aside>
+
+<!-- 취향설문 유도 스낵바 (첫 세션 진입 트리거 · 바텀네비 위 floating) -->
+<aside class="taste-snackbar" id="tasteSnackbar" role="region" aria-label="취향 등록 유도">
+  <div class="ts-icon" aria-hidden="true">
+    <img src="./images/main/mir.png" alt="">
+  </div>
+  <div class="ts-text">
+    <div class="ts-title" data-ko="취향 알려주면 <b>50미르</b> 즉시 지급" data-en="Get <b>50 Mir</b> for your taste">취향 알려주면 <b>50미르</b> 즉시 지급</div>
+    <div class="ts-sub" data-ko="1분이면 끝, 딱 맞는 캐릭터까지 추천" data-en="1 min, plus picks made for you">1분이면 끝, 딱 맞는 캐릭터까지 추천</div>
+  </div>
+  <a class="ts-cta" id="tasteSnackbarCta" href="https://seullyeee-art.github.io/mirai-store-v2/onboarding/">
+    <span data-ko="시작" data-en="Start">시작</span>
+  </a>
+  <button type="button" class="ts-close" id="tasteSnackbarClose" aria-label="닫기">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+  </button>
+</aside>
+
+<!-- 취향설문 풀스크린 인트로 (첫 런치 강제 진입 변형 · ?entry=force) -->
+<div class="taste-intro hidden" id="tasteIntro" role="dialog" aria-modal="true" aria-labelledby="tasteIntroTitle">
+  <div class="ti-card">
+    <div class="ti-hero"><img src="./images/main/taste-hero.png" alt=""></div>
+    <h2 class="ti-title" id="tasteIntroTitle">시작하기 전, <br class="br-m"><b>취향</b>을 알려주세요</h2>
+    <p class="ti-sub">지금 등록완료하면 <img class="mir-inline" src="./images/main/mir.png" alt=""><b>50미르</b> 드려요</p>
+    <a class="ti-cta" id="tasteIntroCta" href="https://seullyeee-art.github.io/mirai-store-v2/onboarding/">시작하기</a>
+    <button type="button" class="ti-skip" id="tasteIntroSkip">나중에 할게요</button>
+  </div>
+</div>
+
+<!-- 취향설문 바텀시트 (아래서 슬라이드업 · ?entry=sheet) -->
+<div class="taste-sheet-backdrop hidden" id="tasteSheetBackdrop"></div>
+<aside class="taste-sheet hidden" id="tasteSheet" role="dialog" aria-modal="true" aria-labelledby="tasteSheetTitle">
+  <div class="sheet-grabber" aria-hidden="true"></div>
+  <div class="ti-hero"><img src="./images/main/taste-hero.png" alt=""></div>
+  <span class="ti-badge">1분이면 끝나요</span>
+  <h2 class="ti-title" id="tasteSheetTitle">시작하기 전, <br class="br-m"><b>취향</b>을 알려주세요</h2>
+  <p class="ti-sub">지금 등록완료하면 <img class="mir-inline" src="./images/main/mir.png" alt=""><b>50미르</b> 드려요</p>
+  <a class="ti-cta" id="tasteSheetCta" href="https://seullyeee-art.github.io/mirai-store-v2/onboarding/">시작하기</a>
+  <button type="button" class="ti-skip" id="tasteSheetSkip">나중에 할게요</button>
+</aside>
+
+<!-- 문구 A/B 프리뷰 토글 (?entry= 있을 때만 노출) -->
+<div class="copy-toggle" id="copyToggle" role="group" aria-label="문구 A/B 전환">
+  <button type="button" data-copy="a">A</button>
+  <button type="button" data-copy="b">B</button>
+</div>
 
 <main>
   <!-- Mobile banner (≤768px, Figma 343×100) -->
@@ -2350,6 +2573,126 @@ document.getElementById('dailyRewardBs')?.addEventListener('click', e => {
       } catch(e){}
       sync();
     };
+  })();
+
+  // 취향설문 진입 트리거 — ?entry=snackbar(기본) | ?entry=force(풀스크린 인트로)
+  (function(){
+    const KEY = 'mirai.tasteSurvey.done'; // 닫거나 완료하면 다시 안 뜸
+    const isDone = () => { try { return localStorage.getItem(KEY) === '1'; } catch(e){ return false; } };
+    const markDone = () => { try { localStorage.setItem(KEY, '1'); } catch(e){} };
+    let mode = 'snackbar';
+    try { mode = new URLSearchParams(location.search).get('entry') || 'snackbar'; } catch(e){}
+    let explicit = false;
+    try { explicit = new URLSearchParams(location.search).has('entry'); } catch(e){}
+
+    // ── 문구 A/B (?copy=a|b 초기값 · 프리뷰에선 화면 토글로 즉시 전환) ──
+    // A = 의무 중심 + 보상 / B = 혜택·감정 중심(미르 없음). 여기서 문구 수정.
+    const COPY = {
+      a: {
+        title: '시작하기 전, <br class="br-m"><b>취향</b>을 알려주세요',
+        sub: '지금 등록완료하면 <img class="mir-inline" src="./images/main/mir.png" alt=""><b>50미르</b> 드려요',
+        hero: './images/main/taste-hero.png'
+      },
+      b: {
+        title: '내 소울메이트는 <br class="br-m">누구일까?',
+        sub: '1분이면 딱 맞는 캐릭터를 찾아드려요',
+        hero: './images/main/taste-hero-b.png'
+      }
+    };
+    function applyCopy(v){
+      const c = COPY[v] || COPY.a;
+      document.querySelectorAll('#tasteIntro .ti-title, #tasteSheet .ti-title').forEach((el) => { el.innerHTML = c.title; });
+      document.querySelectorAll('#tasteIntro .ti-sub, #tasteSheet .ti-sub').forEach((el) => { el.innerHTML = c.sub; });
+      document.querySelectorAll('#tasteIntro .ti-hero img, #tasteSheet .ti-hero img').forEach((el) => { el.src = c.hero; });
+      document.querySelectorAll('#tasteIntro .ti-hero, #tasteSheet .ti-hero').forEach((el) => { el.classList.toggle('hero-a', v === 'a'); el.classList.toggle('hero-b', v === 'b'); });
+      document.querySelectorAll('#copyToggle button').forEach((b) => b.classList.toggle('active', b.dataset.copy === v));
+    }
+    let copyVar = 'a';
+    try { copyVar = (new URLSearchParams(location.search).get('copy') || 'a').toLowerCase(); } catch(e){}
+    if (copyVar !== 'a' && copyVar !== 'b') copyVar = 'a';
+    applyCopy(copyVar);
+    const copyToggle = document.getElementById('copyToggle');
+    if (copyToggle && explicit) {
+      copyToggle.classList.add('show');
+      copyToggle.querySelectorAll('button').forEach((b) => b.addEventListener('click', () => applyCopy(b.dataset.copy)));
+    }
+
+    let showTimer = null;
+
+    // ── 변형 B: 풀스크린 인트로 (강제 진입) ──
+    const intro = document.getElementById('tasteIntro');
+    function showIntro(){
+      if (!intro || (!explicit && isDone())) return;
+      intro.classList.remove('hidden');
+      requestAnimationFrame(() => intro.classList.add('show'));
+    }
+    function hideIntro(persist){
+      if (!intro) return;
+      if (persist) markDone();
+      intro.classList.remove('show');
+      setTimeout(() => intro.classList.add('hidden'), 360);
+    }
+    document.getElementById('tasteIntroSkip')?.addEventListener('click', () => hideIntro(true));
+    document.getElementById('tasteIntroCta')?.addEventListener('click', () => markDone());
+
+    // ── 변형 C: 바텀시트 (아래서 슬라이드업) ──
+    const sheet = document.getElementById('tasteSheet');
+    const sheetBackdrop = document.getElementById('tasteSheetBackdrop');
+    function showSheet(){
+      if (!sheet || (!explicit && isDone())) return;
+      sheetBackdrop.classList.remove('hidden');
+      sheet.classList.remove('hidden');
+      requestAnimationFrame(() => { sheetBackdrop.classList.add('show'); sheet.classList.add('show'); });
+    }
+    function hideSheet(persist){
+      if (!sheet) return;
+      if (persist) markDone();
+      sheet.classList.remove('show');
+      sheetBackdrop.classList.remove('show');
+      setTimeout(() => { sheet.classList.add('hidden'); sheetBackdrop.classList.add('hidden'); }, 440);
+    }
+    document.getElementById('tasteSheetSkip')?.addEventListener('click', () => hideSheet(true));
+    document.getElementById('tasteSheetCta')?.addEventListener('click', () => markDone());
+    sheetBackdrop?.addEventListener('click', () => hideSheet(true));
+
+    // ── 변형 A: 스낵바 ──
+    const snack = document.getElementById('tasteSnackbar');
+    const closeBtn = document.getElementById('tasteSnackbarClose');
+    const appPromo = document.getElementById('appPromoBanner');
+    function show(){
+      if (!snack || (!explicit && isDone())) return;
+      appPromo?.classList.add('hidden');           // 하단 바 중복 방지: 취향 스낵바 우선
+      snack.classList.remove('hidden');
+      requestAnimationFrame(() => snack.classList.add('show'));
+    }
+    function dismiss(persist){
+      if (!snack) return;
+      snack.classList.remove('show');
+      if (persist) markDone();
+      // 앱 프로모 배너 복구 (별도로 닫지 않았다면)
+      try {
+        if (localStorage.getItem('mirai.appPromo.dismissed') !== '1') appPromo?.classList.remove('hidden');
+      } catch(e){}
+      setTimeout(() => snack.classList.add('hidden'), 560);
+    }
+    closeBtn?.addEventListener('click', () => dismiss(true));
+    // CTA는 설문으로 이동 — 다녀온 걸로 간주
+    document.getElementById('tasteSnackbarCta')?.addEventListener('click', () => markDone());
+
+    // 진입 방식 분기 (첫 세션만)
+    if (explicit || !isDone()) {
+      if (mode === 'force') showTimer = setTimeout(showIntro, 600);
+      else if (mode === 'sheet') showTimer = setTimeout(showSheet, 700);
+      else showTimer = setTimeout(show, 1100);
+    }
+
+    // 데모/QA용 토글
+    window.showTasteSnackbar = () => { clearTimeout(showTimer); try{ localStorage.removeItem(KEY); }catch(e){} show(); };
+    window.hideTasteSnackbar = () => dismiss(true);
+    window.showTasteIntro = () => { clearTimeout(showTimer); try{ localStorage.removeItem(KEY); }catch(e){} showIntro(); };
+    window.hideTasteIntro = () => hideIntro(true);
+    window.showTasteSheet = () => { clearTimeout(showTimer); try{ localStorage.removeItem(KEY); }catch(e){} showSheet(); };
+    window.hideTasteSheet = () => hideSheet(true);
   })();
 </script>
 </body>

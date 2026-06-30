@@ -1566,6 +1566,7 @@ main{
 .taste-snackbar .ts-text{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
 .taste-snackbar .ts-title{font-size:14px;font-weight:800;letter-spacing:-0.01em;line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .taste-snackbar .ts-title b{color:var(--primary-normal);font-weight:800}
+.taste-snackbar .ts-sub b{color:var(--primary-normal);font-weight:700}
 .taste-snackbar .ts-sub{font-size:12px;font-weight:500;color:rgba(255,255,255,0.70);line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .taste-snackbar .ts-cta{
   flex-shrink:0;height:36px;padding:0 16px;border-radius:12px;border:none;cursor:pointer;
@@ -1624,8 +1625,9 @@ main{
   .ti-cta::before{animation:none;display:none}
   .ti-hero img{animation:none}
 }
-@media (min-width:768px){.br-m{display:none}.ti-card{max-width:480px}.ti-hero{width:340px;margin-bottom:8px}}
+@media (min-width:768px){.br-m{display:none}.ti-card{max-width:480px}.ti-hero{width:290px;margin-bottom:20px}}
 @media (max-width:767px){.ti-hero.hero-a{width:172px;margin-bottom:14px}}
+@media (min-width:768px){.ti-hero.hero-a{width:240px}}
 .ti-badge{
   display:inline-flex;align-items:center;
   padding:5px 12px;margin-bottom:14px;border-radius:999px;
@@ -1748,8 +1750,8 @@ main{
     <img src="./images/main/mir.png" alt="">
   </div>
   <div class="ts-text">
-    <div class="ts-title" data-ko="취향 알려주면 <b>50미르</b> 즉시 지급" data-en="Get <b>50 Mir</b> for your taste">취향 알려주면 <b>50미르</b> 즉시 지급</div>
-    <div class="ts-sub" data-ko="1분이면 끝, 딱 맞는 캐릭터까지 추천" data-en="1 min, plus picks made for you">1분이면 끝, 딱 맞는 캐릭터까지 추천</div>
+    <div class="ts-title" data-ko="시작하기 전, 취향을 알려주세요" data-en="Tell us your taste first">시작하기 전, 취향을 알려주세요</div>
+    <div class="ts-sub" data-ko="지금 등록완료하면 <b>50미르</b> 드려요" data-en="Finish now, get <b>50 Mir</b>">지금 등록완료하면 <b>50미르</b> 드려요</div>
   </div>
   <a class="ts-cta" id="tasteSnackbarCta" href="https://seullyeee-art.github.io/mirai-store-v2/onboarding/">
     <span data-ko="시작" data-en="Start">시작</span>

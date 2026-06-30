@@ -2241,10 +2241,9 @@ refreshLikedEmpty();
   void carousel.offsetWidth;
   carousel.classList.remove('no-anim');
 
-  // 매 틱마다 호버/표시 상태를 체크 — 인터벌을 clear/restart하지 않아 탭 전환 후에도 안 멈춤
+  // 항상 회전 (숨김 탭일 때만 건너뜀, 인터벌은 유지 → 탭 전환 후에도 안 멈춤)
   setInterval(() => {
-    if (!carousel.clientWidth) return;       // 다른 탭(숨김)이면 건너뜀(인터벌 유지)
-    if (carousel.matches(':hover')) return;  // 마우스 호버 시 일시정지
+    if (!carousel.clientWidth) return;  // 다른 탭(숨김)이면 건너뜀
     next();
   }, 2600);
   window.addEventListener('resize', place);
